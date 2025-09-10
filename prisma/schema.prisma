@@ -20,16 +20,111 @@ enum Role {
 }
 
 model User {
-    id                   String    @id @default(uuid())
-    username             String    @unique
-    email                String    @unique
+    id                   String        @id @default(uuid())
+    username             String        @unique
+    email                String        @unique
     name                 String
     lastName             String
     password             String
     passwordResetToken   String?
     passwordResetExpires DateTime?
-    role                 Role      @default(User)
-    balance              Decimal   @default(0) @db.Decimal(10, 2)
-    isEmailVerified      Boolean   @default(false)
-    created_at           DateTime  @default(now())
+    role                 Role          @default(User)
+    balance              Decimal       @default(0) @db.Decimal(10, 2)
+    isEmailVerified      Boolean       @default(false)
+    created_at           DateTime      @default(now())
+    Transaction          Transaction[]
+}
+
+model Country {
+    id         Int     @id @default(autoincrement())
+    name       String
+    mcc        String
+    isoCode    String
+    region     String
+    keywords   String?
+    pricePerGB Float
+
+    supportedProducts ProductSupportedCountry[]
+    supportedRegions  RegionSupportedCountry[]
+    Product           Product[]
+}
+
+model Region {
+    id       Int     @id @default(autoincrement())
+    name     String
+    code     String
+    keywords String?
+
+    supportedCountries RegionSupportedCountry[]
+    Product            Product[]
+}
+
+model ProductSupportedCountry {
+    countryId Int
+    productId Int
+
+    country Country @relation(fields: [countryId], references: [id])
+
+    @@id([countryId, productId])
+}
+
+model RegionSupportedCountry {
+    regionId  Int
+    countryId Int
+
+    region  Region  @relation(fields: [regionId], references: [id])
+    country Country @relation(fields: [countryId], references: [id])
+
+    @@id([regionId, countryId])
+}
+
+model Product {
+    id                    Int     @id @default(autoincrement())
+    name                  String
+    duration              Int
+    durationUnit          String
+    amount                Int?
+    amountUnit            String?
+    supportsSingleCountry Boolean
+    imsiProfile           String?
+
+    // Foreign keys
+    regionId  Int?
+    countryId Int?
+
+    // Relations
+    region       Region?       @relation(fields: [regionId], references: [id])
+    country      Country?      @relation(fields: [countryId], references: [id])
+    networks     Network[]
+    transactions Transaction[]
+}
+
+model Network {
+    id        Int    @id @default(autoincrement())
+    name      String
+    productId Int
+
+    product Product @relation(fields: [productId], references: [id])
+}
+
+model CouponCode {
+    id           Int      @id @default(autoincrement())
+    code         String   @unique
+    percentage   Int
+    subjectEmail String
+    subjectName  String
+    createdAt    DateTime @default(now())
+
+    transactions Transaction[]
+}
+
+model Transaction {
+    id           Int    @id @default(autoincrement())
+    userId       String
+    couponCodeId Int
+    productId    Int
+
+    user       User       @relation(fields: [userId], references: [id])
+    product    Product    @relation(fields: [productId], references: [id])
+    couponCode CouponCode @relation(fields: [couponCodeId], references: [id])
 }

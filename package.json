@@ -2,9 +2,13 @@
   "name": "simaj-back",
   "version": "1.0.0",
   "main": "index.js",
+  "prisma": {
+    "seed": "node prisma/seed.ts"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon server.ts"
+  
   },
   "keywords": [],
   "author": "",
