@@ -1,6 +1,8 @@
 import { PrismaClient } from "@prisma/client";
 import express, { Request, Response } from "express";
 import authRouter from "./src/routes/authRoutes";
+import countryRouter from "./src/routes/countryRoutes";
+import regionRouter from "./src/routes/regionRoutes";
 
 
 
@@ -49,6 +51,8 @@ async function main() {
 
     const baseUrl: string = "/api/v1";
     app.use(`${baseUrl}/auth`, authRouter);
+    app.use(`${baseUrl}/countries`, countryRouter);
+    app.use(`${baseUrl}/regions`, regionRouter);
 
 
     /// this make problem, check it out
