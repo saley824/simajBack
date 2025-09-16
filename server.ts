@@ -3,6 +3,8 @@ import express, { Request, Response } from "express";
 import authRouter from "./src/routes/authRoutes";
 import countryRouter from "./src/routes/countryRoutes";
 import regionRouter from "./src/routes/regionRoutes";
+import productRouter from "./src/routes/product_routes";
+import transactionRouter from "./src/routes/transaction_router";
 
 
 
@@ -53,6 +55,8 @@ async function main() {
     app.use(`${baseUrl}/auth`, authRouter);
     app.use(`${baseUrl}/countries`, countryRouter);
     app.use(`${baseUrl}/regions`, regionRouter);
+    app.use(`${baseUrl}/products`, productRouter);
+    app.use(`${baseUrl}/transactions`, transactionRouter);
 
 
     /// this make problem, check it out
