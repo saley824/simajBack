@@ -9,6 +9,10 @@ import authController from "../controllers/auth_controller";
 const router = express.Router();
 
 
+router.get("/users", authController.getAllUsers);
+
+
+
 router.post("/signUp", validate(userSchemaCreate), authController.signUp);
 router.post("/login", validate(loginSchema), authController.login);
 router.post("/logOut", authController.logOut);

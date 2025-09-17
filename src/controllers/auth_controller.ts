@@ -8,6 +8,7 @@ import userHelper from "../helpers/user_helper";
 import errorHelper from "../helpers/error_helper";
 
 import jwt from "jsonwebtoken";
+import { get } from "http";
 
 const signToken = (id: String) => {
     const jwtSecret = process.env.JWT_SECRET;
@@ -261,13 +262,35 @@ const changePassword = async (req: Request, res: Response) => {
         errorHelper.handle404(res)
     }
 }
+
+const getAllUsers = async (req: Request, res: Response) => {
+
+    try {
+        let users = await prisma.user.findMany();
+        res.status(200).json({
+            success: true,
+            data: {
+                users: users,
+            },
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            success: false,
+            message: "Internal Server Error"
+
+        });
+    }
+
+}
 export default {
     signUp,
     login,
     logOut,
     forgotPassword,
     resetPassword,
-    changePassword
+    changePassword,
+    getAllUsers,
 };
 
 

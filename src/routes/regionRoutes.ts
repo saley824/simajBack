@@ -7,9 +7,4 @@ const router = express.Router();
 router.get("/", regionController.getAllRegions);
 
 
-
-
-
-
-
 export default router;

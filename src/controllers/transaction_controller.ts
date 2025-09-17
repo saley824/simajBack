@@ -74,14 +74,18 @@ const getTransactionById = async (req: Request, res: Response) => {
         res.status(500).json({
             success: false,
             message: "Internal Server Error"
-
         });
     }
 
 }
 const getTransactions = async (req: Request, res: Response) => {
+    const userId: string | undefined = req.query.userId as string | undefined;
+
     try {
         let transactions = await prisma.transaction.findMany({
+            where: {
+                ...(userId && { userId }),
+            },
             select: {
                 userId: true,
                 product: { select: { name: true, price: true, country: true } },
@@ -89,7 +93,6 @@ const getTransactions = async (req: Request, res: Response) => {
                 TransactionStatus: true,
             }
         });
-
         if (transactions && transactions.length > 0) {
             transactions = transactions.map(transaction => {
                 const transactionWithCustom = {
@@ -110,6 +113,7 @@ const getTransactions = async (req: Request, res: Response) => {
             },
         });
     } catch (error) {
+        console.log(error);
         res.status(500).json({
             success: false,
             message: "Internal Server Error"
