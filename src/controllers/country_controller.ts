@@ -5,9 +5,7 @@ import globalCommonHelper from "../helpers/global_common_helper";
 
 
 
-//TODO maybe use middleware to check is there discount for some product
 
-// const checkDiscount = async (req: Request, res: Response, next: any) => {};
 
 
 

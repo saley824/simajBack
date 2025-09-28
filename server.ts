@@ -5,6 +5,7 @@ import countryRouter from "./src/routes/countryRoutes";
 import regionRouter from "./src/routes/regionRoutes";
 import productRouter from "./src/routes/product_routes";
 import transactionRouter from "./src/routes/transaction_router";
+import reviewsRouter from "./src/routes/reviewRoutes";
 
 
 
@@ -57,6 +58,7 @@ async function main() {
     app.use(`${baseUrl}/regions`, regionRouter);
     app.use(`${baseUrl}/products`, productRouter);
     app.use(`${baseUrl}/transactions`, transactionRouter);
+    app.use(`${baseUrl}/reviews`, reviewsRouter);
 
 
     /// this make problem, check it out

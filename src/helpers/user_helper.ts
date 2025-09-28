@@ -6,40 +6,64 @@ interface Options {
     email: string;
     subject: string;
     token: string;
+    isForEmailVerification: Boolean;
 }
 
 // ----------------------------EMAIL SENDING-----------------------------------
 const sendEmail = async (options: Options, name: String) => {
-    const emailUsername: string = process.env.EMAIL_USERNAME!;
-    const emailPassword = process.env.EMAIL_PASSWORD!;
-    const emailPort = process.env.EMAIL_PORT!;
+    try {
+        const emailUsername: string = process.env.EMAIL_USERNAME!;
+        const emailPassword = process.env.EMAIL_PASSWORD!;
+        const emailPort = process.env.EMAIL_PORT!;
+        const emailHost = process.env.EMAIL_HOST!;
 
-    const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        port: parseInt(emailPort),
-        auth: {
-            user: emailUsername,
-            pass: emailPassword,
-        },
-    });
 
-    const htmlContent = `
+        const transporter = nodemailer.createTransport({
+            host: emailHost,
+            port: parseInt(emailPort),
+            secure: false,
+            auth: {
+                user: emailUsername,
+                pass: emailPassword,
+            },
+        });
+
+        const htmlContent =
+            options.isForEmailVerification ?
+                `
 <p>Poštovani <strong>${name}</strong>,</p>
 <p>Primili smo zahtjev za resetovanje šifre za Vaš nalog.</p>
 <p>Molimo vas da koristite sljedeći token za resetovanje šifre:</p>
 <p><span style="font-size: 32px; background-color: #f0f0f0; padding: 5px 10px; border-radius: 4px;">${options.token}</span></p>
 <p>Token ističe za  10 minuta.</p>
 <p>Srdačan pozdrav,</p>
-<p><strong>Eagro Tim</strong></p>
+<p><strong>Esimaj Tim</strong></p>
+` :
+                `
+<p>Poštovani <strong>${name}</strong>,</p>
+<p>Dobrobrodosli na ESimaj platformu!</p>
+<p>Molimo vas da koristite sljedeći token za verifikovanje mejla:</p>
+<p><span style="font-size: 32px; background-color: #f0f0f0; padding: 5px 10px; border-radius: 4px;">${options.token}</span></p>
+<p>Token ističe za  10 minuta.</p>
+<p>Srdačan pozdrav,</p>
+<p><strong>Esimaj Tim</strong></p>
 `;
-    const mailOptions = {
-        from: emailUsername,
-        to: options.email,
-        subject: options.subject,
-        html: htmlContent,
-    };
 
-    await transporter.sendMail(mailOptions);
+
+        const mailOptions = {
+            from: emailUsername,
+            to: options.email,
+            subject: options.subject,
+            html: htmlContent,
+        };
+
+        await transporter.sendMail(mailOptions);
+        return true;
+    } catch (error) {
+        console.error(error)
+        return false;
+    }
+
 };
 
 // ----------------------------CREATE HASH PASSWORD-----------------------------------
@@ -53,23 +77,23 @@ const compare = async (password: string, candidate: string) => {
 };
 
 // ----------------------------CREATE PASSWORD TOKEN-----------------------------------
-const createPasswordResetToken = function () {
-    const resetToken = crypto.randomBytes(3).toString("hex");
+const createEmailToken = function () {
+    const emailToken = crypto.randomBytes(3).toString("hex");
 
-    const hashResetToken = crypto
+    const hashEmailToken = crypto
         .createHash("sha256")
-        .update(resetToken)
+        .update(emailToken)
         .digest("hex");
 
     const now = new Date();
     const tokenExpires = new Date(now.getTime() + 10 * 60000);
 
-    return { resetToken, hashResetToken, tokenExpires };
+    return { emailToken, hashEmailToken, tokenExpires };
 };
 
 export default {
     hashPassword,
     compare,
-    createPasswordResetToken,
+    createEmailToken,
     sendEmail,
 };

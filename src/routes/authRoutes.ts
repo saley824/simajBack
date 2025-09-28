@@ -16,6 +16,8 @@ router.get("/users", authController.getAllUsers);
 router.post("/signUp", validate(userSchemaCreate), authController.signUp);
 router.post("/login", validate(loginSchema), authController.login);
 router.post("/logOut", authController.logOut);
+router.post("/verifyEmail", authController.verifyEmail);
+router.post("/sendTokenForVerifyEmailAgain", authController.sendTokenForVerifyingAgain);
 
 
 

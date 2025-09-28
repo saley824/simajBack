@@ -20,13 +20,24 @@ async function main() {
     // }
 
 
-    await prisma.couponCode.createMany({
+    await prisma.review.createMany({
         data: [
-            { code: "tropic", percentage: 10, subjectEmail: "tropic@example.com", subjectName: "Tropic Plan" },
-            { code: "bonbon", percentage: 20, subjectEmail: "bonbon@example.com", subjectName: "Bonbon Plan" }
+            { rating: 5, showOnHome: true, name: "Marko", lastName: "Trninic", comment: "Ova aplikacija fenomelna. Svaka cast!" },
+            { rating: 5, showOnHome: true, name: "Aleksandar", lastName: "Obradovic", comment: "Je li moguce da ovako dobro radi?" },
+            { rating: 5, showOnHome: true, name: "Donald", lastName: "Trump", comment: "Kad god idem kod Putina kupujem ovdje net jer im je u Rusiji uzas net.." },
+            { rating: 3, showOnHome: false, name: "Mirko", lastName: "Mirkic", comment: "Onako..." },
+            { rating: 2, showOnHome: false, name: "Marko", lastName: "Baric", comment: "Ne radi mi nesto..." },
 
         ],
     });
+
+    // await prisma.couponCode.createMany({
+    //     data: [
+    //         { code: "tropic", percentage: 10, subjectEmail: "tropic@example.com", subjectName: "Tropic Plan" },
+    //         { code: "bonbon", percentage: 20, subjectEmail: "bonbon@example.com", subjectName: "Bonbon Plan" }
+
+    //     ],
+    // });
 
     // await prisma.country.createMany({
     //     data: [

@@ -5,6 +5,7 @@ function getQueryNumber(query: Record<string, any>, key: string, defaultValue?: 
     return isNaN(n) ? defaultValue : n;
 }
 
+
 export default {
     getQueryNumber,
 };

@@ -26,19 +26,22 @@ enum TransactionStatus {
 }
 
 model User {
-    id                   String        @id @default(uuid())
-    username             String        @unique
-    email                String        @unique
-    name                 String
-    lastName             String
-    password             String
-    passwordResetToken   String?
-    passwordResetExpires DateTime?
-    role                 Role          @default(User)
-    balance              Decimal       @default(0) @db.Decimal(10, 2)
-    isEmailVerified      Boolean       @default(false)
-    created_at           DateTime      @default(now())
-    Transaction          Transaction[]
+    id                                 String        @id @default(uuid())
+    username                           String        @unique
+    email                              String        @unique
+    isEmailVerified                    Boolean       @default(false)
+    emailVerificationToken             String?
+    emailVerificationTokenResetExpires DateTime?
+    name                               String
+    lastName                           String
+    password                           String
+    passwordResetToken                 String?
+    passwordResetExpires               DateTime?
+    role                               Role          @default(User)
+    balance                            Decimal       @default(0) @db.Decimal(10, 2)
+    created_at                         DateTime      @default(now())
+    Transaction                        Transaction[]
+    Review                             Review?
 }
 
 model Country {
@@ -114,12 +117,14 @@ model Network {
 }
 
 model CouponCode {
-    id           Int      @id @default(autoincrement())
-    code         String   @unique
-    percentage   Int
-    subjectEmail String
-    subjectName  String
-    createdAt    DateTime @default(now())
+    id            Int      @id @default(autoincrement())
+    code          String   @unique
+    isFree        Boolean
+    remainingUses Int?
+    percentage    Int
+    subjectEmail  String
+    subjectName   String
+    createdAt     DateTime @default(now())
 
     transactions Transaction[]
 }
@@ -134,4 +139,15 @@ model Transaction {
     user       User        @relation(fields: [userId], references: [id])
     product    Product     @relation(fields: [productId], references: [id])
     couponCode CouponCode? @relation(fields: [couponCodeId], references: [id])
+}
+
+model Review {
+    id         Int      @id @default(autoincrement())
+    rating     Int
+    comment    String?
+    showOnHome Boolean?
+    name       String
+    lastName   String
+    userId     String?  @unique
+    user       User?    @relation(fields: [userId], references: [id])
 }

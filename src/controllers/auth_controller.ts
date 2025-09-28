@@ -39,6 +39,12 @@ const signUp = async (req: Request, res: Response) => {
             },
         });
 
+        if (existingUser && !existingUser.isEmailVerified) {
+            return res.status(409).json({
+                error: "Email already registered but not verified. Resend verification email?"
+            });
+        }
+
         if (existingUser) {
             return res.status(400).json({
                 // todo loc
@@ -50,6 +56,8 @@ const signUp = async (req: Request, res: Response) => {
 
         const hashedPassword = await userHelper.hashPassword(userBody.password);
         userBody.password = hashedPassword;
+        const { emailToken, hashEmailToken, tokenExpires } =
+            userHelper.createEmailToken();
         await prisma.user.create({
             data: {
                 email: userBody.email,
@@ -58,14 +66,146 @@ const signUp = async (req: Request, res: Response) => {
                 username: userBody.username,
                 password: hashedPassword,
                 isEmailVerified: false,
+                emailVerificationToken: hashEmailToken,
+                emailVerificationTokenResetExpires: tokenExpires,
+
             },
         });
+
+        await userHelper.sendEmail({
+            email: userBody.email,
+            subject: "Iskoristite ovaj token za verifikovanje emaila",
+            token: emailToken,
+            isForEmailVerification: false,
+        },
+            userBody.name
+        );
+
         res.status(201).json({
             success: true,
             data: {
                 message: "Korisnik je uspješno kreiran!",
             },
         });
+    } catch (error) {
+        errorHelper.handle500(res)
+    }
+};
+
+const sendTokenForVerifyingAgain = async (req: Request, res: Response) => {
+    try {
+        const { email } = req.body;
+
+        const selectedUser = await prisma.user.findUnique(
+            {
+                where: {
+                    email: email,
+                },
+                select: {
+                    id: true,
+                    isEmailVerified: true,
+                    name: true,
+                }
+            }
+        )
+
+        if (!selectedUser) {
+            return res.status(404).json({
+                success: false,
+                message: "Ne postoji korisnik sa upisanim email-om",
+            });
+
+        }
+
+        if (selectedUser?.isEmailVerified) {
+            return res.status(400).json({
+                success: false,
+                message: "Mejl je vec verifikovan"
+            });
+
+        }
+
+        const { emailToken, hashEmailToken, tokenExpires } =
+            userHelper.createEmailToken();
+        await prisma.user.update({
+            where: {
+                email: email,
+            },
+            data: {
+                emailVerificationToken: hashEmailToken,
+                emailVerificationTokenResetExpires: tokenExpires
+            }
+        })
+
+        await userHelper.sendEmail({
+            email: email,
+            subject: "Iskoristite ovaj token za verifikovanje emaila",
+            token: emailToken,
+            isForEmailVerification: false,
+        },
+            selectedUser.name
+        );
+        res.status(200).json({
+            success: true,
+            data: {
+                message: "Novi token je poslan na email",
+            },
+        });
+    } catch (error) {
+        errorHelper.handle500(res)
+    }
+};
+
+const verifyEmail = async (req: Request, res: Response) => {
+    try {
+        const { token, email } = req.body;
+
+        const hashToken = crypto
+            .createHash("sha256")
+            .update(token)
+            .digest("hex");
+
+        const selectedUser = await prisma.user.findFirst(
+            {
+                where: {
+                    email: email,
+                    emailVerificationToken: hashToken,
+                    emailVerificationTokenResetExpires: {
+                        gte: new Date()
+                    }
+                },
+                select: {
+                    id: true
+                }
+            }
+        )
+        if (!selectedUser) {
+            res.status(400).json({
+                success: false,
+                message: "Token je nevažeći li je istekao!",
+            });
+            return;
+        }
+
+        await prisma.user.update({
+            where: {
+                id: selectedUser.id
+            },
+            data: {
+                isEmailVerified: true,
+                emailVerificationToken: null,
+                emailVerificationTokenResetExpires: null,
+
+            }
+        })
+
+        res.status(201).json({
+            success: true,
+            data: {
+                message: "Email je uspjesno verifikovan",
+            },
+        });
+
     } catch (error) {
         errorHelper.handle500(res)
     }
@@ -108,7 +248,8 @@ const login = async (req: Request, res: Response) => {
             lastName: true,
             email: true,
             username: true,
-            password: true
+            password: true,
+            isEmailVerified: true
         }
     });
 
@@ -116,6 +257,14 @@ const login = async (req: Request, res: Response) => {
         res.status(401).json({
             success: false,
             message: "Email ili šifra nisu tačni!",
+        });
+        return;
+    }
+
+    if (!user.isEmailVerified) {
+        res.status(401).json({
+            success: false,
+            message: "Emajl nije verifikovan",
         });
         return;
     }
@@ -166,21 +315,22 @@ const forgotPassword = async (req: Request, res: Response) => {
             });
             return;
         }
-        const { resetToken, hashResetToken, tokenExpires } =
-            userHelper.createPasswordResetToken();
+        const { emailToken, hashEmailToken, tokenExpires } =
+            userHelper.createEmailToken();
         await prisma.user.update({
             where: {
                 email: email,
             },
             data: {
-                passwordResetToken: hashResetToken,
+                passwordResetToken: hashEmailToken,
                 passwordResetExpires: tokenExpires
             }
         })
         await userHelper.sendEmail({
             email: email,
             subject: "Iskoristite ovaj token za reset šifre",
-            token: resetToken,
+            token: emailToken,
+            isForEmailVerification: false,
         },
             user.name
         );
@@ -231,10 +381,6 @@ const resetPassword = async (req: Request, res: Response) => {
     } catch (error) {
         errorHelper.handle404(res)
     }
-
-
-
-
 };
 const changePassword = async (req: Request, res: Response) => {
     try {
@@ -291,6 +437,9 @@ export default {
     resetPassword,
     changePassword,
     getAllUsers,
+    verifyEmail,
+    sendTokenForVerifyingAgain
+
 };
 
 
