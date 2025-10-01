@@ -151,3 +151,24 @@ model Review {
     userId     String?  @unique
     user       User?    @relation(fields: [userId], references: [id])
 }
+
+model ContactMessage {
+    id            Int     @id @default(autoincrement())
+    name          String
+    lastName      String
+    email         String
+    phoneModel    String?
+    typeOfPackage String?
+    question      String?
+    isResolved    Boolean @default(false)
+}
+
+// Ime
+// Prezime
+// Email
+// Telefon (opciono)
+// Model telefona (opciono)
+// npr. iPhone 14 Pro ili Samsung S23
+// Broj narudžbe (opciono)
+// Ako imate broj narudžbe, unesite ga ovdje
+// Vaše pitanje ili poruka
