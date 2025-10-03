@@ -2,20 +2,27 @@ import argon2 from "argon2";
 import crypto from "crypto";
 import nodemailer from "nodemailer";
 
-interface Options {
+interface ResetPasswordOptions {
     email: string;
     subject: string;
     token: string;
-    isForEmailVerification: Boolean;
+}
+interface VerifyEmailOptions {
+    email: string;
+    subject: string;
+    token: string;
+    userId: string;
 }
 
 // ----------------------------EMAIL SENDING-----------------------------------
-const sendEmail = async (options: Options, name: String) => {
+const sendEmailForResetPassword = async (options: ResetPasswordOptions, name: String) => {
     try {
         const emailUsername: string = process.env.EMAIL_USERNAME!;
         const emailPassword = process.env.EMAIL_PASSWORD!;
         const emailPort = process.env.EMAIL_PORT!;
         const emailHost = process.env.EMAIL_HOST!;
+
+        const font = process.env.FRONTEND_BASE_URL!;
 
 
         const transporter = nodemailer.createTransport({
@@ -29,8 +36,8 @@ const sendEmail = async (options: Options, name: String) => {
         });
 
         const htmlContent =
-            options.isForEmailVerification ?
-                `
+
+            `
 <p>Poštovani <strong>${name}</strong>,</p>
 <p>Primili smo zahtjev za resetovanje šifre za Vaš nalog.</p>
 <p>Molimo vas da koristite sljedeći token za resetovanje šifre:</p>
@@ -38,12 +45,53 @@ const sendEmail = async (options: Options, name: String) => {
 <p>Token ističe za  10 minuta.</p>
 <p>Srdačan pozdrav,</p>
 <p><strong>Esimaj Tim</strong></p>
-` :
-                `
+`
+
+
+        const mailOptions = {
+            from: emailUsername,
+            to: options.email,
+            subject: options.subject,
+            html: htmlContent,
+        };
+
+        await transporter.sendMail(mailOptions);
+        return true;
+    } catch (error) {
+        console.error(error)
+        return false;
+    }
+
+};
+const sendEmailForVerification = async (options: VerifyEmailOptions, name: String) => {
+    try {
+        const emailUsername: string = process.env.EMAIL_USERNAME!;
+        const emailPassword = process.env.EMAIL_PASSWORD!;
+        const emailPort = process.env.EMAIL_PORT!;
+        const emailHost = process.env.EMAIL_HOST!;
+
+        const font = process.env.FRONTEND_BASE_URL!;
+
+
+        const transporter = nodemailer.createTransport({
+            host: emailHost,
+            port: parseInt(emailPort),
+            secure: false,
+            auth: {
+                user: emailUsername,
+                pass: emailPassword,
+            },
+        });
+
+
+        const verificationUrl = `${process.env.FRONTEND_BASE_URL}/verify-email?token=${options.token}&userId=${options.userId}`;
+
+        const htmlContent =
+
+            `
 <p>Poštovani <strong>${name}</strong>,</p>
 <p>Dobrobrodosli na ESimaj platformu!</p>
-<p>Molimo vas da koristite sljedeći token za verifikovanje mejla:</p>
-<p><span style="font-size: 32px; background-color: #f0f0f0; padding: 5px 10px; border-radius: 4px;">${options.token}</span></p>
+<p>Klikom na <a href="${verificationUrl}">here</a> verifikujte email.</p>
 <p>Token ističe za  10 minuta.</p>
 <p>Srdačan pozdrav,</p>
 <p><strong>Esimaj Tim</strong></p>
@@ -95,5 +143,6 @@ export default {
     hashPassword,
     compare,
     createEmailToken,
-    sendEmail,
+    sendEmailForResetPassword,
+    sendEmailForVerification
 };

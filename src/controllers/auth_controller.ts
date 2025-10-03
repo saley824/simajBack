@@ -58,7 +58,7 @@ const signUp = async (req: Request, res: Response) => {
         userBody.password = hashedPassword;
         const { emailToken, hashEmailToken, tokenExpires } =
             userHelper.createEmailToken();
-        await prisma.user.create({
+        const newUser = await prisma.user.create({
             data: {
                 email: userBody.email,
                 lastName: userBody.lastName,
@@ -72,11 +72,12 @@ const signUp = async (req: Request, res: Response) => {
             },
         });
 
-        await userHelper.sendEmail({
+        await userHelper.sendEmailForVerification({
             email: userBody.email,
             subject: "Iskoristite ovaj token za verifikovanje emaila",
             token: emailToken,
-            isForEmailVerification: false,
+            userId: newUser.id,
+
         },
             userBody.name
         );
@@ -137,11 +138,11 @@ const sendTokenForVerifyingAgain = async (req: Request, res: Response) => {
             }
         })
 
-        await userHelper.sendEmail({
+        await userHelper.sendEmailForVerification({
             email: email,
             subject: "Iskoristite ovaj token za verifikovanje emaila",
             token: emailToken,
-            isForEmailVerification: false,
+            userId: selectedUser.id,
         },
             selectedUser.name
         );
@@ -158,7 +159,7 @@ const sendTokenForVerifyingAgain = async (req: Request, res: Response) => {
 
 const verifyEmail = async (req: Request, res: Response) => {
     try {
-        const { token, email } = req.body;
+        const { token, userId } = req.body;
 
         const hashToken = crypto
             .createHash("sha256")
@@ -168,7 +169,7 @@ const verifyEmail = async (req: Request, res: Response) => {
         const selectedUser = await prisma.user.findFirst(
             {
                 where: {
-                    email: email,
+                    id: userId,
                     emailVerificationToken: hashToken,
                     emailVerificationTokenResetExpires: {
                         gte: new Date()
@@ -326,11 +327,10 @@ const forgotPassword = async (req: Request, res: Response) => {
                 passwordResetExpires: tokenExpires
             }
         })
-        await userHelper.sendEmail({
+        await userHelper.sendEmailForResetPassword({
             email: email,
             subject: "Iskoristite ovaj token za reset šifre",
             token: emailToken,
-            isForEmailVerification: false,
         },
             user.name
         );
