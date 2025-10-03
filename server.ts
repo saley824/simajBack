@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import express, { Request, Response } from "express";
+import cors from "cors";
 import authRouter from "./src/routes/authRoutes";
 import countryRouter from "./src/routes/countryRoutes";
 import regionRouter from "./src/routes/regionRoutes";
@@ -49,6 +50,12 @@ const app = express();
 const port = 3000;
 
 async function main() {
+
+    app.use(cors({
+        origin: 'http://localhost:5173', // your frontend URL
+        methods: ['GET', 'POST', 'PUT', 'DELETE'], // allowed HTTP methods
+        credentials: true // if you need cookies/auth
+    }));
     app.use(express.json());
 
     // Register API routes
