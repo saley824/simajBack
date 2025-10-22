@@ -9,8 +9,12 @@ import errorHelper from "../helpers/error_helper";
 
 import jwt from "jsonwebtoken";
 import { get } from "http";
+// models/User.ts
 
-const signToken = (id: String) => {
+
+
+
+const signToken = (id: String, name: String, lastName: String, username: String, email: String,) => {
     const jwtSecret = process.env.JWT_SECRET;
     const jwtExpires = process.env.JWT_EXPIRES;
     let token = "";
@@ -18,6 +22,12 @@ const signToken = (id: String) => {
         token = jwt.sign(
             {
                 id: id,
+                name: name,
+                lastName: lastName,
+                username: username,
+                email: email,
+
+
             },
             jwtSecret,
             {
@@ -96,7 +106,6 @@ const signUp = async (req: Request, res: Response) => {
 const sendTokenForVerifyingAgain = async (req: Request, res: Response) => {
     try {
         const { email } = req.body;
-
         const selectedUser = await prisma.user.findUnique(
             {
                 where: {
@@ -213,6 +222,8 @@ const verifyEmail = async (req: Request, res: Response) => {
 };
 
 const logOut = async (req: Request, res: Response) => {
+    const secret = crypto.randomBytes(64).toString("hex");
+    console.log(secret);
     const { userId } = req.body;
 
     try {
@@ -238,10 +249,13 @@ const logOut = async (req: Request, res: Response) => {
 
 
 const login = async (req: Request, res: Response) => {
-    const { username, password, fcmToken } = req.body;
-    const user = await prisma.user.findUnique({
+    const { usernameEmail, password, fcmToken } = req.body;
+    const user = await prisma.user.findFirst({
         where: {
-            username: username,
+            OR: [
+                { username: usernameEmail },
+                { email: usernameEmail }
+            ]
         },
         select: {
             id: true,
@@ -290,7 +304,7 @@ const login = async (req: Request, res: Response) => {
         });
         return;
     }
-    const token = signToken(user.id);
+    const token = signToken(user.id, user.name, user.lastName, user.username, user.email,);
     const { password: _, ...userWithoutSensitiveData } = user;
     res.status(200).json({
         success: true,

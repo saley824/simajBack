@@ -119,7 +119,7 @@ model Network {
 model CouponCode {
     id            Int      @id @default(autoincrement())
     code          String   @unique
-    isFree        Boolean
+    isFree        Boolean  @default(false)
     remainingUses Int?
     percentage    Int
     subjectEmail  String

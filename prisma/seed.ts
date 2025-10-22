@@ -20,16 +20,16 @@ async function main() {
     // }
 
 
-    await prisma.review.createMany({
-        data: [
-            { rating: 5, showOnHome: true, name: "Marko", lastName: "Trninic", comment: "Ova aplikacija fenomelna. Svaka cast!" },
-            { rating: 5, showOnHome: true, name: "Aleksandar", lastName: "Obradovic", comment: "Je li moguce da ovako dobro radi?" },
-            { rating: 5, showOnHome: true, name: "Donald", lastName: "Trump", comment: "Kad god idem kod Putina kupujem ovdje net jer im je u Rusiji uzas net.." },
-            { rating: 3, showOnHome: false, name: "Mirko", lastName: "Mirkic", comment: "Onako..." },
-            { rating: 2, showOnHome: false, name: "Marko", lastName: "Baric", comment: "Ne radi mi nesto..." },
+    // await prisma.review.createMany({
+    //     data: [
+    //         { rating: 5, showOnHome: true, name: "Marko", lastName: "Trninic", comment: "Ova aplikacija fenomelna. Svaka cast!" },
+    //         { rating: 5, showOnHome: true, name: "Aleksandar", lastName: "Obradovic", comment: "Je li moguce da ovako dobro radi?" },
+    //         { rating: 5, showOnHome: true, name: "Donald", lastName: "Trump", comment: "Kad god idem kod Putina kupujem ovdje net jer im je u Rusiji uzas net.." },
+    //         { rating: 3, showOnHome: false, name: "Mirko", lastName: "Mirkic", comment: "Onako..." },
+    //         { rating: 2, showOnHome: false, name: "Marko", lastName: "Baric", comment: "Ne radi mi nesto..." },
 
-        ],
-    });
+    //     ],
+    // });
 
     // await prisma.couponCode.createMany({
     //     data: [
@@ -277,21 +277,21 @@ async function main() {
     // });
 
 
-    // await prisma.product.createMany({
-    //     data: [
-    //         { name: "1gb 7 day", duration: 7, durationUnit: "days", amount: 1, amountUnit: "GB", price: 1.25, countryId: 686 },
-    //         { name: "2gb 14 day", duration: 14, durationUnit: "days", amount: 2, amountUnit: "GB", price: 2.5, countryId: 686 },
-    //         { name: "3gb 21 day", duration: 21, durationUnit: "days", amount: 3, amountUnit: "GB", price: 3.75, countryId: 686 },
-    //         { name: "5gb 30 day", duration: 30, durationUnit: "days", amount: 5, amountUnit: "GB", price: 5.00, countryId: 686 },
-    //         { name: "1gb 7 day", duration: 7, durationUnit: "days", amount: 1, amountUnit: "GB", price: 1.25, countryId: 832 },
-    //         { name: "2gb 14 day", duration: 14, durationUnit: "days", amount: 2, amountUnit: "GB", price: 2.50, countryId: 832 },
-    //         { name: "3gb 21 day", duration: 21, durationUnit: "days", amount: 5, amountUnit: "GB", price: 3.75, countryId: 832 },
-    //         { name: "1gb 7 day", duration: 7, durationUnit: "days", amount: 1, amountUnit: "GB", price: 5, regionId: 37 },
-    //         { name: "2gb 14 day", duration: 14, durationUnit: "days", amount: 2, amountUnit: "GB", price: 10, regionId: 37 },
-    //         { name: "3gb 21 day", duration: 21, durationUnit: "days", amount: 5, amountUnit: "GB", price: 15, regionId: 37 },
+    await prisma.product.createMany({
+        data: [
+            { name: "1gb 7 day", duration: 7, durationUnit: "days", amount: 1, amountUnit: "GB", price: 1.25, countryId: 1562 },
+            { name: "2gb 14 day", duration: 14, durationUnit: "days", amount: 2, amountUnit: "GB", price: 2.5, countryId: 1562 },
+            { name: "3gb 21 day", duration: 21, durationUnit: "days", amount: 3, amountUnit: "GB", price: 3.75, countryId: 1562 },
+            { name: "5gb 30 day", duration: 30, durationUnit: "days", amount: 5, amountUnit: "GB", price: 5.00, countryId: 1562 },
+            { name: "1gb 7 day", duration: 7, durationUnit: "days", amount: 1, amountUnit: "GB", price: 1.25, countryId: 1708 },
+            { name: "2gb 14 day", duration: 14, durationUnit: "days", amount: 2, amountUnit: "GB", price: 2.50, countryId: 1708 },
+            { name: "3gb 21 day", duration: 21, durationUnit: "days", amount: 5, amountUnit: "GB", price: 3.75, countryId: 1708 },
+            { name: "1gb 7 day", duration: 7, durationUnit: "days", amount: 1, amountUnit: "GB", price: 5, regionId: 50 },
+            { name: "2gb 14 day", duration: 14, durationUnit: "days", amount: 2, amountUnit: "GB", price: 10, regionId: 50 },
+            { name: "3gb 21 day", duration: 21, durationUnit: "days", amount: 5, amountUnit: "GB", price: 15, regionId: 50 },
 
-    //     ],
-    // });
+        ],
+    });
 }
 
 main()

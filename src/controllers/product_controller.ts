@@ -9,7 +9,13 @@ const getAllProducts = async (req: Request, res: Response) => {
     const regionId = req.query.regionId ? Number(req.query.regionId) : -1;
 
 
+
     try {
+        const country = await prisma.country.findFirst({
+            where: {
+                id: countryId
+            }
+        });
         const products = await prisma.product.findMany({
             where: {
                 OR: [
@@ -24,6 +30,7 @@ const getAllProducts = async (req: Request, res: Response) => {
         res.status(200).json({
             success: true,
             data: {
+                country: country,
                 products: products,
 
             },
