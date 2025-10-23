@@ -88,14 +88,15 @@ model RegionSupportedCountry {
 }
 
 model Product {
-    id           Int     @id @default(autoincrement())
-    name         String
-    duration     Int
-    durationUnit String
-    amount       Int?
-    amountUnit   String?
-    imsiProfile  String?
-    price        Float?
+    id              Int     @id @default(autoincrement())
+    name            String
+    duration        Int
+    durationUnit    String
+    amount          Int?
+    amountUnit      String?
+    imsiProfile     String?
+    price           Float?
+    discountPercent Float? // null means no discount
 
     // Foreign keys
     regionId  Int?

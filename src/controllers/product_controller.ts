@@ -2,9 +2,12 @@ import { NextFunction, Request, Response } from "express";
 
 import { prisma } from "../../server";
 
+import productsHelper from "../helpers/product_helper";
 
 
-const getAllProducts = async (req: Request, res: Response) => {
+
+
+const getAllProductsForCountry = async (req: Request, res: Response) => {
     const countryId = req.query.countryId ? Number(req.query.countryId) : -1;
     const regionId = req.query.regionId ? Number(req.query.regionId) : -1;
 
@@ -20,18 +23,21 @@ const getAllProducts = async (req: Request, res: Response) => {
             where: {
                 OR: [
                     { countryId: countryId },
-                    { regionId: regionId }
+                    // { regionId: regionId }
                 ]
             },
             orderBy: {
                 amount: "asc"
             }
         });
+
+        const productsResponse = products.map(productsHelper.formatProduct);
+
         res.status(200).json({
             success: true,
             data: {
                 country: country,
-                products: products,
+                products: productsResponse,
 
             },
         });
@@ -97,7 +103,7 @@ const getCouponCode = async (req: Request, res: Response) => {
 
 
 export default {
-    getAllProducts,
+    getAllProducts: getAllProductsForCountry,
     getProductById
 };
 

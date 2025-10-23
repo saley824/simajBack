@@ -8,6 +8,7 @@ import productRouter from "./src/routes/product_routes";
 import transactionRouter from "./src/routes/transaction_router";
 import reviewsRouter from "./src/routes/reviewRoutes";
 import contactFormRouter from "./src/routes/contactFormRoutes";
+import userRouter from "./src/routes/userRoutes";
 
 
 
@@ -68,6 +69,7 @@ async function main() {
     app.use(`${baseUrl}/transactions`, transactionRouter);
     app.use(`${baseUrl}/reviews`, reviewsRouter);
     app.use(`${baseUrl}/contactForm`, contactFormRouter);
+    app.use(`${baseUrl}/user`, userRouter);
 
 
     /// this make problem, check it out

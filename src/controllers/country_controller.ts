@@ -40,7 +40,6 @@ const getAllCountries = async (req: Request, res: Response) => {
                 }
             }
         }
-
         // PAGINATION
         const skip = (page - 1) * perPage;
         const take = perPage + 1;
