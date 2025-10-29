@@ -1,5 +1,6 @@
 // import { prisma } from "../script";
 
+
 const { PrismaClient } = require('@prisma/client');
 
 const prisma = new PrismaClient();
@@ -7,7 +8,6 @@ const prisma = new PrismaClient();
 
 
 async function main() {
-
     // model CouponCode {
     // id           Int @id @default (autoincrement())
     // code         String @unique
@@ -31,13 +31,7 @@ async function main() {
     //     ],
     // });
 
-    // await prisma.couponCode.createMany({
-    //     data: [
-    //         { code: "tropic", percentage: 10, subjectEmail: "tropic@example.com", subjectName: "Tropic Plan" },
-    //         { code: "bonbon", percentage: 20, subjectEmail: "bonbon@example.com", subjectName: "Bonbon Plan" }
 
-    //     ],
-    // });
 
     // await prisma.country.createMany({
     //     data: [
@@ -277,21 +271,32 @@ async function main() {
     // });
 
 
-    await prisma.product.createMany({
-        data: [
-            { name: "1gb 7 day", duration: 7, durationUnit: "days", amount: 1, amountUnit: "GB", price: 1.25, countryId: 1562 },
-            { name: "2gb 14 day", duration: 14, durationUnit: "days", amount: 2, amountUnit: "GB", price: 2.5, countryId: 1562 },
-            { name: "3gb 21 day", duration: 21, durationUnit: "days", amount: 3, amountUnit: "GB", price: 3.75, countryId: 1562 },
-            { name: "5gb 30 day", duration: 30, durationUnit: "days", amount: 5, amountUnit: "GB", price: 5.00, countryId: 1562 },
-            { name: "1gb 7 day", duration: 7, durationUnit: "days", amount: 1, amountUnit: "GB", price: 1.25, countryId: 1708 },
-            { name: "2gb 14 day", duration: 14, durationUnit: "days", amount: 2, amountUnit: "GB", price: 2.50, countryId: 1708 },
-            { name: "3gb 21 day", duration: 21, durationUnit: "days", amount: 5, amountUnit: "GB", price: 3.75, countryId: 1708 },
-            { name: "1gb 7 day", duration: 7, durationUnit: "days", amount: 1, amountUnit: "GB", price: 5, regionId: 50 },
-            { name: "2gb 14 day", duration: 14, durationUnit: "days", amount: 2, amountUnit: "GB", price: 10, regionId: 50 },
-            { name: "3gb 21 day", duration: 21, durationUnit: "days", amount: 5, amountUnit: "GB", price: 15, regionId: 50 },
+    // await prisma.product.createMany({
+    //     data: [
+    //         { name: "1gb 7 day", duration: 7, durationUnit: "days", amount: 1, amountUnit: "GB", basePrice: 1.25, countryId: 1562 },
+    //         { name: "2gb 14 day", duration: 14, durationUnit: "days", amount: 2, amountUnit: "GB", basePrice: 2.5, countryId: 1562 },
+    //         { name: "3gb 21 day", duration: 21, durationUnit: "days", amount: 3, amountUnit: "GB", basePrice: 3.75, countryId: 1562 },
+    //         { name: "5gb 30 day", duration: 30, durationUnit: "days", amount: 5, amountUnit: "GB", basePrice: 5.00, countryId: 1562 },
+    //         { name: "1gb 7 day", duration: 7, durationUnit: "days", amount: 1, amountUnit: "GB", basePrice: 1.25, countryId: 1708 },
+    //         { name: "2gb 14 day", duration: 14, durationUnit: "days", amount: 2, amountUnit: "GB", basePrice: 2.50, countryId: 1708 },
+    //         { name: "3gb 21 day", duration: 21, durationUnit: "days", amount: 5, amountUnit: "GB", basePrice: 3.75, countryId: 1708 },
+    //         { name: "1gb 7 day", duration: 7, durationUnit: "days", amount: 1, amountUnit: "GB", basePrice: 5, regionId: 50 },
+    //         { name: "2gb 14 day", duration: 14, durationUnit: "days", amount: 2, amountUnit: "GB", basePrice: 10, regionId: 50 },
+    //         { name: "3gb 21 day", duration: 21, durationUnit: "days", amount: 5, amountUnit: "GB", basePrice: 15, regionId: 50 },
 
-        ],
-    });
+    //     ],
+    // });
+
+    // await prisma.couponCode.createMany({
+    //     data: [
+    //         { code: "all", countryPercentage: 10, regionPercentage: 10, subjectEmail: "tropic@example.com", subjectName: "All", couponType: "All" },
+    //         { code: "country10", countryPercentage: 10, regionPercentage: null, subjectEmail: "tropic@example.com", subjectName: "Only country", couponType: "OnlyCountry" },
+    //         { code: "countryWith10", countryPercentage: 10, regionPercentage: null, subjectEmail: "tropic@example.com", subjectName: "Only country without discount", couponType: "OnlyCountryWithoutDiscount" },
+    //         { code: "custom", countryPercentage: 20, regionPercentage: 10, subjectEmail: "tropic@example.com", subjectName: "Custom", couponType: "CustomPercentageCountryRegion" },
+    //         { code: "free", subjectEmail: "tropic@example.com", subjectName: "Free", couponType: "Free" },
+
+    //     ],
+    // });
 }
 
 main()
