@@ -51,7 +51,7 @@ const getCheckoutInfo = async (req: Request, res: Response) => {
             productDuration: productRes.duration,
             DurationUnit: "days",
             productBasePrice: product.basePrice,
-            productFinalPrice: product.final,
+            productFinalPrice: product.finalPrice,
             productDiscountPercentage: product.discountPercent,
             couponCodePercentage: null,
             isPromoCodeNotApplicable: false,
@@ -72,7 +72,7 @@ const getCheckoutInfo = async (req: Request, res: Response) => {
 
 
 
-        if (couponCode != null) {
+        if (couponCode != null && couponCode != "") {
             const coupon = await prisma.couponCode.findUnique({
                 where: {
                     code: couponCode
@@ -94,10 +94,13 @@ const getCheckoutInfo = async (req: Request, res: Response) => {
                         if (product.countryId != null && coupon.countryPercentage != null && coupon.countryPercentage > 0) {
                             checkoutResponse.productFinalPrice = productsHelper.getFinalPrice(product.finalPrice, coupon.countryPercentage)
                             checkoutResponse.couponCodePercentage = coupon.countryPercentage;
+                            checkoutResponse.couponName = coupon.subjectName;
                         }
                         else if (product.regionId != null && coupon.regionPercentage != null && coupon.regionPercentage > 0) {
                             checkoutResponse.productFinalPrice = productsHelper.getFinalPrice(product.finalPrice, coupon.regionPercentage)
                             checkoutResponse.couponCodePercentage = coupon.regionPercentage;
+                            checkoutResponse.couponName = coupon.subjectName;
+
                         }
                         else {
                             checkoutResponse.isPromoCodeNotApplicable = true;
@@ -109,6 +112,7 @@ const getCheckoutInfo = async (req: Request, res: Response) => {
                             checkoutResponse.productFinalPrice =
                                 productsHelper.getFinalPrice(product.finalPrice, coupon.countryPercentage ?? 1)
                             checkoutResponse.couponCodePercentage = coupon.countryPercentage;
+                            checkoutResponse.couponName = coupon.subjectName;
                         }
                         else {
                             checkoutResponse.isPromoCodeNotApplicable = true;

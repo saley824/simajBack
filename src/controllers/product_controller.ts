@@ -98,7 +98,6 @@ const getCouponCode = async (req: Request, res: Response) => {
 
         });
     }
-
 }
 
 
