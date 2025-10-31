@@ -62,6 +62,8 @@ async function main() {
     // Register API routes
 
     const baseUrl: string = "/api/v1";
+
+
     app.use(`${baseUrl}/auth`, authRouter);
     app.use(`${baseUrl}/countries`, countryRouter);
     app.use(`${baseUrl}/regions`, regionRouter);
@@ -79,7 +81,7 @@ async function main() {
     // });
 
     app.listen(process.env.PORT, () => {
-        console.log(`Server is listening on port `);
+        console.log(`Server is listening on ${process.env.PORT} `);
     });
 }
 
