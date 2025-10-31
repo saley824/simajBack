@@ -49,7 +49,6 @@ export const prisma = new PrismaClient();
 // import app from "./app";
 const app = express();
 
-const port = 3000;
 
 async function main() {
 

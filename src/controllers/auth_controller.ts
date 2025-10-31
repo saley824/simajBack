@@ -425,6 +425,8 @@ const changePassword = async (req: Request, res: Response) => {
 
 const getAllUsers = async (req: Request, res: Response) => {
 
+    console.log("TEEEEEEEEEEST")
+
     try {
         let users = await prisma.user.findMany();
         res.status(200).json({
