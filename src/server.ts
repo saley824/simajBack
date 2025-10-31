@@ -1,15 +1,15 @@
 import { PrismaClient } from "@prisma/client";
 import express, { Request, Response } from "express";
 import cors from "cors";
-import authRouter from "./src/routes/authRoutes";
-import countryRouter from "./src/routes/countryRoutes";
-import regionRouter from "./src/routes/regionRoutes";
-import productRouter from "./src/routes/product_routes";
-import transactionRouter from "./src/routes/transaction_router";
-import reviewsRouter from "./src/routes/reviewRoutes";
-import contactFormRouter from "./src/routes/contactFormRoutes";
-import userRouter from "./src/routes/userRoutes";
-import checkoutRoutes from "./src/routes/checkoutRoutes";
+import authRouter from "./routes/authRoutes";
+import countryRouter from "./routes/countryRoutes";
+import regionRouter from "./routes/regionRoutes";
+import productRouter from "./routes/product_routes";
+import transactionRouter from "./routes/transaction_router";
+import reviewsRouter from "./routes/reviewRoutes";
+import contactFormRouter from "./routes/contactFormRoutes";
+import userRouter from "./routes/userRoutes";
+import checkoutRoutes from "./routes/checkoutRoutes";
 
 
 

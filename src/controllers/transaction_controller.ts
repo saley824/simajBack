@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 
-import { prisma } from "../../server";
+import { prisma } from "../server";
 
 
 const createNewTransaction = async (req: Request, res: Response) => {

@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 
-import { prisma } from "../../server";
+import { prisma } from "../server";
 import { userSchemaCreateDto } from "../models/validation_models/user-schema";
 import { PublicUserDto } from "../models/dto_models/public_user_dto";
 import crypto from "crypto"

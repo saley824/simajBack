@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 
-import { prisma } from "../../server";
+import { prisma } from "../server";
 
 import productsHelper from "../helpers/product_helper";
 

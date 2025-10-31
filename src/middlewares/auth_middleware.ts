@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { promisify } from "util";
-import { prisma } from "../../server";
+import { prisma } from "../server";
 
 export const checkToken = async (
     req: Request,

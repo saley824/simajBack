@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 
 
 
-const handleError = async (res: Response, message: Text, statusCode: number, success: boolean) => {
+const handleError = async (res: Response, message: string, statusCode: number, success: boolean) => {
   res.status(statusCode).json({
     success: success,
     message: "message",

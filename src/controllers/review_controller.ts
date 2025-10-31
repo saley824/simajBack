@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 
-import { prisma } from "../../server";
+import { prisma } from "../server";
 
 import { reviewSchemaCreateDto } from "../models/validation_models/review-schema";
 
