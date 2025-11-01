@@ -80,8 +80,10 @@ async function main() {
     //     res.status(404).json({ error: `Route ${req.originalUrl} not found` });
     // });
 
-    app.listen(process.env.PORT, () => {
-        console.log(`Server is listening on ${process.env.PORT} `);
+    const port = Number(process.env.PORT) || 8080;
+
+    app.listen(port, "0.0.0.0", () => {
+        console.log(`✅ Server is listening on port ${port}`);
     });
 }
 
