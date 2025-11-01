@@ -271,21 +271,21 @@ async function main() {
     // });
 
 
-    // await prisma.product.createMany({
-    //     data: [
-    //         { name: "1gb 7 day", duration: 7, durationUnit: "days", amount: 1, amountUnit: "GB", basePrice: 1.25, countryId: 1562 },
-    //         { name: "2gb 14 day", duration: 14, durationUnit: "days", amount: 2, amountUnit: "GB", basePrice: 2.5, countryId: 1562 },
-    //         { name: "3gb 21 day", duration: 21, durationUnit: "days", amount: 3, amountUnit: "GB", basePrice: 3.75, countryId: 1562 },
-    //         { name: "5gb 30 day", duration: 30, durationUnit: "days", amount: 5, amountUnit: "GB", basePrice: 5.00, countryId: 1562 },
-    //         { name: "1gb 7 day", duration: 7, durationUnit: "days", amount: 1, amountUnit: "GB", basePrice: 1.25, countryId: 1708 },
-    //         { name: "2gb 14 day", duration: 14, durationUnit: "days", amount: 2, amountUnit: "GB", basePrice: 2.50, countryId: 1708 },
-    //         { name: "3gb 21 day", duration: 21, durationUnit: "days", amount: 5, amountUnit: "GB", basePrice: 3.75, countryId: 1708 },
-    //         { name: "1gb 7 day", duration: 7, durationUnit: "days", amount: 1, amountUnit: "GB", basePrice: 5, regionId: 50 },
-    //         { name: "2gb 14 day", duration: 14, durationUnit: "days", amount: 2, amountUnit: "GB", basePrice: 10, regionId: 50 },
-    //         { name: "3gb 21 day", duration: 21, durationUnit: "days", amount: 5, amountUnit: "GB", basePrice: 15, regionId: 50 },
+    await prisma.product.createMany({
+        data: [
+            { name: "1gb 7 day", duration: 7, durationUnit: "days", amount: 1, amountUnit: "GB", basePrice: 1.25, countryId: 28 },
+            { name: "2gb 14 day", duration: 14, durationUnit: "days", amount: 2, amountUnit: "GB", basePrice: 2.5, countryId: 28 },
+            { name: "3gb 21 day", duration: 21, durationUnit: "days", amount: 3, amountUnit: "GB", basePrice: 3.75, countryId: 28 },
+            { name: "5gb 30 day", duration: 30, durationUnit: "days", amount: 5, amountUnit: "GB", basePrice: 5.00, countryId: 28 },
+            { name: "1gb 7 day", duration: 7, durationUnit: "days", amount: 1, amountUnit: "GB", basePrice: 1.25, countryId: 27 },
+            { name: "2gb 14 day", duration: 14, durationUnit: "days", amount: 2, amountUnit: "GB", basePrice: 2.50, countryId: 27 },
+            { name: "3gb 21 day", duration: 21, durationUnit: "days", amount: 5, amountUnit: "GB", basePrice: 3.75, countryId: 27 },
+            // { name: "1gb 7 day", duration: 7, durationUnit: "days", amount: 1, amountUnit: "GB", basePrice: 5, regionId: 50 },
+            // { name: "2gb 14 day", duration: 14, durationUnit: "days", amount: 2, amountUnit: "GB", basePrice: 10, regionId: 50 },
+            // { name: "3gb 21 day", duration: 21, durationUnit: "days", amount: 5, amountUnit: "GB", basePrice: 15, regionId: 50 },
 
-    //     ],
-    // });
+        ],
+    });
 
     // await prisma.couponCode.createMany({
     //     data: [

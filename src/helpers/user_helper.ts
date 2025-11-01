@@ -22,7 +22,6 @@ const sendEmailForResetPassword = async (options: ResetPasswordOptions, name: St
         const emailPort = process.env.EMAIL_PORT!;
         const emailHost = process.env.EMAIL_HOST!;
 
-        const font = process.env.FRONTEND_BASE_URL!;
 
 
         const transporter = nodemailer.createTransport({

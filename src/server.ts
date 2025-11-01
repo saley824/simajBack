@@ -53,7 +53,7 @@ const app = express();
 async function main() {
 
     app.use(cors({
-        origin: 'http://localhost:5173', // your frontend URL
+        origin: process.env.FRONTEND_BASE_URL, // your frontend URL
         methods: ['GET', 'POST', 'PUT', 'DELETE'], // allowed HTTP methods
         credentials: true // if you need cookies/auth
     }));
