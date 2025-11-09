@@ -100,71 +100,71 @@ main()
 
 
 
-        const countries = await prisma.country.findMany({
-            // orderBy: sort,
-            // where: filterObject
-        });
+        // const countries = await prisma.country.findMany({
+        //     // orderBy: sort,
+        //     // where: filterObject
+        // });
 
-        let countryNames1 = countries.map(c => c.isoCode);
-        let countryNames2 = countries.map(c => c.isoCode);
-
-
-        let countriesThatIDontHave: string[] = [];
-        let countriesThatTheyDontHave: string[] = [];
+        // let countryNames1 = countries.map(c => c.isoCode);
+        // let countryNames2 = countries.map(c => c.isoCode);
 
 
-        let lastId = "";
+        // let countriesThatIDontHave: string[] = [];
+        // let countriesThatTheyDontHave: string[] = [];
 
 
+        // let lastId = "";
 
 
 
-        for (let index = 0; index < 14; index++) {
-            console.log(index)
-            const res = await axios.post(
-                "https://api.esimfx.com/product/api/v1/get_products",
-                {
-                    "page_start": {
-                        "id": lastId
-                    },
-                    "page_size": "99",
-                    "countries": "",
-                    "region": ""
-                },
-                {
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyZXNlbGxlcl9pZCI6Ijk3M2UwMWM0LWZhNjMtNGIzMS04NTc0LTU1YmMyZWI3ZDA0ZSIsInZlcnNpb24iOjEsImVwb2NoIjoxNzYyNjUwMTM4MTUyLCJjaGFubmVsX2lkIjoicmVzZWxsZXIiLCJpYXQiOjE3NjI2NTAxMzgsImV4cCI6MTc2MjY1MzczOH0.U1uAmvkTta4Mv_pKEr7zGJ2xUnn1C1rCkd3FZKqhnAU", // optional
-                    }
-                }
-            );
-
-            if (index != 13) {
-                lastId = res.data.data.last_evaluated_key.id;
-
-            }
-
-            console.log(lastId)
-
-            for (let index = 0; index < 99; index++) {
-                try {
-                    if (res.data.data.products[index].coverage.length == 1) {
-                        const newCode = res.data.data.products[index].coverage[0]
-                        if (countryNames1.includes(newCode)) {
-                            countryNames1 = countryNames1.filter(item => item !== newCode);
-                        }
-                    }
-
-                } catch (error) {
-
-                }
 
 
-            }
+        // for (let index = 0; index < 14; index++) {
+        //     console.log(index)
+        //     const res = await axios.post(
+        //         "https://api.esimfx.com/product/api/v1/get_products",
+        //         {
+        //             "page_start": {
+        //                 "id": lastId
+        //             },
+        //             "page_size": "99",
+        //             "countries": "",
+        //             "region": ""
+        //         },
+        //         {
+        //             headers: {
+        //                 "Content-Type": "application/json",
+        //                 "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyZXNlbGxlcl9pZCI6Ijk3M2UwMWM0LWZhNjMtNGIzMS04NTc0LTU1YmMyZWI3ZDA0ZSIsInZlcnNpb24iOjEsImVwb2NoIjoxNzYyNjUwMTM4MTUyLCJjaGFubmVsX2lkIjoicmVzZWxsZXIiLCJpYXQiOjE3NjI2NTAxMzgsImV4cCI6MTc2MjY1MzczOH0.U1uAmvkTta4Mv_pKEr7zGJ2xUnn1C1rCkd3FZKqhnAU", // optional
+        //             }
+        //         }
+        //     );
 
-        }
+        //     if (index != 13) {
+        //         lastId = res.data.data.last_evaluated_key.id;
 
-        console.log(countriesThatIDontHave)
+        //     }
+
+        //     console.log(lastId)
+
+        //     for (let index = 0; index < 99; index++) {
+        //         try {
+        //             if (res.data.data.products[index].coverage.length == 1) {
+        //                 const newCode = res.data.data.products[index].coverage[0]
+        //                 if (countryNames1.includes(newCode)) {
+        //                     countryNames1 = countryNames1.filter(item => item !== newCode);
+        //                 }
+        //             }
+
+        //         } catch (error) {
+
+        //         }
+
+
+        //     }
+
+        // }
+
+        // console.log(countriesThatIDontHave)
 
 
     })
