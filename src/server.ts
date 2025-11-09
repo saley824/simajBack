@@ -12,6 +12,7 @@ import reviewsRouter from "./routes/reviewRoutes";
 import contactFormRouter from "./routes/contactFormRoutes";
 import userRouter from "./routes/userRoutes";
 import checkoutRoutes from "./routes/checkoutRoutes";
+import { date } from "yup";
 
 
 
@@ -98,9 +99,102 @@ main()
     .then(async () => {
         await prisma.$connect();
 
+        // const countries = await prisma.country.findMany({
+        //     // orderBy: sort,
+        //     // where: filterObject
+        // });
+
+        // let countryNames1 = countries.map(c => c.isoCode);
+        // let countryNames2 = countries.map(c => c.isoCode);
+
+
+        // let countriesThatIDontHave: string[] = [];
+        // let countriesThatTheyDontHave: string[] = [];
+
+
+        let lastId = "";
 
 
 
+
+
+        for (let index = 0; index < 1; index++) {
+            console.log(index)
+            const res = await axios.post(
+                "https://api.esimfx.com/product/api/v1/get_products",
+                {
+                    "page_start": {
+                        "id": lastId
+                    },
+                    "page_size": "99",
+                    "countries": "",
+                    "region": ""
+                },
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyZXNlbGxlcl9pZCI6Ijk3M2UwMWM0LWZhNjMtNGIzMS04NTc0LTU1YmMyZWI3ZDA0ZSIsInZlcnNpb24iOjEsImVwb2NoIjoxNzYyNzE3MDEwNjc3LCJjaGFubmVsX2lkIjoicmVzZWxsZXIiLCJpYXQiOjE3NjI3MTcwMTAsImV4cCI6MTc2MjcyMDYxMH0.lwCJvfhS521AbayIDGvL_yA95kcoQb9f5UxLAkfgWbE", // optional
+                    }
+                }
+            );
+
+            if (index != 13) {
+                lastId = res.data.data.last_evaluated_key.id;
+
+            }
+
+            console.log(lastId)
+
+            for (let index = 0; index < 99; index++) {
+                try {
+                    const product = res.data.data.products[index]
+                    const network = product.networks[0]
+                    if (product.coverage.length == 1) {
+                        const newCode = product.coverage[0]
+                        const country = await prisma.country.findFirst({
+                            where: {
+                                isoCode: newCode
+                            }
+                        });
+                        await prisma.product.create(
+                            {
+                                data: {
+                                    id: product.id,
+                                    name: product.name,
+                                    duration: product.duration,
+                                    durationUnit: product.duration_unit,
+                                    amount: product.amount,
+                                    amountUnit: product.amount_unit,
+                                    imsiProfile: product.imsi_profile,
+                                    countryId: country?.id,
+                                    originalPrice: product.price,
+                                    sellingPrice: product.price,
+                                }
+                            }
+                        )
+                        await prisma.network.create(
+                            {
+                                data: {
+                                    mccmnc: network.mccmnc,
+                                    name: network.name,
+                                    speed: network.speed,
+                                    country_iso: network.country_iso,
+                                    productId: product.id,
+
+                                }
+                            }
+                        )
+
+                    }
+
+                } catch (error) {
+                    console.log(error)
+                }
+
+
+            }
+
+        }
 
     })
     .catch(async (e) => {

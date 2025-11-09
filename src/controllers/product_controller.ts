@@ -51,7 +51,7 @@ const getAllProductsForCountry = async (req: Request, res: Response) => {
 
 }
 const getProductById = async (req: Request, res: Response) => {
-    const productId = req.params.id ? Number(req.params.id) : -1;
+    const productId = req.params.id;
     try {
         const product = await prisma.product.findFirst({
             where: {
@@ -76,7 +76,7 @@ const getProductById = async (req: Request, res: Response) => {
 
 }
 const getCouponCode = async (req: Request, res: Response) => {
-    const productId = req.params.id ? Number(req.params.id) : -1;
+    const productId = req.params.id;
     try {
         const product = await prisma.product.findFirst({
             where: {

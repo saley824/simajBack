@@ -85,14 +85,15 @@ model RegionSupportedCountry {
 }
 
 model Product {
-    id              Int     @id @default(autoincrement())
+    id              String  @id
     name            String
     duration        Int
     durationUnit    String
     amount          Int?
     amountUnit      String?
     imsiProfile     String?
-    basePrice       Float?
+    originalPrice   Float?
+    sellingPrice    Float?
     discountPercent Float? // null means no discount
 
     // Foreign keys
@@ -107,11 +108,13 @@ model Product {
 }
 
 model Network {
-    id        Int    @id @default(autoincrement())
-    name      String
-    productId Int
-
-    product Product @relation(fields: [productId], references: [id])
+    id          Int     @id @default(autoincrement())
+    mccmnc      String
+    name        String
+    speed       String
+    country_iso String
+    productId   String
+    product     Product @relation(fields: [productId], references: [id])
 }
 
 model CouponCode {
@@ -134,7 +137,7 @@ model Transaction {
     id                Int               @id @default(autoincrement())
     userId            String
     couponCodeId      Int?
-    productId         Int
+    productId         String
     TransactionStatus TransactionStatus @default(Started)
 
     user       User        @relation(fields: [userId], references: [id])
