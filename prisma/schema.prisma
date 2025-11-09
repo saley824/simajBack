@@ -4,6 +4,7 @@
 // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
+// npx prisma migrate deploy  
 generator client {
     provider   = "prisma-client-js"
     engineType = "library"
@@ -53,36 +54,24 @@ model User {
 }
 
 model Country {
-    id         Int     @id @default(autoincrement())
-    name       String
-    mcc        String
-    isoCode    String
-    region     String
-    keywords   String?
-    pricePerGB Float
-
-    supportedProducts ProductSupportedCountry[]
-    supportedRegions  RegionSupportedCountry[]
-    Product           Product[]
+    id               Int                      @id @default(autoincrement())
+    displayNameEn    String
+    displayNameSr    String
+    mcc              String
+    isoCode          String
+    keywords         String?
+    supportedRegions RegionSupportedCountry[]
+    Product          Product[]
 }
 
 model Region {
-    id       Int     @id @default(autoincrement())
-    name     String
-    code     String
-    keywords String?
-
+    id                 Int                      @id @default(autoincrement())
+    displayNameEn      String
+    displayNameSr      String
+    code               String
+    keywords           String?
     supportedCountries RegionSupportedCountry[]
     Product            Product[]
-}
-
-model ProductSupportedCountry {
-    countryId Int
-    productId Int
-
-    country Country @relation(fields: [countryId], references: [id])
-
-    @@id([countryId, productId])
 }
 
 model RegionSupportedCountry {

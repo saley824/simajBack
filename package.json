@@ -10,8 +10,9 @@
     "dev": "nodemon server.ts",
     "build": "tsc",
     "start": "node dist/server.js",
+    "start_nodemon": "nodemon dist/server.js",
     "prisma:migrate": "prisma migrate deploy",
-    "prisma:generate": "prisma generate"    
+    "prisma:generate": "prisma generate"
   },
   "keywords": [],
   "author": "",
@@ -20,6 +21,7 @@
   "dependencies": {
     "@prisma/client": "^6.13.0",
     "argon2": "^0.43.1",
+    "axios": "^1.13.2",
     "cors": "^2.8.5",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",

@@ -1,9 +1,11 @@
 import { Request, Response } from "express";
 import { prisma } from "../server";
 import globalCommonHelper from "../helpers/global_common_helper";
+import { RegionDto } from "../models/dto_models/region_dto";
 
 const getAllRegions = async (req: Request, res: Response) => {
     const searchText = req.query.searchText?.toString() || "";
+    const lang = req.headers["accept-language"] || "en";
     try {
         const regions = await prisma.region.findMany({
         });
@@ -14,7 +16,7 @@ const getAllRegions = async (req: Request, res: Response) => {
         /// Searching based on name and keywords
         for (const region of regions) {
             //-------------------------searching regions by search text-------------------------
-            if (region.name.toLowerCase().includes(searchText.toLowerCase())) {
+            if (region.displayNameEn.toLowerCase().includes(searchText.toLowerCase()) || region.displayNameSr.toLowerCase().includes(searchText.toLowerCase())) {
                 filteredRegions.push(region);
             }
             else {
@@ -34,7 +36,7 @@ const getAllRegions = async (req: Request, res: Response) => {
                 });
 
                 for (const country of countries) {
-                    if (country.name.toLowerCase().includes(searchText.toLowerCase())) {
+                    if (country.displayNameEn.toLowerCase().includes(searchText.toLowerCase()) || country.displayNameSr.toLowerCase().includes(searchText.toLowerCase())) {
                         filteredRegions.push(region);
                     }
                     else if (country.keywords != null) {
@@ -48,10 +50,24 @@ const getAllRegions = async (req: Request, res: Response) => {
                 }
             }
         }
+        let localizedResult: RegionDto[] = [];
+
+        filteredRegions.map(c => {
+            if (lang == "en") {
+                localizedResult.push(
+                    {
+                        id: c.id,
+                        name: lang == "en" ? c.displayNameEn : c.displayNameSr,
+                        code: c.code,
+                    }
+                )
+            }
+        });
+
         res.status(200).json({
             success: true,
             data: {
-                regions: filteredRegions,
+                regions: localizedResult,
 
             },
         });

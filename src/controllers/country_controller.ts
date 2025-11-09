@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { prisma } from "../server";
 import globalCommonHelper from "../helpers/global_common_helper";
+import { CountryDto } from "../models/dto_models/country_dto";
 
 
 
@@ -15,6 +16,9 @@ const getAllCountries = async (req: Request, res: Response) => {
     const perPage = req.query.perPage ? Number(req.query.perPage) : 10;
     const searchText = req.query.searchText?.toString() || "";
 
+    const lang = req.headers["accept-language"] || "en";
+
+
 
 
 
@@ -28,7 +32,7 @@ const getAllCountries = async (req: Request, res: Response) => {
 
         /// Searching based on name and keywords
         for (const country of countries) {
-            if (country.name.toLowerCase().includes(searchText.toLowerCase())) {
+            if (country.displayNameEn.toLowerCase().includes(searchText.toLowerCase()) || country.displayNameSr.toLowerCase().includes(searchText.toLowerCase())) {
                 filteredCountries.push(country);
             }
             else if (country.keywords != null) {
@@ -46,10 +50,28 @@ const getAllCountries = async (req: Request, res: Response) => {
         const result = filteredCountries.slice(skip, skip + take);
         let hasNext: boolean = result.length > perPage;
 
+
+        let localizedResult: CountryDto[] = [];
+
+        result.map(c => {
+            if (lang == "en") {
+                localizedResult.push(
+                    {
+                        id: c.id,
+                        name: lang == "en" ? c.displayNameEn : c.displayNameSr,
+                        isoCode: c.isoCode,
+                        mcc: c.mcc
+
+                    }
+                )
+            }
+        });
+
+
         res.status(200).json({
             success: true,
             data: {
-                countries: result,
+                countries: localizedResult,
                 hasNext: hasNext
             },
         });
