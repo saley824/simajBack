@@ -50,7 +50,7 @@ const getCheckoutInfo = async (req: Request, res: Response) => {
             productPlanName: product.name,
             productDuration: productRes.duration,
             DurationUnit: "days",
-            productBasePrice: product.basePrice,
+            productBasePrice: product.sellingPrice,
             productFinalPrice: product.finalPrice,
             productDiscountPercentage: product.discountPercent,
             couponCodePercentage: null,
@@ -132,7 +132,7 @@ const getCheckoutInfo = async (req: Request, res: Response) => {
                         }
                         else {
                             checkoutResponse.productFinalPrice =
-                                productsHelper.getFinalPrice(product.basePrice, coupon.countryPercentage ?? 1)
+                                productsHelper.getFinalPrice(product.sellingPrice, coupon.countryPercentage ?? 1)
                         }
                         break;
 
