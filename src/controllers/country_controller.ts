@@ -54,17 +54,16 @@ const getAllCountries = async (req: Request, res: Response) => {
         let localizedResult: CountryDto[] = [];
 
         result.map(c => {
-            if (lang == "en") {
-                localizedResult.push(
-                    {
-                        id: c.id,
-                        name: lang == "en" ? c.displayNameEn : c.displayNameSr,
-                        isoCode: c.isoCode,
-                        mcc: c.mcc
+            localizedResult.push(
+                {
+                    id: c.id,
+                    name: lang == "en" ? c.displayNameEn : c.displayNameSr,
+                    isoCode: c.isoCode,
+                    mcc: c.mcc
 
-                    }
-                )
-            }
+                }
+            )
+
         });
 
 
