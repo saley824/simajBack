@@ -9,6 +9,7 @@ import { CouponType } from "@prisma/client";
 interface CheckoutResponse {
     productPlanName: string;
     productDuration: number;
+    amount: number;
     DurationUnit: string;
     productBasePrice: number;
     productFinalPrice: number;
@@ -48,7 +49,8 @@ const getCheckoutInfo = async (req: Request, res: Response) => {
 
         let checkoutResponse: CheckoutResponse = {
             productPlanName: product.name,
-            productDuration: productRes.duration,
+            productDuration: product.duration,
+            amount: product.amount,
             DurationUnit: "days",
             productBasePrice: product.sellingPrice,
             productFinalPrice: product.finalPrice,
