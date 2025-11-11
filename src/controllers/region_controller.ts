@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { prisma } from "../server";
-import globalCommonHelper from "../helpers/global_common_helper";
+import convertHelper from "../helpers/convert_helpers";
 import { RegionDto } from "../models/dto_models/region_dto";
 
 const getAllRegions = async (req: Request, res: Response) => {
@@ -8,6 +8,13 @@ const getAllRegions = async (req: Request, res: Response) => {
     const lang = req.headers["accept-language"] || "en";
     try {
         const regions = await prisma.region.findMany({
+            include: {
+                supportedCountries: {
+                    select: {
+                        country: true
+                    }
+                },
+            }
         });
 
 
@@ -58,6 +65,8 @@ const getAllRegions = async (req: Request, res: Response) => {
                     id: c.id,
                     name: lang == "en" ? c.displayNameEn : c.displayNameSr,
                     code: c.code,
+                    supportedCOuntries: c.supportedCountries.map(c => convertHelper.getCountryDto(c.country, lang))
+
                 }
             )
 
