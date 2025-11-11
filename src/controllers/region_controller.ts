@@ -65,7 +65,7 @@ const getAllRegions = async (req: Request, res: Response) => {
                     id: c.id,
                     name: lang == "en" ? c.displayNameEn : c.displayNameSr,
                     code: c.code,
-                    supportedCOuntries: c.supportedCountries.map(c => convertHelper.getCountryDto(c.country, lang))
+                    supportedCountries: c.supportedCountries.map(c => convertHelper.getCountryDto(c.country, lang))
 
                 }
             )

@@ -94,7 +94,7 @@ const getAllProductsForRegion = async (req: Request, res: Response) => {
                 id: region.id,
                 name: lang == "en" ? region.displayNameEn : region.displayNameSr,
                 code: region.code,
-                supportedCOuntries: region.supportedCountries.map(c => convertHelper.getCountryDto(c.country, lang))
+                supportedCountries: region.supportedCountries.map(c => convertHelper.getCountryDto(c.country, lang))
 
             }
             res.status(200).json({
