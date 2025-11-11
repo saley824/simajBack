@@ -24,10 +24,10 @@ const getAllCountries = async (req: Request, res: Response) => {
 
     try {
         const countries = await prisma.country.findMany({
-            // orderBy: sort,
-            // where: filterObject
+            orderBy: {
+                priority: 'asc'
+            },
         });
-
         const filteredCountries: typeof countries = [];
 
         /// Searching based on name and keywords

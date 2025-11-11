@@ -60,6 +60,7 @@ model Country {
     mcc              String
     isoCode          String
     keywords         String?
+    priority         Int
     supportedRegions RegionSupportedCountry[]
     Product          Product[]
 }
