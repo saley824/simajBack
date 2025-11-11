@@ -56,8 +56,11 @@ const getAllProductsForRegion = async (req: Request, res: Response) => {
     try {
         const region = await prisma.region.findFirst({
             where: {
-                id: regionId
+                id: regionId,
             },
+            include: {
+                supportedCountries: true
+            }
         });
         const products = await prisma.product.findMany({
             where: {
