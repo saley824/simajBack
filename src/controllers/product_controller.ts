@@ -50,6 +50,45 @@ const getAllProductsForCountry = async (req: Request, res: Response) => {
     }
 
 }
+const getAllProductsForRegion = async (req: Request, res: Response) => {
+    const regionId = req.query.regionId ? Number(req.query.regionId) : -1;
+
+    try {
+        const region = await prisma.region.findFirst({
+            where: {
+                id: regionId
+            },
+        });
+        const products = await prisma.product.findMany({
+            where: {
+                OR: [
+                    { regionId: regionId },
+                ]
+            },
+            orderBy: {
+                amount: "asc"
+            }
+        });
+
+        const productsResponse = products.map(productsHelper.formatProduct);
+
+        res.status(200).json({
+            success: true,
+            data: {
+                region: region,
+                products: productsResponse,
+
+            },
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Internal Server Error"
+
+        });
+    }
+
+}
 const getProductById = async (req: Request, res: Response) => {
     const productId = req.params.id;
     try {
@@ -102,7 +141,8 @@ const getCouponCode = async (req: Request, res: Response) => {
 
 
 export default {
-    getAllProducts: getAllProductsForCountry,
+    getAllProductsForCountry,
+    getAllProductsForRegion,
     getProductById
 };
 
