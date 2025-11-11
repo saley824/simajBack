@@ -3,44 +3,52 @@ import { NextFunction, Request, Response } from "express";
 import { prisma } from "../server";
 
 import productsHelper from "../helpers/product_helper";
+import convertHelper from "../helpers/convert_helpers";
+import { CountryDto } from "../models/dto_models/country_dto";
+
 
 
 
 
 const getAllProductsForCountry = async (req: Request, res: Response) => {
     const countryId = req.query.countryId ? Number(req.query.countryId) : -1;
-    const regionId = req.query.regionId ? Number(req.query.regionId) : -1;
-
+    const lang = req.headers["accept-language"] || "en";
 
 
     try {
-        const country = await prisma.country.findFirst({
+        const country = await prisma.country.findUnique({
             where: {
                 id: countryId
             }
         });
-        const products = await prisma.product.findMany({
-            where: {
-                OR: [
-                    { countryId: countryId },
-                    // { regionId: regionId }
-                ]
-            },
-            orderBy: {
-                amount: "asc"
-            }
-        });
+        if (country != null) {
+            const products = await prisma.product.findMany({
+                where: {
+                    OR: [
+                        { countryId: countryId },
+                        // { regionId: regionId }
+                    ]
+                },
+                orderBy: {
+                    amount: "asc"
+                }
+            });
 
-        const productsResponse = products.map(productsHelper.formatProduct);
+            const productsResponse = products.map(productsHelper.formatProduct);
+            let localizedCountry: CountryDto = convertHelper.getCountryDto(country, lang)
 
-        res.status(200).json({
-            success: true,
-            data: {
-                country: country,
-                products: productsResponse,
 
-            },
-        });
+
+            res.status(200).json({
+                success: true,
+                data: {
+                    country: localizedCountry,
+                    products: productsResponse,
+
+                },
+            });
+        }
+
     } catch (error) {
         res.status(500).json({
             success: false,
@@ -59,7 +67,11 @@ const getAllProductsForRegion = async (req: Request, res: Response) => {
                 id: regionId,
             },
             include: {
-                supportedCountries: true
+                supportedCountries: {
+                    select: {
+                        country: true
+                    }
+                },
             }
         });
         const products = await prisma.product.findMany({
