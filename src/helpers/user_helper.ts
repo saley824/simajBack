@@ -75,7 +75,7 @@ const sendEmailForVerification = async (options: VerifyEmailOptions, name: Strin
         const transporter = nodemailer.createTransport({
             host: emailHost,
             port: parseInt(emailPort),
-            secure: false,
+            secure: true,
             auth: {
                 user: emailUsername,
                 pass: emailPassword,
