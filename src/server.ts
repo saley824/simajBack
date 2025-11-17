@@ -12,6 +12,7 @@ import reviewsRouter from "./routes/reviewRoutes";
 import contactFormRouter from "./routes/contactFormRoutes";
 import userRouter from "./routes/userRoutes";
 import checkoutRoutes from "./routes/checkoutRoutes";
+import deviceRoutes from "./routes/devicesRoutes";
 import { date } from "yup";
 
 
@@ -81,6 +82,7 @@ async function main() {
     app.use(`${baseUrl}/contactForm`, contactFormRouter);
     app.use(`${baseUrl}/user`, userRouter);
     app.use(`${baseUrl}/checkout`, checkoutRoutes);
+    app.use(`${baseUrl}/devices`, deviceRoutes);
 
 
     /// this make problem, check it out

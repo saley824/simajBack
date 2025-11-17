@@ -34,6 +34,12 @@ enum CouponType {
     Free
 }
 
+enum DeviceType {
+    mobile
+    tablet
+    laptop
+}
+
 model User {
     id                                 String        @id @default(uuid())
     username                           String        @unique
@@ -166,4 +172,25 @@ model ContactMessage {
     typeOfPackage String?
     question      String?
     isResolved    Boolean @default(false)
+}
+
+model DeviceBrand {
+    id             Int                @id @default(autoincrement())
+    name           String
+    additionalText String?
+    models         CompatibleDevice[]
+    type           DeviceType
+
+    @@unique([name, type])
+}
+
+model CompatibleDevice {
+    id      Int         @id @default(autoincrement())
+    brandId Int
+    brand   DeviceBrand @relation(fields: [brandId], references: [id])
+
+    model       String
+    displayName String?
+    notes       String?
+    isActive    Boolean @default(true)
 }
