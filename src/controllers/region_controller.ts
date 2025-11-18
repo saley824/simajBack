@@ -89,10 +89,58 @@ const getAllRegions = async (req: Request, res: Response) => {
 
 }
 
+const getSupportedCountriesForRegion = async (req: Request, res: Response) => {
+    const regionId = req.params.regionId
+        ? Number(req.params.regionId)
+        : null; const lang = req.headers["accept-language"] || "en";
+    try {
+        if (regionId != null) {
+            const regionSupportedCountries = await prisma.regionSupportedCountry.findMany({
+                where: {
+                    regionId: regionId
+                }
+            });
+
+            const countryIds = regionSupportedCountries.map((r) => r.countryId);
+            const supportedCountries = await prisma.country.findMany({
+                where: {
+                    id: {
+                        in: countryIds,
+                    }
+                }
+            });
+            res.status(200).json({
+                success: true,
+                data: {
+                    supportedCountries: supportedCountries.map(c => convertHelper.getCountryDto(c, lang))
+
+                },
+            });
+        }
+
+        else {
+            res.status(400).json({
+                success: false,
+                message: "Region doesn't exist"
+
+            });
+        }
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Internal Server Error"
+
+        });
+    }
+
+}
+
 
 
 
 
 export default {
-    getAllRegions
+    getAllRegions,
+    getSupportedCountriesForRegion
 };
