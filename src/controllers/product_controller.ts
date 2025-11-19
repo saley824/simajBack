@@ -24,7 +24,11 @@ const getAllProductsForCountry = async (req: Request, res: Response) => {
             include: {
                 supportedRegions: {
                     select: {
-                        region: true
+                        region: {
+                            include: {
+                                supportedCountries: true
+                            }
+                        },
                     }
                 },
             }
@@ -79,7 +83,11 @@ const getAllProductsForRegion = async (req: Request, res: Response) => {
             include: {
                 supportedCountries: {
                     select: {
-                        country: true
+                        country: {
+                            include: {
+                                supportedRegions: true
+                            }
+                        }
                     }
                 },
             }

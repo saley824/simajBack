@@ -13,6 +13,7 @@ function getCountryDto(country: any, lang: string): CountryDto {
 
 }
 function getRegionDto(region: any, lang: string): RegionDto {
+    console.log(region)
     return {
         id: region.id,
         name: lang == "en" ? region.displayNameEn : region.displayNameSr,
