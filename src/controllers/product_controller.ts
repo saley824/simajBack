@@ -20,6 +20,13 @@ const getAllProductsForCountry = async (req: Request, res: Response) => {
         const country = await prisma.country.findUnique({
             where: {
                 id: countryId
+            },
+            include: {
+                supportedRegions: {
+                    select: {
+                        region: true
+                    }
+                },
             }
         });
         if (country != null) {

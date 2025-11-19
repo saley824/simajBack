@@ -1,5 +1,6 @@
 {
     "cSpell.words": [
         "autoincrement"
-    ]
+    ],
+    "prisma.pinToPrisma6": true
 }

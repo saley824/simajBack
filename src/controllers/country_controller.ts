@@ -2,6 +2,9 @@ import { Request, Response } from "express";
 import { prisma } from "../server";
 import globalCommonHelper from "../helpers/global_common_helper";
 import { CountryDto } from "../models/dto_models/country_dto";
+import { RegionDto } from "../models/dto_models/region_dto";
+import convertHelper from "../helpers/convert_helpers";
+
 
 
 
@@ -27,6 +30,9 @@ const getAllCountries = async (req: Request, res: Response) => {
             orderBy: {
                 priority: 'asc'
             },
+            include: {
+                supportedRegions: true
+            }
         });
         const filteredCountries: typeof countries = [];
 
@@ -59,7 +65,9 @@ const getAllCountries = async (req: Request, res: Response) => {
                     id: c.id,
                     name: lang == "en" ? c.displayNameEn : c.displayNameSr,
                     isoCode: c.isoCode,
-                    mcc: c.mcc
+                    mcc: c.mcc,
+                    supportedRegions: []
+
 
                 }
             )
@@ -84,10 +92,87 @@ const getAllCountries = async (req: Request, res: Response) => {
 
 }
 
+const getSupportedRegionsForCountry = async (req: Request, res: Response) => {
+    const countryId = req.params.regionId
+        ? Number(req.params.regionId)
+        : null; const lang = req.headers["accept-language"] || "en";
+    try {
+        if (countryId != null) {
+            const regionSupportedCountries = await prisma.regionSupportedCountry.findMany({
+                where: {
+                    countryId: countryId
+                }
+            });
+
+            const regionIds = regionSupportedCountries.map((r) => r.regionId);
+            const supportedRegions = await prisma.region.findMany({
+                where: {
+                    id: {
+                        in: regionIds,
+
+                    },
+
+
+
+                },
+                include: {
+                    supportedCountries: {
+                        select: {
+                            country: true
+                        }
+                    },
+                }
+            });
+
+            let localizedResult: RegionDto[] = [];
+
+
+
+            supportedRegions.map(c => {
+                localizedResult.push(
+                    {
+                        id: c.id,
+                        name: lang == "en" ? c.displayNameEn : c.displayNameSr,
+                        code: c.code,
+                        supportedCountries: c.supportedCountries.map(c => convertHelper.getCountryDto(c.country, lang))
+
+                    }
+                )
+
+            });
+            res.status(200).json({
+                success: true,
+                data: {
+                    regions: localizedResult,
+
+                },
+            });
+        }
+
+        else {
+            res.status(400).json({
+                success: false,
+                message: "Region doesn't exist"
+
+            });
+        }
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Internal Server Error"
+
+        });
+    }
+
+}
+
+
 
 
 
 
 export default {
-    getAllCountries
+    getAllCountries,
+    getSupportedRegionsForCountry
 };
