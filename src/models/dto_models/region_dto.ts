@@ -1,8 +1,9 @@
-import { CountryDto } from "./country_dto";
+import { CountryLightDto } from "./country_light_dto";
 
 export type RegionDto = {
     id: number;
     name: string;
     code: string;
-    supportedCountries: CountryDto[],
+    keywords: string | null;
+    supportedCountries: CountryLightDto[],
 }

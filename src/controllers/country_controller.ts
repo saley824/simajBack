@@ -66,6 +66,7 @@ const getAllCountries = async (req: Request, res: Response) => {
                     name: lang == "en" ? c.displayNameEn : c.displayNameSr,
                     isoCode: c.isoCode,
                     mcc: c.mcc,
+                    keywords: c.keywords,
                     supportedRegions: []
 
 
@@ -134,6 +135,7 @@ const getSupportedRegionsForCountry = async (req: Request, res: Response) => {
                         id: c.id,
                         name: lang == "en" ? c.displayNameEn : c.displayNameSr,
                         code: c.code,
+                        keywords: c.keywords,
                         supportedCountries: c.supportedCountries.map(c => convertHelper.getCountryDto(c.country, lang))
 
                     }
