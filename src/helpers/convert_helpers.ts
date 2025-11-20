@@ -54,5 +54,7 @@ function getRegionLightDto(region: any, lang: string): RegionLightDto {
 
 export default {
     getCountryDto,
-    getRegionDto
+    getRegionDto,
+    getCountryLightDto,
+    getRegionLightDto
 };
