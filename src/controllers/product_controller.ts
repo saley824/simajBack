@@ -102,7 +102,7 @@ const getAllProductsForRegion = async (req: Request, res: Response) => {
                 id: region.id,
                 name: lang == "en" ? region.displayNameEn : region.displayNameSr,
                 code: region.code,
-                supportedCountries: region.supportedCountries.map(c => convertHelper.getCountryDto(c.country, lang)),
+                supportedCountries: region.supportedCountries.map(c => convertHelper.getCountryLightDto(c.country, lang)),
                 keywords: region.keywords,
 
             }
@@ -117,6 +117,7 @@ const getAllProductsForRegion = async (req: Request, res: Response) => {
         }
 
     } catch (error) {
+        console.log(error)
         res.status(500).json({
             success: false,
             message: "Internal Server Error"
