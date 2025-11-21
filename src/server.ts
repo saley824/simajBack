@@ -59,7 +59,8 @@ async function main() {
     app.use(cors({
         origin: [
             process.env.FRONTEND_BASE_URL!,
-            process.env.FRONTEND_BASE_URL_LOCAL!
+            process.env.FRONTEND_BASE_URL_LOCAL!,
+            process.env.FRONTEND_BASE_URL_PRODUCTION!
 
         ],
 

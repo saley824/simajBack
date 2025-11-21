@@ -338,10 +338,9 @@ async function main() {
     //     ],
     // });
 
-
-    const samsungTablet = await prisma.deviceBrand.create({
+    const appleTablet = await prisma.deviceBrand.create({
         data: {
-            name: "Samsung",
+            name: "Apple",
             type: "tablet",
         },
     });
@@ -349,32 +348,59 @@ async function main() {
     await prisma.compatibleDevice.createMany({
         data: [
             {
-                brandId: samsungTablet.id,
-                model: "Galaxy Tab S9",
-                displayName: "Samsung Galaxy Tab S9",
+                brandId: appleTablet.id,
+                model: "iPad Pro 13-inch (M4) Wi-Fi + Cellular",
+                displayName: "iPad Pro 13-inch (M4) Wi-Fi + Cellular",
             },
             {
-                brandId: samsungTablet.id,
-                model: "Galaxy Tab S9+",
-                displayName: "Samsung Galaxy Tab S9+",
+                brandId: appleTablet.id,
+                model: "iPad Pro 12.9-inch (3rd through 6th generation) Wi-Fi + Cellular",
+                displayName: "iPad Pro 12.9-inch (3rd through 6th generation) Wi-Fi + Cellular",
+            },
+
+            {
+                brandId: appleTablet.id,
+                model: "iPad Pro 11-inch (M4) Wi-Fi + Cellular",
+                displayName: "iPad Pro 11-inch (M4) Wi-Fi + Cellular",
             },
             {
-                brandId: samsungTablet.id,
-                model: "Galaxy Tab S9 Ultra",
-                displayName: "Samsung Galaxy Tab S9 Ultra",
+                brandId: appleTablet.id,
+                model: "iPad Pro 11-inch (1st through 4th generation) Wi-Fi + Cellular",
+                displayName: "iPad Pro 11-inch (1st through 4th generation) Wi-Fi + Cellular",
+            },
+
+            {
+                brandId: appleTablet.id,
+                model: "iPad Air 13-inch (M2) Wi-Fi + Cellular",
+                displayName: "iPad Air 13-inch (M2) Wi-Fi + Cellular",
             },
             {
-                brandId: samsungTablet.id,
-                model: "Galaxy Tab S9 FE",
-                displayName: "Samsung Galaxy Tab S9 FE",
+                brandId: appleTablet.id,
+                model: "iPad Air 11-inch (M2) Wi-Fi + Cellular",
+                displayName: "iPad Air 11-inch (M2) Wi-Fi + Cellular",
             },
             {
-                brandId: samsungTablet.id,
-                model: "Galaxy Tab S9 FE+",
-                displayName: "Samsung Galaxy Tab S9 FE+",
+                brandId: appleTablet.id,
+                model: "iPad Air (3rd through 5th generation) Wi-Fi + Cellular",
+                displayName: "iPad Air (3rd through 5th generation) Wi-Fi + Cellular",
+            },
+
+            {
+                brandId: appleTablet.id,
+                model: "iPad mini (5th and 6th generation) Wi-Fi + Cellular",
+                displayName: "iPad mini (5th and 6th generation) Wi-Fi + Cellular",
+            },
+
+            {
+                brandId: appleTablet.id,
+                model: "iPad (7th through 10th generation) Wi-Fi + Cellular",
+                displayName: "iPad (7th through 10th generation) Wi-Fi + Cellular",
             },
         ],
     });
+
+
+
 }
 
 main()
