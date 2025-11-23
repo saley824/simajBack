@@ -28,9 +28,6 @@ interface CheckoutResponse {
 const getCheckoutInfo = async (req: Request, res: Response) => {
     const { productId, userId, couponCode } = req.body;
 
-
-
-
     try {
         const productRes = await prisma.product.findUnique(
             {
@@ -62,16 +59,6 @@ const getCheckoutInfo = async (req: Request, res: Response) => {
             couponName: null,
             isFreeCouponActivated: false,
         };
-
-
-        // const user = await prisma.user.findUnique(
-        //     {
-        //         where: {
-        //             id: userId
-        //         }
-        //     }
-        // );
-
 
 
         if (couponCode != null && couponCode != "") {
@@ -169,6 +156,10 @@ const getCheckoutInfo = async (req: Request, res: Response) => {
 
         });
     }
+
+}
+
+const buyNow = async (req: Request, res: Response) => {
 
 }
 

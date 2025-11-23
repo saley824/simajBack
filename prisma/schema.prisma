@@ -10,6 +10,11 @@ generator client {
     engineType = "library"
 }
 
+enum Currency {
+    EUR
+    USD
+}
+
 datasource db {
     provider = "postgresql"
     url      = env("DATABASE_URL")
@@ -193,4 +198,14 @@ model CompatibleDevice {
     displayName String?
     notes       String?
     isActive    Boolean @default(true)
+}
+
+model ExchangeRate {
+    id Int @id @default(autoincrement())
+
+    currency    Currency
+    rateFromBAM Decimal  @db.Decimal(10, 6)
+    updatedAt   DateTime @updatedAt
+
+    @@unique([currency])
 }

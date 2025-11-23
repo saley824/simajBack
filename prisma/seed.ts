@@ -338,67 +338,80 @@ async function main() {
     //     ],
     // });
 
-    const appleTablet = await prisma.deviceBrand.create({
-        data: {
-            name: "Apple",
-            type: "tablet",
-        },
-    });
+    // const appleTablet = await prisma.deviceBrand.create({
+    //     data: {
+    //         name: "Apple",
+    //         type: "tablet",
+    //     },
+    // });
 
-    await prisma.compatibleDevice.createMany({
+    // await prisma.compatibleDevice.createMany({
+    //     data: [
+    //         {
+    //             brandId: appleTablet.id,
+    //             model: "iPad Pro 13-inch (M4) Wi-Fi + Cellular",
+    //             displayName: "iPad Pro 13-inch (M4) Wi-Fi + Cellular",
+    //         },
+    //         {
+    //             brandId: appleTablet.id,
+    //             model: "iPad Pro 12.9-inch (3rd through 6th generation) Wi-Fi + Cellular",
+    //             displayName: "iPad Pro 12.9-inch (3rd through 6th generation) Wi-Fi + Cellular",
+    //         },
+
+    //         {
+    //             brandId: appleTablet.id,
+    //             model: "iPad Pro 11-inch (M4) Wi-Fi + Cellular",
+    //             displayName: "iPad Pro 11-inch (M4) Wi-Fi + Cellular",
+    //         },
+    //         {
+    //             brandId: appleTablet.id,
+    //             model: "iPad Pro 11-inch (1st through 4th generation) Wi-Fi + Cellular",
+    //             displayName: "iPad Pro 11-inch (1st through 4th generation) Wi-Fi + Cellular",
+    //         },
+
+    //         {
+    //             brandId: appleTablet.id,
+    //             model: "iPad Air 13-inch (M2) Wi-Fi + Cellular",
+    //             displayName: "iPad Air 13-inch (M2) Wi-Fi + Cellular",
+    //         },
+    //         {
+    //             brandId: appleTablet.id,
+    //             model: "iPad Air 11-inch (M2) Wi-Fi + Cellular",
+    //             displayName: "iPad Air 11-inch (M2) Wi-Fi + Cellular",
+    //         },
+    //         {
+    //             brandId: appleTablet.id,
+    //             model: "iPad Air (3rd through 5th generation) Wi-Fi + Cellular",
+    //             displayName: "iPad Air (3rd through 5th generation) Wi-Fi + Cellular",
+    //         },
+
+    //         {
+    //             brandId: appleTablet.id,
+    //             model: "iPad mini (5th and 6th generation) Wi-Fi + Cellular",
+    //             displayName: "iPad mini (5th and 6th generation) Wi-Fi + Cellular",
+    //         },
+
+    //         {
+    //             brandId: appleTablet.id,
+    //             model: "iPad (7th through 10th generation) Wi-Fi + Cellular",
+    //             displayName: "iPad (7th through 10th generation) Wi-Fi + Cellular",
+    //         },
+    //     ],
+    // });
+
+    await prisma.exchangeRate.createMany({
         data: [
             {
-                brandId: appleTablet.id,
-                model: "iPad Pro 13-inch (M4) Wi-Fi + Cellular",
-                displayName: "iPad Pro 13-inch (M4) Wi-Fi + Cellular",
+                currency: 'EUR',
+                rateFromBAM: 0.511292, // 1 BAM = 0.511292 EUR
             },
             {
-                brandId: appleTablet.id,
-                model: "iPad Pro 12.9-inch (3rd through 6th generation) Wi-Fi + Cellular",
-                displayName: "iPad Pro 12.9-inch (3rd through 6th generation) Wi-Fi + Cellular",
-            },
-
-            {
-                brandId: appleTablet.id,
-                model: "iPad Pro 11-inch (M4) Wi-Fi + Cellular",
-                displayName: "iPad Pro 11-inch (M4) Wi-Fi + Cellular",
-            },
-            {
-                brandId: appleTablet.id,
-                model: "iPad Pro 11-inch (1st through 4th generation) Wi-Fi + Cellular",
-                displayName: "iPad Pro 11-inch (1st through 4th generation) Wi-Fi + Cellular",
-            },
-
-            {
-                brandId: appleTablet.id,
-                model: "iPad Air 13-inch (M2) Wi-Fi + Cellular",
-                displayName: "iPad Air 13-inch (M2) Wi-Fi + Cellular",
-            },
-            {
-                brandId: appleTablet.id,
-                model: "iPad Air 11-inch (M2) Wi-Fi + Cellular",
-                displayName: "iPad Air 11-inch (M2) Wi-Fi + Cellular",
-            },
-            {
-                brandId: appleTablet.id,
-                model: "iPad Air (3rd through 5th generation) Wi-Fi + Cellular",
-                displayName: "iPad Air (3rd through 5th generation) Wi-Fi + Cellular",
-            },
-
-            {
-                brandId: appleTablet.id,
-                model: "iPad mini (5th and 6th generation) Wi-Fi + Cellular",
-                displayName: "iPad mini (5th and 6th generation) Wi-Fi + Cellular",
-            },
-
-            {
-                brandId: appleTablet.id,
-                model: "iPad (7th through 10th generation) Wi-Fi + Cellular",
-                displayName: "iPad (7th through 10th generation) Wi-Fi + Cellular",
-            },
+                currency: 'USD',
+                rateFromBAM: 0.5561,   // 1 BAM = 0.5561 USD
+            }
         ],
+        skipDuplicates: true, // ako već postoji — preskoči
     });
-
 
 
 }
