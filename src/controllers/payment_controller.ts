@@ -34,7 +34,6 @@ const createTransaction = async (req: Request, res: Response) => {
             data: {
                 userId: req.body.userId,
                 productId: req.body.productId,
-                couponCode: req.body.couponCode,
                 price: req.body.price
             },
         });
@@ -74,31 +73,33 @@ const handleMonriCallback = async (req: Request, res: Response) => {
 
 
             const token = getAccessToken();
+            console.log(token)
 
 
-            const response = await axios.post<OrderEsimResponse>(
-                "",
-                {
-                    operation_type: "NEW",
-                    product: {
-                        id: transaction?.productId
-                    }
-                },
-                {
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${token}`,
-                    }
-                }
-            );
+            // const response = await axios.post<OrderEsimResponse>(
+            //     "",
+            //     {
+            //         operation_type: "NEW",
+            //         product: {
+            //             id: transaction?.productId
+            //         }
+            //     },
+            //     {
+            //         headers: {
+            //             "Content-Type": "application/json",
+            //             "Authorization": `Bearer ${token}`,
+            //         }
+            //     }
+            // );
 
-            if (response.data.message === "Success") {
+            // if (response.data.message === "Success") {
+            if (true) {
 
-                const esimData = response.data.data;
+                // const esimData = response.data.data;
 
                 const orderData = {
-                    id: esimData.id,
-                    iccid: esimData.esim.iccid,
+                    id: "21",
+                    iccid: "lazni",
                     productId: transaction!.productId
                 };
 
@@ -122,6 +123,7 @@ const handleMonriCallback = async (req: Request, res: Response) => {
 
 
     } catch (error) {
+        console.log(error)
         res.status(500).json({
             success: false,
             message: "Internal Server Error"
