@@ -77,30 +77,32 @@ const handleMonriCallback = async (req: Request, res: Response) => {
             console.log(token)
 
 
-            // const response = await axios.post<OrderEsimResponse>(
-            //     "",
-            //     {
-            //         operation_type: "NEW",
-            //         product: {
-            //             id: transaction?.productId
-            //         }
-            //     },
-            //     {
-            //         headers: {
-            //             "Content-Type": "application/json",
-            //             "Authorization": `Bearer ${token}`,
-            //         }
-            //     }
-            // );
+            const response = await axios.post<OrderEsimResponse>(
+                "",
+                {
+                    operation_type: "NEW",
+                    product: {
+                        id: transaction?.productId
+                    }
+                },
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`,
+                    }
+                }
+            );
 
-            // if (response.data.message === "Success") {
-            if (true) {
+            console.log(response)
 
-                // const esimData = response.data.data;
+            if (response.data.message === "Success") {
+                // if (true) {
+
+                const esimData = response.data.data;
 
                 const orderData = {
-                    id: "21",
-                    iccid: "lazni",
+                    id: esimData.id,
+                    iccid: esimData.esim.iccid,
                     productId: transaction!.productId
                 };
 
