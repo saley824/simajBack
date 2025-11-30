@@ -1,6 +1,9 @@
 import { Request, Response } from "express";
 import { prisma } from "../server";
 
+
+
+
 const getAllDevices = async (req: Request, res: Response) => {
     const lang = req.headers["accept-language"] || "en";
     try {

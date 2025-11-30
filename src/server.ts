@@ -13,6 +13,7 @@ import contactFormRouter from "./routes/contactFormRoutes";
 import userRouter from "./routes/userRoutes";
 import checkoutRoutes from "./routes/checkoutRoutes";
 import deviceRoutes from "./routes/devicesRoutes";
+import paymentRoutes from "./routes/payment_route";
 import { date } from "yup";
 
 
@@ -43,10 +44,7 @@ export const prisma = new PrismaClient();
 
 // var serviceAccount = require("./serviceAccountKeyNotifications.json");
 
-// export const firebase = admin.initializeApp({
-//     credential: admin.credential.cert(serviceAccount),
-//     storageBucket: "gs://grad-push-notifications-2a76a.appspot.com", //storage bucket url
-// });
+
 
 // export const bucket = firebase.storage().bucket()
 
@@ -84,6 +82,7 @@ async function main() {
     app.use(`${baseUrl}/user`, userRouter);
     app.use(`${baseUrl}/checkout`, checkoutRoutes);
     app.use(`${baseUrl}/devices`, deviceRoutes);
+    app.use(`${baseUrl}/payment`, paymentRoutes);
 
 
     /// this make problem, check it out
@@ -133,7 +132,7 @@ main()
         //         {
         //             headers: {
         //                 "Content-Type": "application/json",
-        //                 "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyZXNlbGxlcl9pZCI6Ijk3M2UwMWM0LWZhNjMtNGIzMS04NTc0LTU1YmMyZWI3ZDA0ZSIsInZlcnNpb24iOjEsImVwb2NoIjoxNzYyODYwMjk0NDk4LCJjaGFubmVsX2lkIjoicmVzZWxsZXIiLCJpYXQiOjE3NjI4NjAyOTQsImV4cCI6MTc2Mjg2Mzg5NH0.w73xdGNRKn15f-UEaPWlHJbWiu_LkzMYD5MzOUoscn4", // optional
+        //                 "Authorization": "Bearer", // optional
         //             }
         //         }
         //     );

@@ -117,6 +117,7 @@ model Product {
     country      Country?      @relation(fields: [countryId], references: [id])
     networks     Network[]
     transactions Transaction[]
+    orders       Order[]
 }
 
 model Network {
@@ -146,15 +147,28 @@ model CouponCode {
 }
 
 model Transaction {
-    id                Int               @id @default(autoincrement())
-    userId            String
-    couponCodeId      Int?
-    productId         String
+    id           Int     @id @default(autoincrement())
+    userId       String
+    couponCodeId Int?
+    productId    String
+    orderId      String? @unique
+    price        Float?
+
     TransactionStatus TransactionStatus @default(Started)
 
     user       User        @relation(fields: [userId], references: [id])
     product    Product     @relation(fields: [productId], references: [id])
+    order      Order?      @relation(fields: [orderId], references: [id])
     couponCode CouponCode? @relation(fields: [couponCodeId], references: [id])
+}
+
+model Order {
+    id        String @id
+    iccid     String
+    productId String
+
+    product     Product      @relation(fields: [productId], references: [id])
+    transaction Transaction?
 }
 
 model Review {
