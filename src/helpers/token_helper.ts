@@ -30,9 +30,10 @@ async function fetchNewToken(): Promise<string> {
         },
         body: JSON.stringify({
             client_id: process.env.CLIENT_ID,
-            client_secret: process.env.CLIENT_KEY,
+            client_key: process.env.CLIENT_KEY,
         }),
     });
+
 
     if (!response.ok) {
         console.error("[TokenHelper] Failed to fetch new token (HTTP error)");

@@ -4,6 +4,7 @@ import globalCommonHelper from "../helpers/global_common_helper";
 import { CountryDto } from "../models/dto_models/country_dto";
 import { RegionDto } from "../models/dto_models/region_dto";
 import convertHelper from "../helpers/convert_helpers";
+import { getAccessToken } from "../helpers/token_helper";
 
 
 
@@ -14,7 +15,8 @@ import convertHelper from "../helpers/convert_helpers";
 
 
 const getAllCountries = async (req: Request, res: Response) => {
-
+    const token = getAccessToken();
+    console.log(token)
     const page = req.query.page ? Number(req.query.page) : 1;
     const perPage = req.query.perPage ? Number(req.query.perPage) : 10;
     const searchText = req.query.searchText?.toString() || "";
