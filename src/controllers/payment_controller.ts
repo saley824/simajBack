@@ -54,8 +54,11 @@ const createTransaction = async (req: Request, res: Response) => {
 
 }
 const handleMonriCallback = async (req: Request, res: Response) => {
-    const transactionId = req.params.transactionId
-        ? Number(req.params.transactionId)
+    console.log("---------")
+    console.log(req.body)
+    console.log("---------")
+    const transactionId = req.body.order_number
+        ? Number(req.body.order_number)
         : null;
 
     try {
@@ -64,8 +67,6 @@ const handleMonriCallback = async (req: Request, res: Response) => {
             let transaction = await prisma.transaction.findUnique({
                 where: {
                     id: transactionId
-
-
                 },
             });
 
