@@ -78,7 +78,7 @@ const handleMonriCallback = async (req: Request, res: Response) => {
 
 
             const response = await axios.post<OrderEsimResponse>(
-                "",
+                `${process.env.N_BASE_URL}/order/api/v1/create_order`,
                 {
                     operation_type: "NEW",
                     product: {
