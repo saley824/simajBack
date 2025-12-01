@@ -53,90 +53,90 @@ const createTransaction = async (req: Request, res: Response) => {
 
 }
 const handleMonriCallback = async (req: Request, res: Response) => {
-    return;
-    console.log("---------")
-    console.log(req.body)
-    console.log("---------")
-    const transactionId = req.body.order_number
-        ? Number(req.body.order_number)
-        : null;
 
-    try {
+    // console.log("---------")
+    // console.log(req.body)
+    // console.log("---------")
+    // const transactionId = req.body.order_number
+    //     ? Number(req.body.order_number)
+    //     : null;
 
-        if (transactionId != null) {
-            let transaction = await prisma.transaction.findUnique({
-                where: {
-                    id: transactionId
-                },
-            });
+    // try {
 
-            if (transaction == null) return
+    //     if (transactionId != null) {
+    //         let transaction = await prisma.transaction.findUnique({
+    //             where: {
+    //                 id: transactionId
+    //             },
+    //         });
 
-
-            const token = await getAccessToken();
-            console.log(token)
+    //         if (transaction == null) return
 
 
-            const response = await axios.post<OrderEsimResponse>(
-                `${process.env.N_BASE_URL}/order/api/v1/create_order`,
-                {
-                    "operation_type": "NEW",
-                    "product": {
-                        "id": transaction?.productId
-                    }
-                },
-                {
-                    headers: {
-                        "X-Idempotency-Key": crypto.randomUUID(),
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${token}`,
-                    }
-                }
-            );
-
-            console.log(response)
-
-            if (response.data.message === "Success") {
-                // if (true) {
-
-                const esimData = response.data.data;
-
-                const orderData = {
-                    id: esimData.id,
-                    iccid: esimData.esim.iccid,
-                    productId: transaction!.productId
-                };
-
-                const order = await prisma.order.create({
-                    data: orderData
-                });
+    //         const token = await getAccessToken();
+    //         console.log(token)
 
 
-                await prisma.transaction.update({
-                    where: { id: transaction!.id },
-                    data: {
-                        orderId: order.id,
-                        TransactionStatus: "Completed"
-                    }
-                });
+    //         const response = await axios.post<OrderEsimResponse>(
+    //             `${process.env.N_BASE_URL}/order/api/v1/create_order`,
+    //             {
+    //                 "operation_type": "NEW",
+    //                 "product": {
+    //                     "id": transaction?.productId
+    //                 }
+    //             },
+    //             {
+    //                 headers: {
+    //                     "X-Idempotency-Key": crypto.randomUUID(),
+    //                     "Content-Type": "application/json",
+    //                     "Authorization": `Bearer ${token}`,
+    //                 }
+    //             }
+    //         );
 
-                return res.status(20).json({
-                    success: true,
-                });
+    //         console.log(response)
 
-            }
+    //         if (response.data.message === "Success") {
+    //             // if (true) {
+
+    //             const esimData = response.data.data;
+
+    //             const orderData = {
+    //                 id: esimData.id,
+    //                 iccid: esimData.esim.iccid,
+    //                 productId: transaction!.productId
+    //             };
+
+    //             const order = await prisma.order.create({
+    //                 data: orderData
+    //             });
 
 
-        }
+    //             await prisma.transaction.update({
+    //                 where: { id: transaction!.id },
+    //                 data: {
+    //                     orderId: order.id,
+    //                     TransactionStatus: "Completed"
+    //                 }
+    //             });
+
+    //             return res.status(200).json({
+    //                 success: true,
+    //             });
+
+    //         }
 
 
-    } catch (error) {
-        return res.status(500).json({
-            success: false,
-            message: "Internal Server Error"
+    //     }
 
-        });
-    }
+
+    // } catch (error) {
+    //     return res.status(500).json({
+    //         success: false,
+    //         message: "Internal Server Error"
+
+    // });
+    //     }
 
 }
 
