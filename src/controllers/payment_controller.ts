@@ -72,7 +72,7 @@ const handleMonriCallback = async (req: Request, res: Response) => {
             if (transaction == null) return
 
 
-            const token = getAccessToken();
+            const token = await getAccessToken();
             console.log(token)
 
 
