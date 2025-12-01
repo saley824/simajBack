@@ -87,6 +87,7 @@ const handleMonriCallback = async (req: Request, res: Response) => {
                 },
                 {
                     headers: {
+                        "X-Idempotency-Key": crypto.randomUUID(),
                         "Content-Type": "application/json",
                         "Authorization": `Bearer ${token}`,
                     }
@@ -126,7 +127,6 @@ const handleMonriCallback = async (req: Request, res: Response) => {
 
 
     } catch (error) {
-        console.log(error)
         res.status(500).json({
             success: false,
             message: "Internal Server Error"
