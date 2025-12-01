@@ -80,9 +80,9 @@ const handleMonriCallback = async (req: Request, res: Response) => {
             const response = await axios.post<OrderEsimResponse>(
                 `${process.env.N_BASE_URL}/order/api/v1/create_order`,
                 {
-                    operation_type: "NEW",
-                    product: {
-                        id: transaction?.productId
+                    "operation_type": "NEW",
+                    "product": {
+                        "id": transaction?.productId
                     }
                 },
                 {
@@ -120,6 +120,10 @@ const handleMonriCallback = async (req: Request, res: Response) => {
                     }
                 });
 
+                return res.status(20).json({
+                    success: true,
+                });
+
             }
 
 
@@ -127,7 +131,7 @@ const handleMonriCallback = async (req: Request, res: Response) => {
 
 
     } catch (error) {
-        res.status(500).json({
+        return res.status(500).json({
             success: false,
             message: "Internal Server Error"
 
