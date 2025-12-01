@@ -63,10 +63,10 @@ export async function getAccessToken(): Promise<string> {
     const now = Date.now();
 
     // No token or expired token → refresh
-    if (!cachedToken || cachedToken.expiresAt < now) {
-        return fetchNewToken();
-    }
+    // if (!cachedToken || cachedToken.expiresAt < now) {
+    return await fetchNewToken();
+    // }
 
     // Token is valid → return from memory
-    return cachedToken.accessToken;
+    // return cachedToken.accessToken;
 }
