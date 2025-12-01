@@ -82,7 +82,7 @@ const sendQRcode = async (subject: string, to: string, lpaString: string) => {
         `
             <h2>Your eSIM QR</h2>
             <p>Scan the QR code below:</p>
-            <img src="cid:qr.png" />
+            <img src="cid:qrcode" />
         `;
 
     const resend = new Resend(resendApiKey);
@@ -96,6 +96,8 @@ const sendQRcode = async (subject: string, to: string, lpaString: string) => {
             {
                 filename: "qr.png",
                 content: imageBuffer,
+                contentId: "qrcode",
+
             },
         ],
     });
