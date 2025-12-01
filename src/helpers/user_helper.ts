@@ -1,6 +1,8 @@
 import argon2 from "argon2";
 import crypto from "crypto";
 import nodemailer from "nodemailer";
+import { Resend } from 'resend';
+
 
 interface ResetPasswordOptions {
     email: string;
@@ -64,27 +66,16 @@ const sendEmailForResetPassword = async (options: ResetPasswordOptions, name: St
 };
 const sendEmailForVerification = async (options: VerifyEmailOptions, name: String) => {
     try {
+
+
+
         const emailUsername: string = process.env.EMAIL_USERNAME!;
         const emailPassword = process.env.EMAIL_PASSWORD!;
         const emailPort = process.env.EMAIL_PORT!;
         const emailHost = process.env.EMAIL_HOST!;
+        const resendApiKey = process.env.RESEND_API_KEY!;
 
         const font = process.env.FRONTEND_BASE_URL!;
-
-
-        const transporter = nodemailer.createTransport({
-            host: emailHost,
-            port: parseInt(emailPort),
-            secure: false,
-            auth: {
-                user: emailUsername,
-                pass: emailPassword,
-            },
-            tls: {
-                rejectUnauthorized: false,
-            }
-        });
-
 
         const verificationUrl = `${process.env.FRONTEND_BASE_URL}/verify-email?token=${options.token}&userId=${options.userId}`;
 
@@ -100,14 +91,42 @@ const sendEmailForVerification = async (options: VerifyEmailOptions, name: Strin
 `;
 
 
-        const mailOptions = {
+
+
+        const resend = new Resend(resendApiKey);
+
+        await resend.emails.send({
             from: emailUsername,
             to: options.email,
             subject: options.subject,
-            html: htmlContent,
-        };
+            html: htmlContent
+        });
 
-        await transporter.sendMail(mailOptions);
+
+        // const transporter = nodemailer.createTransport({
+        //     host: emailHost,
+        //     port: parseInt(emailPort),
+        //     secure: false,
+        //     auth: {
+        //         user: emailUsername,
+        //         pass: emailPassword,
+        //     },
+        //     tls: {
+        //         rejectUnauthorized: false,
+        //     }
+        // });
+
+
+
+
+        // const mailOptions = {
+        //     from: emailUsername,
+        //     to: options.email,
+        //     subject: options.subject,
+        //     html: htmlContent,
+        // };
+
+        // await transporter.sendMail(mailOptions);
         return true;
     } catch (error) {
         console.error(error)

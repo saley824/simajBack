@@ -26,6 +26,7 @@
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "nodemailer": "^7.0.5",
+    "resend": "^6.5.2",
     "yup": "^1.7.0"
   },
   "devDependencies": {
