@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import { prisma } from "../server";
 import axios from "axios";
 import { getAccessToken } from "../helpers/token_helper";
+import userHelper from "../helpers/user_helper";
+
 
 interface OrderEsimResponse {
     code: number;
@@ -54,89 +56,97 @@ const createTransaction = async (req: Request, res: Response) => {
 }
 const handleMonriCallback = async (req: Request, res: Response) => {
 
-    // console.log("---------")
-    // console.log(req.body)
-    // console.log("---------")
-    // const transactionId = req.body.order_number
-    //     ? Number(req.body.order_number)
-    //     : null;
+    console.log("---------")
+    console.log(req.body)
+    console.log("---------")
+    const transactionId = req.body.order_number
+        ? Number(req.body.order_number)
+        : null;
 
-    // try {
+    try {
 
-    //     if (transactionId != null) {
-    //         let transaction = await prisma.transaction.findUnique({
-    //             where: {
-    //                 id: transactionId
-    //             },
-    //         });
+        if (transactionId != null) {
+            let transaction = await prisma.transaction.findUnique({
+                where: {
+                    id: transactionId
+                },
+            });
 
-    //         if (transaction == null) return
+            if (transaction == null) return
 
+            const user = await prisma.user.findUnique(
+                {
+                    where: {
+                        id: transaction.userId
+                    }
+                }
+            );
 
-    //         const token = await getAccessToken();
-    //         console.log(token)
-
-
-    //         const response = await axios.post<OrderEsimResponse>(
-    //             `${process.env.N_BASE_URL}/order/api/v1/create_order`,
-    //             {
-    //                 "operation_type": "NEW",
-    //                 "product": {
-    //                     "id": transaction?.productId
-    //                 }
-    //             },
-    //             {
-    //                 headers: {
-    //                     "X-Idempotency-Key": crypto.randomUUID(),
-    //                     "Content-Type": "application/json",
-    //                     "Authorization": `Bearer ${token}`,
-    //                 }
-    //             }
-    //         );
-
-    //         console.log(response)
-
-    //         if (response.data.message === "Success") {
-    //             // if (true) {
-
-    //             const esimData = response.data.data;
-
-    //             const orderData = {
-    //                 id: esimData.id,
-    //                 iccid: esimData.esim.iccid,
-    //                 productId: transaction!.productId
-    //             };
-
-    //             const order = await prisma.order.create({
-    //                 data: orderData
-    //             });
+            const token = await getAccessToken();
+            // console.log(token)
 
 
-    //             await prisma.transaction.update({
-    //                 where: { id: transaction!.id },
-    //                 data: {
-    //                     orderId: order.id,
-    //                     TransactionStatus: "Completed"
-    //                 }
-    //             });
+            // const response = await axios.post<OrderEsimResponse>(
+            //     `${process.env.N_BASE_URL}/order/api/v1/create_order`,
+            //     {
+            //         "operation_type": "NEW",
+            //         "product": {
+            //             "id": transaction?.productId
+            //         }
+            //     },
+            //     {
+            //         headers: {
+            //             "X-Idempotency-Key": crypto.randomUUID(),
+            //             "Content-Type": "application/json",
+            //             "Authorization": `Bearer ${token}`,
+            //         }
+            //     }
+            // );
 
-    //             return res.status(200).json({
-    //                 success: true,
-    //             });
 
-    //         }
+            // if (response.data.message === "Success") {
+            if (true) {
+
+                userHelper.sendQRcode(
+                    "Paket",
+                    user?.email ?? "",
+                    "LPA:1$bics.validspereachdpplus.com$E-RVFA-RLCXFSJ7DYL6FS6EUM-LW3H8ND4QGC4Z3F0A4P3NBLZQO40L6TPOXA3-O"
+                )
+
+                // const esimData = response.data.data;
+
+                // const orderData = {
+                //     id: esimData.id,
+                //     iccid: esimData.esim.iccid,
+                //     productId: transaction!.productId
+                // };
+
+                // const order = await prisma.order.create({
+                //     data: orderData
+                // });
 
 
-    //     }
+                // await prisma.transaction.update({
+                //     where: { id: transaction!.id },
+                //     data: {
+                //         orderId: order.id,
+                //         TransactionStatus: "Completed"
+                //     }
+                // });
 
+                return res.status(200).json({
+                    success: true,
+                });
 
-    // } catch (error) {
-    //     return res.status(500).json({
-    //         success: false,
-    //         message: "Internal Server Error"
+            }
+        }
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: "Internal Server Error"
 
-    // });
-    //     }
+        });
+    }
 
 }
 

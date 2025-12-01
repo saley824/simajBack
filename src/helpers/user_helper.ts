@@ -2,6 +2,9 @@ import argon2 from "argon2";
 import crypto from "crypto";
 import nodemailer from "nodemailer";
 import { Resend } from 'resend';
+import QRCode from "qrcode";
+
+
 
 
 interface ResetPasswordOptions {
@@ -64,15 +67,33 @@ const sendEmailForResetPassword = async (options: ResetPasswordOptions, name: St
     }
 
 };
+const sendQRcode = async (subject: string, to: string, lpaString: string) => {
+    const qrDataUrl = await QRCode.toDataURL(lpaString);
+    const emailUsername: string = process.env.EMAIL_USERNAME!;
+    const resendApiKey = process.env.RESEND_API_KEY!;
+
+    const htmlContent = `
+            <p>Scan the QR code below to install your eSIM:</p>
+            <img src="${qrDataUrl}" alt="eSIM QR Code" />
+        `
+
+    const resend = new Resend(resendApiKey);
+
+    await resend.emails.send({
+        from: emailUsername,
+        to: to,
+        subject: subject,
+        html: htmlContent
+    });
+
+}
+
 const sendEmailForVerification = async (options: VerifyEmailOptions, name: String) => {
     try {
 
 
 
         const emailUsername: string = process.env.EMAIL_USERNAME!;
-        const emailPassword = process.env.EMAIL_PASSWORD!;
-        const emailPort = process.env.EMAIL_PORT!;
-        const emailHost = process.env.EMAIL_HOST!;
         const resendApiKey = process.env.RESEND_API_KEY!;
 
         const font = process.env.FRONTEND_BASE_URL!;
@@ -165,5 +186,6 @@ export default {
     compare,
     createEmailToken,
     sendEmailForResetPassword,
-    sendEmailForVerification
+    sendEmailForVerification,
+    sendQRcode
 };
