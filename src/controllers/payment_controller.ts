@@ -106,7 +106,6 @@ const handleMonriCallback = async (req: Request, res: Response) => {
 
             // if (response.data.message === "Success") {
             if (true) {
-
                 userHelper.sendQRcode(
                     "Paket",
                     user?.email ?? "",

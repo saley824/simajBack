@@ -68,14 +68,22 @@ const sendEmailForResetPassword = async (options: ResetPasswordOptions, name: St
 
 };
 const sendQRcode = async (subject: string, to: string, lpaString: string) => {
-    const qrDataUrl = await QRCode.toDataURL(lpaString);
+
+    // 1. Generate QR Code (PNG Base64)
+    const qrBase64 = await QRCode.toDataURL(lpaString);
+    const imageBuffer = Buffer.from(qrBase64.split(",")[1], "base64");
+
+
+
     const emailUsername: string = process.env.EMAIL_USERNAME!;
     const resendApiKey = process.env.RESEND_API_KEY!;
 
-    const htmlContent = `
-            <p>Scan the QR code below to install your eSIM:</p>
-            <img src="${qrDataUrl}" alt="eSIM QR Code" />
+    const htmlContent =
         `
+            <h2>Your eSIM QR</h2>
+            <p>Scan the QR code below:</p>
+            <img src="cid:qr.png" />
+        `;
 
     const resend = new Resend(resendApiKey);
 
@@ -83,7 +91,13 @@ const sendQRcode = async (subject: string, to: string, lpaString: string) => {
         from: emailUsername,
         to: to,
         subject: subject,
-        html: htmlContent
+        html: htmlContent,
+        attachments: [
+            {
+                filename: "qr.png",
+                content: imageBuffer,
+            },
+        ],
     });
 
 }
