@@ -106,11 +106,13 @@ const handleMonriCallback = async (req: Request, res: Response) => {
 
             // if (response.data.message === "Success") {
             if (true) {
-                userHelper.sendQRcode(
-                    "Paket",
-                    user?.email ?? "",
-                    "LPA:1$bics.validspereachdpplus.com$E-RVFA-RLCXFSJ7DYL6FS6EUM-LW3H8ND4QGC4Z3F0A4P3NBLZQO40L6TPOXA3-O"
-                )
+                console.log("CALBACK CALLEED")
+                console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+                // userHelper.sendQRcode(
+                //     "Paket",
+                //     user?.email ?? "",
+                //     "LPA:1$bics.validspereachdpplus.com$E-RVFA-RLCXFSJ7DYL6FS6EUM-LW3H8ND4QGC4Z3F0A4P3NBLZQO40L6TPOXA3-O"
+                // )
 
                 // const esimData = response.data.data;
 
