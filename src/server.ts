@@ -62,7 +62,7 @@ async function main() {
 
         ],
 
-        methods: ['GET', 'POST', 'PUT', 'DELETE'], // allowed HTTP methods
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], // allowed HTTP methods
         credentials: true // if you need cookies/auth
     }));
     app.use(express.json());
