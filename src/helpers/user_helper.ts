@@ -105,7 +105,7 @@ const sendEmailForVerification = async (options: VerifyEmailOptions, name: Strin
 <p>Poštovani <strong>${name}</strong>,</p>
 <p>Dobrobrodosli na ESimaj platformu!</p>
 <p>Klikom na <a href="${verificationUrl}">here</a> verifikujte email.</p>
-<p>Token ističe za  10 minuta.</p>
+<p>Token ističe za  120 minuta.</p>
 <p>Srdačan pozdrav,</p>
 <p><strong>Esimaj Tim</strong></p>
 `;
@@ -175,7 +175,8 @@ const createEmailToken = function () {
         .digest("hex");
 
     const now = new Date();
-    const tokenExpires = new Date(now.getTime() + 10 * 60000);
+    // token aktivan 2 sata
+    const tokenExpires = new Date(now.getTime() + 2 * 60 * 60 * 1000);
 
     return { emailToken, hashEmailToken, tokenExpires };
 };
