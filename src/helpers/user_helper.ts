@@ -22,44 +22,27 @@ interface VerifyEmailOptions {
 // ----------------------------EMAIL SENDING-----------------------------------
 const sendEmailForResetPassword = async (options: ResetPasswordOptions, name: String) => {
     try {
+        const resendApiKey = process.env.RESEND_API_KEY!;
         const emailUsername: string = process.env.EMAIL_USERNAME!;
-        const emailPassword = process.env.EMAIL_PASSWORD!;
-        const emailPort = process.env.EMAIL_PORT!;
-        const emailHost = process.env.EMAIL_HOST!;
 
-
-
-        const transporter = nodemailer.createTransport({
-            host: emailHost,
-            port: parseInt(emailPort),
-            secure: false,
-            auth: {
-                user: emailUsername,
-                pass: emailPassword,
-            },
-        });
+        const resend = new Resend(resendApiKey);
 
         const htmlContent =
-
             `
-<p>Poštovani <strong>${name}</strong>,</p>
-<p>Primili smo zahtjev za resetovanje šifre za Vaš nalog.</p>
-<p>Molimo vas da koristite sljedeći token za resetovanje šifre:</p>
-<p><span style="font-size: 32px; background-color: #f0f0f0; padding: 5px 10px; border-radius: 4px;">${options.token}</span></p>
-<p>Token ističe za  10 minuta.</p>
-<p>Srdačan pozdrav,</p>
-<p><strong>Esimaj Tim</strong></p>
+            <p>Poštovani <strong>${name}</strong>,</p>
+            <p>Primili smo zahtjev za resetovanje šifre za Vaš nalog.</p>
+            <p>Molimo vas da koristite sljedeći token za resetovanje šifre:</p>
+            <p><span style="font-size: 32px; background-color: #f0f0f0; padding: 5px 10px; border-radius: 4px;">${options.token}</span></p>
+            <p>Token ističe za  10 minuta.</p>
+            <p>Srdačan pozdrav,</p>
+            <p><strong>Esimaj Tim</strong></p>
 `
-
-
-        const mailOptions = {
+        await resend.emails.send({
             from: emailUsername,
             to: options.email,
             subject: options.subject,
-            html: htmlContent,
-        };
-
-        await transporter.sendMail(mailOptions);
+            html: htmlContent
+        });
         return true;
     } catch (error) {
         console.error(error)
