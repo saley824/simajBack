@@ -101,59 +101,59 @@ main()
     .then(async () => {
         await prisma.$connect();
 
-        const rows: PriceRow[] = externalHelper.readExcel("C:/Users/obradovica/Desktop/ES Project Documentation/simaj back/south_america.xlsx")
+        // const rows: PriceRow[] = externalHelper.readExcel("C:/Users/obradovica/Desktop/ES Project Documentation/simaj back/south_america.xlsx")
 
-        const products = await prisma.product.findMany({
+        // const products = await prisma.product.findMany({
 
-        });
+        // });
 
-        for (const product of products) {
-
-
-            const result = rows.find(
-                row => row.id == product.countryId
-            );
+        // for (const product of products) {
 
 
-            if (result != undefined) {
-
-                console.log(result)
-                if (product.amount == 1) {
-                    product.sellingPrice = result.gb1;
-                }
-                if (product.amount == 3) {
-                    product.sellingPrice = result.gb3;
-                }
-                if (product.amount == 5) {
-                    product.sellingPrice = result.gb5;
-                }
-                if (product.amount == 10) {
-                    product.sellingPrice = result.gb10;
-                }
-                if (product.amount == 20) {
-                    product.sellingPrice = result.gb20;
-                }
-                if (product.amount == 50) {
-                    product.sellingPrice = result.gb50;
-                }
+        //     const result = rows.find(
+        //         row => row.id == product.countryId
+        //     );
 
 
-                try {
-                    await prisma.product.update({
-                        where: { id: product.id },
-                        data: {
-                            sellingPrice: product.sellingPrice,
-                        },
-                    });
-                } catch (error) {
-                    console.log(error)
-                }
+        //     if (result != undefined) {
+
+        //         console.log(result)
+        //         if (product.amount == 1) {
+        //             product.sellingPrice = result.gb1;
+        //         }
+        //         if (product.amount == 3) {
+        //             product.sellingPrice = result.gb3;
+        //         }
+        //         if (product.amount == 5) {
+        //             product.sellingPrice = result.gb5;
+        //         }
+        //         if (product.amount == 10) {
+        //             product.sellingPrice = result.gb10;
+        //         }
+        //         if (product.amount == 20) {
+        //             product.sellingPrice = result.gb20;
+        //         }
+        //         if (product.amount == 50) {
+        //             product.sellingPrice = result.gb50;
+        //         }
 
 
-            }
-        }
+        //         try {
+        //             await prisma.product.update({
+        //                 where: { id: product.id },
+        //                 data: {
+        //                     sellingPrice: product.sellingPrice,
+        //                 },
+        //             });
+        //         } catch (error) {
+        //             console.log(error)
+        //         }
 
-        console.log("ssssss")
+
+        //     }
+        // }
+
+        // console.log("ssssss")
 
 
         // await prisma.product.createMany({
