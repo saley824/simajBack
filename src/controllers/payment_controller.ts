@@ -56,9 +56,7 @@ const createTransaction = async (req: Request, res: Response) => {
 }
 const handleMonriCallback = async (req: Request, res: Response) => {
 
-    console.log("---------")
-    console.log(req.body)
-    console.log("---------")
+
     const transactionId = req.body.order_number
         ? Number(req.body.order_number)
         : null;
@@ -106,8 +104,7 @@ const handleMonriCallback = async (req: Request, res: Response) => {
 
             // if (response.data.message === "Success") {
             if (true) {
-                console.log("CALBACK CALLEED")
-                console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+
                 // userHelper.sendQRcode(
                 //     "Paket",
                 //     user?.email ?? "",

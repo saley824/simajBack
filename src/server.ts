@@ -1,7 +1,6 @@
 import { PrismaClient } from "@prisma/client";
-import express, { Request, Response } from "express";
+import express from "express";
 
-import axios from "axios";
 import cors from "cors";
 import authRouter from "./routes/authRoutes";
 import countryRouter from "./routes/countryRoutes";
@@ -14,7 +13,8 @@ import userRouter from "./routes/userRoutes";
 import checkoutRoutes from "./routes/checkoutRoutes";
 import deviceRoutes from "./routes/devicesRoutes";
 import paymentRoutes from "./routes/payment_route";
-import { date } from "yup";
+import { PriceRow } from './external_helpers/external_helpers'
+import externalHelper from "./external_helpers/external_helpers";
 
 
 
@@ -100,6 +100,66 @@ async function main() {
 main()
     .then(async () => {
         await prisma.$connect();
+
+        const rows: PriceRow[] = externalHelper.readExcel("C:/Users/obradovica/Desktop/ES Project Documentation/simaj back/south_america.xlsx")
+
+        const products = await prisma.product.findMany({
+
+        });
+
+        for (const product of products) {
+
+
+            const result = rows.find(
+                row => row.id == product.countryId
+            );
+
+
+            if (result != undefined) {
+
+                console.log(result)
+                if (product.amount == 1) {
+                    product.sellingPrice = result.gb1;
+                }
+                if (product.amount == 3) {
+                    product.sellingPrice = result.gb3;
+                }
+                if (product.amount == 5) {
+                    product.sellingPrice = result.gb5;
+                }
+                if (product.amount == 10) {
+                    product.sellingPrice = result.gb10;
+                }
+                if (product.amount == 20) {
+                    product.sellingPrice = result.gb20;
+                }
+                if (product.amount == 50) {
+                    product.sellingPrice = result.gb50;
+                }
+
+
+                try {
+                    await prisma.product.update({
+                        where: { id: product.id },
+                        data: {
+                            sellingPrice: product.sellingPrice,
+                        },
+                    });
+                } catch (error) {
+                    console.log(error)
+                }
+
+
+            }
+        }
+
+        console.log("ssssss")
+
+
+        // await prisma.product.createMany({
+        //     data: products
+        // });
+
 
         // const countries = await prisma.country.findMany({
         //     // orderBy: sort,

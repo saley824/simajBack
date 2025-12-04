@@ -28,6 +28,7 @@
     "nodemailer": "^7.0.5",
     "qrcode": "^1.5.4",
     "resend": "^6.5.2",
+    "xlsx": "^0.18.5",
     "yup": "^1.7.0"
   },
   "devDependencies": {

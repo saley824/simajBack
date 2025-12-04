@@ -223,7 +223,6 @@ const verifyEmail = async (req: Request, res: Response) => {
 
 const logOut = async (req: Request, res: Response) => {
     const secret = crypto.randomBytes(64).toString("hex");
-    console.log(secret);
     const { userId } = req.body;
 
     try {
@@ -425,7 +424,6 @@ const changePassword = async (req: Request, res: Response) => {
 
 const getAllUsers = async (req: Request, res: Response) => {
 
-    console.log("TEEEEEEEEEEST")
 
     try {
         let users = await prisma.user.findMany();

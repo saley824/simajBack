@@ -27,7 +27,6 @@ function getCountryLightDto(country: any, lang: string): CountryLightDto {
 
 }
 function getRegionDto(region: any, lang: string): RegionDto {
-    console.log(region)
     return {
         id: region.id,
         name: lang == "en" ? region.displayNameEn : region.displayNameSr,
@@ -39,7 +38,6 @@ function getRegionDto(region: any, lang: string): RegionDto {
 
 }
 function getRegionLightDto(region: any, lang: string): RegionLightDto {
-    console.log(region)
     return {
         id: region.id,
         name: lang == "en" ? region.displayNameEn : region.displayNameSr,

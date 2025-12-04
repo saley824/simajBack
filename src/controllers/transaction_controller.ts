@@ -127,7 +127,6 @@ const getTransactions = async (req: Request, res: Response) => {
 
 const addCouponCode = async (req: Request, res: Response) => {
     const couponCode = req.body.couponCode?.toString() || "";
-    console.log(couponCode);
     try {
         const coupon = await prisma.couponCode.findFirst({
             where: {

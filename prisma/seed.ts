@@ -399,19 +399,19 @@ async function main() {
     //     ],
     // });
 
-    await prisma.exchangeRate.createMany({
-        data: [
-            {
-                currency: 'EUR',
-                rateFromBAM: 0.511292, // 1 BAM = 0.511292 EUR
-            },
-            {
-                currency: 'USD',
-                rateFromBAM: 0.5561,   // 1 BAM = 0.5561 USD
-            }
-        ],
-        skipDuplicates: true, // ako već postoji — preskoči
-    });
+    // await prisma.exchangeRate.createMany({
+    //     data: [
+    //         {
+    //             currency: 'EUR',
+    //             rateFromBAM: 0.511292, // 1 BAM = 0.511292 EUR
+    //         },
+    //         {
+    //             currency: 'USD',
+    //             rateFromBAM: 0.5561,   // 1 BAM = 0.5561 USD
+    //         }
+    //     ],
+    //     skipDuplicates: true, // ako već postoji — preskoči
+    // });
 
 
 }
