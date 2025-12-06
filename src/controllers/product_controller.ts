@@ -104,6 +104,7 @@ const getAllProductsForRegion = async (req: Request, res: Response) => {
                 code: region.code,
                 supportedCountries: region.supportedCountries.map(c => convertHelper.getCountryLightDto(c.country, lang)),
                 keywords: region.keywords,
+                startsFrom: region.startsFrom,
 
             }
             res.status(200).json({

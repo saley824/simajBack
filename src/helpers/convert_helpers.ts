@@ -10,8 +10,8 @@ function getCountryDto(country: any, lang: string): CountryDto {
         isoCode: country.isoCode,
         mcc: country.mcc,
         supportedRegions: country.supportedRegions.map((r: { region: any; }) => getRegionLightDto(r.region, lang)),
-        keywords: country.keywords
-
+        keywords: country.keywords,
+        startsFrom: country.startsFrom
     }
 
 }
@@ -32,6 +32,7 @@ function getRegionDto(region: any, lang: string): RegionDto {
         name: lang == "en" ? region.displayNameEn : region.displayNameSr,
         code: region.code,
         keywords: region.keywords,
+        startsFrom: region.startsFrom,
         supportedCountries: region.supportedCountries.map((c: { country: any; }) => getCountryLightDto(c.country, lang),),
 
     }

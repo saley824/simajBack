@@ -7,6 +7,7 @@ export type CountryDto = {
     mcc: string;
     isoCode: string;
     keywords: string | null;
+    startsFrom: number | null;
     supportedRegions: RegionLightDto[],
 
 }

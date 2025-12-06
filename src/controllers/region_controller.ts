@@ -8,6 +8,9 @@ const getAllRegions = async (req: Request, res: Response) => {
     const lang = req.headers["accept-language"] || "en";
     try {
         const regions = await prisma.region.findMany({
+            orderBy: {
+                priority: 'asc'
+            },
             include: {
                 supportedCountries: {
                     select: {
@@ -66,6 +69,7 @@ const getAllRegions = async (req: Request, res: Response) => {
                     name: lang == "en" ? c.displayNameEn : c.displayNameSr,
                     code: c.code,
                     keywords: c.keywords,
+                    startsFrom: c.startsFrom,
                     supportedCountries: c.supportedCountries.map(c => convertHelper.getCountryLightDto(c.country, lang))
 
                 }

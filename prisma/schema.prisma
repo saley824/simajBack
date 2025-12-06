@@ -86,6 +86,8 @@ model Region {
     displayNameSr      String
     code               String
     keywords           String?
+    priority           Int?
+    startsFrom         Float?
     supportedCountries RegionSupportedCountry[]
     Product            Product[]
 }

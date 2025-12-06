@@ -15,8 +15,10 @@ import deviceRoutes from "./routes/devicesRoutes";
 import paymentRoutes from "./routes/payment_route";
 import testRoutes from "./routes/testRoutes";
 import testHelper from "./helpers/user_helper";
-import axios from "axios";
+import externalHelper from "./external_helpers/external_helpers";
+import axios, { AxiosResponse } from "axios";
 import { getAccessToken } from "./helpers/token_helper";
+import { PriceRow } from "./external_helpers/external_helpers";
 
 
 
@@ -103,152 +105,8 @@ async function main() {
 main()
     .then(async () => {
         await prisma.$connect();
-
         const token = await getAccessToken();
 
-
-        // const products = await prisma.product.findMany({
-        //     where: {
-        //         amount: 50
-        //     }
-        // });
-        // var i = 0;
-        // for (const product of products) {
-        //     if (product.countryId && product.sellingPrice && product.countryId) {
-
-        //         i++;
-
-        //         const startsFrom = Number((product.sellingPrice / 50).toFixed(2))
-        //         // try {
-        //         //     await prisma.country.update({
-        //         //         where: { id: product.countryId },
-        //         //         data: {
-        //         //             startsFrom:
-        //         //                 startsFrom,
-        //         //         },
-        //         //     });
-        //         // } catch (error) {
-        //         //     console.log(error)
-        //         // }
-        //     }
-
-        // }
-        // console.log(i)
-
-
-        // console.log("ssssss")
-
-
-        // await prisma.product.createMany({
-        //     data: products
-        // });
-
-
-        // const countries = await prisma.country.findMany({
-        //     // orderBy: sort,
-        //     // where: filterObject
-        // });
-
-        // let countryNames1 = countries.map(c => c.isoCode);
-        // let countryNames2 = countries.map(c => c.isoCode);
-
-
-        // let countriesThatIDontHave: string[] = [];
-        // let countriesThatTheyDontHave: string[] = [];
-
-
-        let lastId = "";
-
-        // await prisma.product.deleteMany(
-
-        // )
-
-        // for (let index = 0; index < 25; index++) {
-        //     console.log(index)
-        //     const res = await axios.post(
-        //         "e",
-        //         {
-        //             "page_start": {
-        //                 "id": lastId
-        //             },
-        //             "page_size": "99",
-        //             "countries": "",
-        //             "region": ""
-        //         },
-        //         {
-        //             headers: {
-        //                 "Content-Type": "application/json",
-        //                 "Authorization": `Bearer ${token}`,
-        //             }
-        //         }
-        //     );
-
-        //     if (index != 13) {
-        //         lastId = res.data.data.last_evaluated_key.id;
-
-        //     }
-
-
-
-        //     for (let index = 0; index < 99; index++) {
-
-        //         try {
-        //             const product = res.data.data.products[index]
-
-        //             if (product.is_unlimited) {
-        //                 console.log(product)
-        //             }
-
-        //             const networks = product.networks
-        // if (product.coverage.length == 1) {
-        //     const newCode = product.coverage[0]
-        //     const country = await prisma.country.findFirst({
-        //         where: {
-        //             isoCode: newCode
-        //         }
-        //     });
-        //     await prisma.product.create(
-        //         {
-        //             data: {
-        //                 id: product.id,
-        //                 name: product.name,
-        //                 duration: product.duration,
-        //                 durationUnit: product.duration_unit,
-        //                 amount: product.amount,
-        //                 amountUnit: product.amount_unit,
-        //                 imsiProfile: product.imsi_profile,
-        //                 countryId: country?.id,
-        //                 originalPrice: product.price,
-        //                 sellingPrice: product.price,
-        //                 isUnlimited: product.is_unlimited,
-        //                 highSpeed: product.high_speed,
-        //                 highSpeedUnit: product.high_speed_unit,
-        //                 unlimitedSpeed: product.unlimited_speed,
-        //             }
-        //         }
-        //     )
-
-        //     for (let j = 0; j < networks.length; j++) {
-        //         await prisma.network.create({
-        //             data: {
-        //                 mccmnc: networks[j].mccmnc,
-        //                 name: networks[j].name,
-        //                 speed: networks[j].speed,
-        //                 country_iso: networks[j].country_iso,
-        //                 productId: product.id,
-        //             }
-        //         });
-        //     }
-        // }
-
-        // } catch (error) {
-        //     console.log(error)
-        // }
-
-
-        //         }
-
-        //     }
 
     })
     .catch(async (e) => {

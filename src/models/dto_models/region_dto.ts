@@ -5,5 +5,6 @@ export type RegionDto = {
     name: string;
     code: string;
     keywords: string | null;
+    startsFrom: number | null;
     supportedCountries: CountryLightDto[],
 }
