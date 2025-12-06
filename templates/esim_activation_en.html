@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>eSIM Activation Instructions</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #f7fbff;
+            color: #222;
+            line-height: 1.6;
+            margin: 0;
+            padding: 25px;
+        }
+
+        h2 {
+            color: #2460FF;
+            margin-top: 35px;
+        }
+
+        h3 {
+            color: #2460FF;
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 18px 20px;
+            margin: 25px 0;
+            border: 1px solid #dce8ff;
+            box-shadow: 0 2px 6px rgba(36, 96, 255, 0.08);
+        }
+
+        ul,
+        ol {
+            padding-left: 20px;
+        }
+
+        .highlight {
+            background: #eff5ff;
+            border-left: 4px solid #2460FF;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-weight: 500;
+        }
+
+        .small {
+            font-size: 13px;
+            color: #555;
+        }
+
+        .qr-container {
+            text-align: center;
+            margin-top: 15px;
+            padding: 22px;
+            border: 2px dashed #2460FF;
+            border-radius: 12px;
+            background: #f2f8ff;
+        }
+
+        .qr-container img {
+            width: 180px;
+        }
+
+        .guide-links {
+            font-size: 14px;
+            color: #333;
+            margin-top: 12px;
+            margin-bottom: 20px;
+        }
+
+        .guide-links a {
+            color: #2460FF;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .guide-links a:hover {
+            text-decoration: underline;
+        }
+
+        .footer {
+            margin-top: 40px;
+            padding-top: 10px;
+            font-size: 15px;
+            color: #444;
+        }
+
+        strong {
+            color: #2460FF;
+        }
+    </style>
+</head>
+
+<body>
+
+    <p>Hi <strong>{{customerName}}</strong>,</p>
+
+    <p>🎉 Your eSIM purchase was successful — you're all set!</p>
+
+    <div class="card">
+        <h3>📦 Plan Details</h3>
+        <ul>
+            <li><strong>Destination:</strong> {{country}}</li>
+            <li><strong>Plan:</strong> {{dataAmount}}</li>
+            <li><strong>Validity:</strong> {{validity}}</li>
+            <li><strong>Networks:</strong> {{networks}}</li>
+            <li><strong>Provider:</strong> {{provider}}</li>
+        </ul>
+    </div>
+
+    <p><strong>Make sure you are connected to Wi-Fi or stable internet before installing.</strong></p>
+
+    <h2>📌 Install via QR Code</h2>
+    <p>Scan the QR code below to download and install your eSIM.</p>
+
+    <div class="qr-container">
+        <img src="cid:qrcode" alt="eSIM QR Code" />
+    </div>
+
+    <p class="guide-links">
+        If you require step-by-step visuals, check out:
+        <a href={{iosUrl}} target="_blank" rel="noopener noreferrer">iOS guide</a>,
+        <a href={{androidUrl}} target="_blank" rel="noopener noreferrer">General Android guide</a>
+        or
+        <a href={{samsungUrl}} target="_blank" rel="noopener noreferrer">Samsung-specific
+            guide</a>.
+    </p>
+
+    <p class="small">📌 Some Android models require scanning through “Add eSIM” inside settings—not the camera app.</p>
+
+    <h2>📌 Activate When Ready</h2>
+    <ol class="card">
+        <li>Go to <strong>Settings → Cellular</strong> and turn this eSIM ON</li>
+        <li>Enable <strong>Data Roaming</strong> and select this eSIM for mobile data</li>
+        <li>This plan auto-starts when you connect to a local network at your destination*</li>
+    </ol>
+
+    <div class="highlight">
+        ⏳ Your validity only begins once the eSIM connects to a network.
+    </div>
+
+    <h2>📌 Trouble Connecting?</h2>
+    <ol class="card">
+        <li>The eSIM must be switched <strong>ON</strong> and set as primary data line</li>
+        <li>Ensure Data Roaming is enabled</li>
+        <li>APN should be: <strong>{{apn}}</strong></li>
+        <li>Try manually selecting one of these networks: <strong>{{networks}}</strong></li>
+    </ol>
+
+    <p class="small">⚡ Initial activation may take 5–15 minutes.</p>
+
+    <div class="highlight">
+        ⚠️ Do not remove this eSIM after installation — it cannot be reactivated once deleted.
+    </div>
+
+    <h2>📌 Manual Setup (if QR fails)</h2>
+
+    <div class="card">
+        <h3>🍏 iOS Setup</h3>
+        <ul>
+            <li><strong>SM-DP+ Address:</strong> {{smdp}}</li>
+            <li><strong>Activation Code:</strong> {{activationCode}}</li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <h3>🤖 Android Setup</h3>
+        <ul>
+            <li><strong>Activation Code:</strong> {{lpaString}}</li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <h3>💻 Laptop Setup</h3>
+        <ul>
+            <li><strong>Activation Code:</strong>{{lpaString}}</li>
+        </ul>
+    </div>
+
+    <p>If you need help, our team is here for you — just mention your Order ID:</p>
+    <p><strong>{{orderId}}</strong></p>
+
+    <p class="footer">✈️ Safe travels and enjoy your connectivity! 🌍</p>
+
+</body>
+
+</html>

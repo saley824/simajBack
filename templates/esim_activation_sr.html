@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="sr">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Instrukcije za aktivaciju eSIM-a</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #f7fbff;
+            color: #222;
+            line-height: 1.6;
+            margin: 0;
+            padding: 25px;
+        }
+
+        h2 {
+            color: #2460FF;
+            margin-top: 35px;
+        }
+
+        h3 {
+            color: #2460FF;
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 18px 20px;
+            margin: 25px 0;
+            border: 1px solid #dce8ff;
+            box-shadow: 0 2px 6px rgba(36, 96, 255, 0.08);
+        }
+
+        ul,
+        ol {
+            padding-left: 20px;
+        }
+
+        .highlight {
+            background: #eff5ff;
+            border-left: 4px solid #2460FF;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-weight: 500;
+        }
+
+        .small {
+            font-size: 13px;
+            color: #555;
+        }
+
+        .qr-container {
+            text-align: center;
+            margin-top: 15px;
+            padding: 22px;
+            border: 2px dashed #2460FF;
+            border-radius: 12px;
+            background: #f2f8ff;
+        }
+
+        .qr-container img {
+            width: 180px;
+        }
+
+        .guide-links {
+            font-size: 14px;
+            color: #333;
+            margin-top: 12px;
+            margin-bottom: 20px;
+        }
+
+        .guide-links a {
+            color: #2460FF;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .guide-links a:hover {
+            text-decoration: underline;
+        }
+
+        .footer {
+            margin-top: 40px;
+            padding-top: 10px;
+            font-size: 15px;
+            color: #444;
+        }
+
+        strong {
+            color: #2460FF;
+        }
+    </style>
+</head>
+
+<body>
+
+    <p>Pozdrav <strong>{{customerName}}</strong>,</p>
+
+    <p>🎉 Kupovina Vašeg eSIM-a je uspješno obavljena — sve je spremno!</p>
+
+    <div class="card">
+        <h3>📦 Detalji plana</h3>
+        <ul>
+            <li><strong>Destinacija:</strong> {{country}}</li>
+            <li><strong>Plan:</strong> {{dataAmount}}</li>
+            <li><strong>Trajanje:</strong> {{validity}}</li>
+            <li><strong>Mreže:</strong> {{networks}}</li>
+            <li><strong>Provajder:</strong> {{provider}}</li>
+        </ul>
+    </div>
+
+    <p><strong>Prije instalacije osigurajte stabilnu Wi-Fi ili internet vezu.</strong></p>
+
+    <h2>📌 Instalacija putem QR koda</h2>
+    <p>Skenirajte QR kod ispod kako biste preuzeli i instalirali svoj eSIM.</p>
+
+    <div class="qr-container">
+        <img src="cid:qrcode" alt="eSIM QR kod" />
+    </div>
+
+    <p class="guide-links">
+        Ako su Vam potrebni detaljni koraci sa slikama, pogledajte:
+        <a href={{iosUrl}} target="_blank" rel="noopener noreferrer">iOS uputstvo</a>,
+        <a href={{androidUrl}} target="_blank" rel="noopener noreferrer">Opšte Android uputstvo</a>
+        ili
+        <a href={{samsungUrl}} target="_blank" rel="noopener noreferrer">Samsung uputstvo</a>.
+    </p>
+
+    <p class="small">📌 Neki Android modeli zahtijevaju skeniranje kroz „Dodaj eSIM” u podešavanjima, a ne kamerom.</p>
+
+    <h2>📌 Aktivacija kada stignete</h2>
+    <ol class="card">
+        <li>Otvorite <strong>Podešavanja → Mobilna mreža</strong> i uključite ovaj eSIM</li>
+        <li>Aktivirajte <strong>Data Roaming</strong> i postavite ovaj eSIM kao primarni za mobilne podatke</li>
+        <li>Plan se automatski aktivira kada se povežete na lokalnu mrežu na destinaciji*</li>
+    </ol>
+
+    <div class="highlight">
+        ⏳ Trajanje počinje tek kada se eSIM poveže na mrežu.
+    </div>
+
+    <h2>📌 Problemi sa konekcijom?</h2>
+    <ol class="card">
+        <li>eSIM mora biti uključen i postavljen kao primarna linija za podatke</li>
+        <li>Provjerite da je Data Roaming omogućen</li>
+        <li>APN treba biti: <strong>{{apn}}</strong></li>
+        <li>Pokušajte ručno odabrati jednu od ovih mreža: <strong>{{networks}}</strong></li>
+    </ol>
+
+    <p class="small">⚡ Prva aktivacija može trajati 5–15 minuta.</p>
+
+    <div class="highlight">
+        ⚠️ Ne brišite ovaj eSIM nakon instalacije — ne može se ponovo aktivirati nakon uklanjanja.
+    </div>
+
+    <h2>📌 Ručna instalacija (ako QR ne radi)</h2>
+
+    <div class="card">
+        <h3>🍏 iOS instalacija</h3>
+        <ul>
+            <li><strong>SM-DP+ adresa:</strong> {{smdp}}</li>
+            <li><strong>Aktivacioni kod:</strong> {{activationCode}}</li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <h3>🤖 Android instalacija</h3>
+        <ul>
+            <li><strong>Aktivacioni kod:</strong> {{lpaString}}</li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <h3>💻 Laptop instalacija</h3>
+        <ul>
+            <li><strong>Aktivacioni kod:</strong> {{lpaString}}</li>
+        </ul>
+    </div>
+
+    <p>Ako Vam je potrebna pomoć, naš tim je uz Vas — samo navedite svoj ID porudžbine:</p>
+    <p><strong>{{orderId}}</strong></p>
+
+    <p class="footer">✈️ Sretan put i uživajte u povezivanju! 🌍</p>
+
+</body>
+
+</html>

@@ -13,8 +13,10 @@ import userRouter from "./routes/userRoutes";
 import checkoutRoutes from "./routes/checkoutRoutes";
 import deviceRoutes from "./routes/devicesRoutes";
 import paymentRoutes from "./routes/payment_route";
-import { PriceRow } from './external_helpers/external_helpers'
-import externalHelper from "./external_helpers/external_helpers";
+import testRoutes from "./routes/testRoutes";
+import testHelper from "./helpers/user_helper";
+import axios from "axios";
+import { getAccessToken } from "./helpers/token_helper";
 
 
 
@@ -83,6 +85,7 @@ async function main() {
     app.use(`${baseUrl}/checkout`, checkoutRoutes);
     app.use(`${baseUrl}/devices`, deviceRoutes);
     app.use(`${baseUrl}/payment`, paymentRoutes);
+    app.use(`${baseUrl}/test`, testRoutes);
 
 
     /// this make problem, check it out
@@ -101,57 +104,38 @@ main()
     .then(async () => {
         await prisma.$connect();
 
-        // const rows: PriceRow[] = externalHelper.readExcel("C:/Users/obradovica/Desktop/ES Project Documentation/simaj back/south_america.xlsx")
+        const token = await getAccessToken();
+        testHelper.sendEmailForResetPassword()
+
 
         // const products = await prisma.product.findMany({
-
-        // });
-
-        // for (const product of products) {
-
-
-        //     const result = rows.find(
-        //         row => row.id == product.countryId
-        //     );
-
-
-        //     if (result != undefined) {
-
-        //         console.log(result)
-        //         if (product.amount == 1) {
-        //             product.sellingPrice = result.gb1;
-        //         }
-        //         if (product.amount == 3) {
-        //             product.sellingPrice = result.gb3;
-        //         }
-        //         if (product.amount == 5) {
-        //             product.sellingPrice = result.gb5;
-        //         }
-        //         if (product.amount == 10) {
-        //             product.sellingPrice = result.gb10;
-        //         }
-        //         if (product.amount == 20) {
-        //             product.sellingPrice = result.gb20;
-        //         }
-        //         if (product.amount == 50) {
-        //             product.sellingPrice = result.gb50;
-        //         }
-
-
-        //         try {
-        //             await prisma.product.update({
-        //                 where: { id: product.id },
-        //                 data: {
-        //                     sellingPrice: product.sellingPrice,
-        //                 },
-        //             });
-        //         } catch (error) {
-        //             console.log(error)
-        //         }
-
-
+        //     where: {
+        //         amount: 50
         //     }
+        // });
+        // var i = 0;
+        // for (const product of products) {
+        //     if (product.countryId && product.sellingPrice && product.countryId) {
+
+        //         i++;
+
+        //         const startsFrom = Number((product.sellingPrice / 50).toFixed(2))
+        //         // try {
+        //         //     await prisma.country.update({
+        //         //         where: { id: product.countryId },
+        //         //         data: {
+        //         //             startsFrom:
+        //         //                 startsFrom,
+        //         //         },
+        //         //     });
+        //         // } catch (error) {
+        //         //     console.log(error)
+        //         // }
+        //     }
+
         // }
+        // console.log(i)
+
 
         // console.log("ssssss")
 
@@ -174,10 +158,13 @@ main()
         // let countriesThatTheyDontHave: string[] = [];
 
 
-        // let lastId = "";
+        let lastId = "";
 
+        // await prisma.product.deleteMany(
 
-        // for (let index = 0; index < 14; index++) {
+        // )
+
+        // for (let index = 0; index < 25; index++) {
         //     console.log(index)
         //     const res = await axios.post(
         //         "https://api.esimfx.com/product/api/v1/get_products",
@@ -192,7 +179,7 @@ main()
         //         {
         //             headers: {
         //                 "Content-Type": "application/json",
-        //                 "Authorization": "Bearer", // optional
+        //                 "Authorization": `Bearer ${token}`,
         //             }
         //         }
         //     );
@@ -202,53 +189,67 @@ main()
 
         //     }
 
-        //     console.log(lastId)
+
 
         //     for (let index = 0; index < 99; index++) {
+
         //         try {
         //             const product = res.data.data.products[index]
-        //             const coverage = product.coverage
-        //             if (coverage.length > 1) {
-        //                 const newCode = product.region
-        //                 const region = await prisma.region.findFirst({
-        //                     where: {
-        //                         code: newCode
-        //                     }
-        //                 });
 
-        //                 for (let j = 0; j < coverage.length; j++) {
-        //                     const country = await prisma.country.findFirst({
-        //                         where: {
-        //                             isoCode: coverage[j]
-        //                         }
-        //                     });
-        //                     if (country != null && region != null) {
-        //                         console.log(country.displayNameEn)
-        //                         console.log(region.displayNameEn)
-        //                         try {
-        //                             await prisma.regionSupportedCountry.create({
-        //                                 data: {
-        //                                     countryId: country!.id,
-        //                                     regionId: region!.id,
-        //                                 }
-        //                             });
-        //                         } catch (error) {
-        //                             console.log("exist")
-        //                         }
-
-        //                     }
-
-        //                 }
+        //             if (product.is_unlimited) {
+        //                 console.log(product)
         //             }
 
-        //         } catch (error) {
-        //             console.log(error)
+        //             const networks = product.networks
+        // if (product.coverage.length == 1) {
+        //     const newCode = product.coverage[0]
+        //     const country = await prisma.country.findFirst({
+        //         where: {
+        //             isoCode: newCode
+        //         }
+        //     });
+        //     await prisma.product.create(
+        //         {
+        //             data: {
+        //                 id: product.id,
+        //                 name: product.name,
+        //                 duration: product.duration,
+        //                 durationUnit: product.duration_unit,
+        //                 amount: product.amount,
+        //                 amountUnit: product.amount_unit,
+        //                 imsiProfile: product.imsi_profile,
+        //                 countryId: country?.id,
+        //                 originalPrice: product.price,
+        //                 sellingPrice: product.price,
+        //                 isUnlimited: product.is_unlimited,
+        //                 highSpeed: product.high_speed,
+        //                 highSpeedUnit: product.high_speed_unit,
+        //                 unlimitedSpeed: product.unlimited_speed,
+        //             }
+        //         }
+        //     )
+
+        //     for (let j = 0; j < networks.length; j++) {
+        //         await prisma.network.create({
+        //             data: {
+        //                 mccmnc: networks[j].mccmnc,
+        //                 name: networks[j].name,
+        //                 speed: networks[j].speed,
+        //                 country_iso: networks[j].country_iso,
+        //                 productId: product.id,
+        //             }
+        //         });
+        //     }
+        // }
+
+        // } catch (error) {
+        //     console.log(error)
+        // }
+
+
         //         }
 
-
         //     }
-
-        // }
 
     })
     .catch(async (e) => {

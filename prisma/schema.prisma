@@ -5,6 +5,9 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 // npx prisma migrate deploy  
+
+// > npx prisma migrate dev    
+
 generator client {
     provider   = "prisma-client-js"
     engineType = "library"
@@ -71,6 +74,7 @@ model Country {
     mcc              String
     isoCode          String
     keywords         String?
+    startsFrom       Float?
     priority         Int
     supportedRegions RegionSupportedCountry[]
     Product          Product[]
@@ -96,6 +100,11 @@ model RegionSupportedCountry {
     @@id([regionId, countryId])
 }
 
+//    "is_unlimited": true,
+//     "unlimited_speed": "2GB/day at 4G/5G. 512kbps after",
+//     "high_speed_amount": 2,
+//     "high_speed_amount_unit": "GB",
+
 model Product {
     id              String  @id
     name            String
@@ -106,7 +115,11 @@ model Product {
     imsiProfile     String?
     originalPrice   Float?
     sellingPrice    Float?
-    discountPercent Float? // null means no discount
+    discountPercent Float?
+    isUnlimited     Boolean @default(false)
+    unlimitedSpeed  String?
+    highSpeed       Int?
+    highSpeedUnit   String?
 
     // Foreign keys
     regionId  Int?
@@ -165,7 +178,9 @@ model Transaction {
 model Order {
     id        String @id
     iccid     String
+    esimQr    String
     productId String
+    apn       String
 
     product     Product      @relation(fields: [productId], references: [id])
     transaction Transaction?

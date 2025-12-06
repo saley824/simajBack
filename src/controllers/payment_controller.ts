@@ -1,8 +1,9 @@
 import { Request, Response } from "express";
 import { prisma } from "../server";
 import axios from "axios";
-import { getAccessToken } from "../helpers/token_helper";
 import userHelper from "../helpers/user_helper";
+
+import { getAccessToken } from "../helpers/token_helper";
 
 
 interface OrderEsimResponse {
@@ -68,7 +69,16 @@ const handleMonriCallback = async (req: Request, res: Response) => {
                 where: {
                     id: transactionId
                 },
+                include: {
+                    order: true,
+                    product: {
+                        include: {
+                            networks: true
+                        }
+                    },
+                }
             });
+
 
             if (transaction == null) return
 
@@ -81,56 +91,70 @@ const handleMonriCallback = async (req: Request, res: Response) => {
             );
 
             const token = await getAccessToken();
-            // console.log(token)
 
 
-            // const response = await axios.post<OrderEsimResponse>(
-            //     `${process.env.N_BASE_URL}/order/api/v1/create_order`,
-            //     {
-            //         "operation_type": "NEW",
-            //         "product": {
-            //             "id": transaction?.productId
-            //         }
-            //     },
-            //     {
-            //         headers: {
-            //             "X-Idempotency-Key": crypto.randomUUID(),
-            //             "Content-Type": "application/json",
-            //             "Authorization": `Bearer ${token}`,
-            //         }
-            //     }
-            // );
+            const response = await axios.post<OrderEsimResponse>(
+                `${process.env.N_BASE_URL}/order/api/v1/create_order`,
+                {
+                    "operation_type": "NEW",
+                    "product": {
+                        "id": transaction?.productId
+                    }
+                },
+                {
+                    headers: {
+                        "X-Idempotency-Key": crypto.randomUUID(),
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`,
+                    }
+                }
+            );
 
 
-            // if (response.data.message === "Success") {
-            if (true) {
-
-                // userHelper.sendQRcode(
-                //     "Paket",
-                //     user?.email ?? "",
-                //     "LPA:1$bics.validspereachdpplus.com$E-RVFA-RLCXFSJ7DYL6FS6EUM-LW3H8ND4QGC4Z3F0A4P3NBLZQO40L6TPOXA3-O"
-                // )
-
-                // const esimData = response.data.data;
-
-                // const orderData = {
-                //     id: esimData.id,
-                //     iccid: esimData.esim.iccid,
-                //     productId: transaction!.productId
-                // };
-
-                // const order = await prisma.order.create({
-                //     data: orderData
-                // });
 
 
-                // await prisma.transaction.update({
-                //     where: { id: transaction!.id },
-                //     data: {
-                //         orderId: order.id,
-                //         TransactionStatus: "Completed"
-                //     }
-                // });
+            // (subject: string, to: string, lpaString: string, apn: string, amount: number, days: number, customerName: string, countryName: string, orderId: string,)
+            if (response.data.message === "Success") {
+                const esimData = response.data.data;
+                const networks = transaction.product.networks.map(network => network.name ?? "").join(",")
+                ///todo put e sim data za order
+                userHelper.sendQRcode(
+                    "Esim package",
+                    user?.email ?? "",
+                    esimData.esim.esim_qr,
+                    esimData.esim.apn,
+                    transaction.product!.amount!,
+                    transaction.product.duration,
+                    user?.name ?? "",
+                    transaction.product.name,
+                    transactionId!,
+                    networks,
+                    transaction.product.imsiProfile ?? ""
+
+                )
+
+
+                const orderData = {
+                    id: esimData.id,
+                    iccid: esimData.esim.iccid,
+                    esimQr: esimData.esim.esim_qr,
+                    apn: esimData.esim.apn,
+                    productId: transaction!.productId,
+
+                };
+
+                const order = await prisma.order.create({
+                    data: orderData
+                });
+
+
+                await prisma.transaction.update({
+                    where: { id: transaction!.id },
+                    data: {
+                        orderId: order.id,
+                        TransactionStatus: "Completed"
+                    }
+                });
 
                 return res.status(200).json({
                     success: true,
