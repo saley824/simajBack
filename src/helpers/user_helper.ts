@@ -39,7 +39,7 @@ const sendEmailForResetPassword = async (options: ResetPasswordOptions, name: St
 
         const htmlContent =
             `
-                   <img src="cid:logoId" />
+                  <img src="cid:logoId" style="max-width: 160px; width: 100%; height: auto;" />
                     <p>Poštovani <strong>${name}</strong>,</p>
                     <p>Primili smo zahtjev za resetovanje šifre za Vaš nalog.</p>
                     <p>Molimo vas da koristite sljedeći token za resetovanje šifre:</p>
