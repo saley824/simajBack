@@ -113,11 +113,9 @@ const handleMonriCallback = async (req: Request, res: Response) => {
 
 
 
-            // (subject: string, to: string, lpaString: string, apn: string, amount: number, days: number, customerName: string, countryName: string, orderId: string,)
             if (response.data.message === "Success") {
                 const esimData = response.data.data;
                 const networks = transaction.product.networks.map(network => network.name ?? "").join(",")
-                ///todo put e sim data za order
                 userHelper.sendQRcode(
                     "Esim package",
                     user?.email ?? "",

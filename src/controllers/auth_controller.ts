@@ -340,14 +340,14 @@ const forgotPassword = async (req: Request, res: Response) => {
                 passwordResetExpires: tokenExpires
             }
         })
-        // await userHelper.sendEmailForResetPassword(
-        //     {
-        //     email: email,
-        //     subject: "Iskoristite ovaj token za reset šifre",
-        //     token: emailToken,
-        // },
-        //     user.name
-        // );
+        await userHelper.sendEmailForResetPassword(
+            {
+                email: email,
+                subject: "Iskoristite ovaj token za reset šifre",
+                token: emailToken,
+            },
+            user.name
+        );
         res.status(200).json({
             success: true,
             message: "Email je poslan",
