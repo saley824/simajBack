@@ -91,6 +91,8 @@ const sendQRcode = async (subject: string, to: string, lpaString: string, apn: s
     //     `;
 
     const resend = new Resend(resendApiKey);
+    const logoPath = path.join(process.cwd(), "assets/esimaj_logo.png");
+    const logoBuffer = fs.readFileSync(logoPath);
 
     const { activationCode, smdp } = extractIOSCodes(lpaString);
 
@@ -124,6 +126,13 @@ const sendQRcode = async (subject: string, to: string, lpaString: string, apn: s
                 contentId: "qrcode",
 
             },
+            {
+                filename: "logo.png",
+                content: logoBuffer,
+                contentId: "logoId",
+
+            },
+
         ],
     });
 
@@ -150,13 +159,15 @@ const sendEmailForVerification = async (options: VerifyEmailOptions, name: Strin
         const emailUsername: string = process.env.EMAIL_USERNAME!;
         const resendApiKey = process.env.RESEND_API_KEY!;
 
-        const font = process.env.FRONTEND_BASE_URL!;
+        const logoPath = path.join(process.cwd(), "assets/esimaj_logo.png");
+        const logoBuffer = fs.readFileSync(logoPath);
 
         const verificationUrl = `${process.env.FRONTEND_BASE_URL}/verify-email?token=${options.token}&userId=${options.userId}`;
 
         const htmlContent =
 
             `
+<img src="cid:logoId" style="max-width: 160px; width: 100%; height: auto;" />
 <p>Poštovani <strong>${name}</strong>,</p>
 <p>Dobrobrodosli na ESimaj platformu!</p>
 <p>Klikom na <a href="${verificationUrl}">here</a> verifikujte email.</p>
@@ -174,7 +185,16 @@ const sendEmailForVerification = async (options: VerifyEmailOptions, name: Strin
             from: emailUsername,
             to: options.email,
             subject: options.subject,
-            html: htmlContent
+            html: htmlContent,
+            attachments: [
+                {
+                    filename: "logo.png",
+                    content: logoBuffer,
+                    contentId: "logoId",
+
+                },
+
+            ],
         });
 
 
