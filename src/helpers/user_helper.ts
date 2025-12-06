@@ -31,7 +31,7 @@ const sendEmailForResetPassword = async (options: ResetPasswordOptions, name: St
         const logoPath = path.join(process.cwd(), "assets/esimaj_logo.png");
         const logoBuffer = fs.readFileSync(logoPath);
 
-        console.log(logoPath)
+
 
 
 

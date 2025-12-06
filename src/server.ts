@@ -105,7 +105,6 @@ main()
         await prisma.$connect();
 
         const token = await getAccessToken();
-        testHelper.sendEmailForResetPassword()
 
 
         // const products = await prisma.product.findMany({
@@ -167,7 +166,7 @@ main()
         // for (let index = 0; index < 25; index++) {
         //     console.log(index)
         //     const res = await axios.post(
-        //         "https://api.esimfx.com/product/api/v1/get_products",
+        //         "e",
         //         {
         //             "page_start": {
         //                 "id": lastId
