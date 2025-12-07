@@ -115,9 +115,9 @@ const handleMonriCallback = async (req: Request, res: Response) => {
 
             if (response.data.message === "Success") {
                 const esimData = response.data.data;
-                const networks = transaction.product.networks.map(network => network.name ?? "").join(",")
+                const networks = transaction.product.networks.map(network => network.name ?? "").join(", ")
                 userHelper.sendQRcode(
-                    "Esim package",
+                    "sr",
                     user?.email ?? "",
                     esimData.esim.esim_qr,
                     esimData.esim.apn,

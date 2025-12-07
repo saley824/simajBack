@@ -69,10 +69,11 @@ const sendEmailForResetPassword = async (options: ResetPasswordOptions, name: St
     }
 
 };
-const sendQRcode = async (subject: string, to: string, lpaString: string, apn: string, amount: number, days: number, customerName: string, countryName: string, orderId: number, networks: string, provider: string) => {
+const sendQRcode = async (lang: string, to: string, lpaString: string, apn: string, amount: number, days: number, customerName: string, countryName: string, orderId: number, networks: string, provider: string) => {
 
 
-    var htmlContent = fs.readFileSync(path.resolve("templates/esim_activation_sr.html"), "utf-8");
+    var htmlContent = lang == "en" ? fs.readFileSync(path.resolve("templates/esim_activation_en.html"), "utf-8") : fs.readFileSync(path.resolve("templates/esim_activation_sr.html"), "utf-8");
+
 
     // 1. Generate QR Code (PNG Base64)
     const qrBase64 = await QRCode.toDataURL(lpaString);
@@ -107,17 +108,17 @@ const sendQRcode = async (subject: string, to: string, lpaString: string, apn: s
         .replace(/{{apn}}/g, apn)
         .replace(/{{dataAmount}}/g, amount.toString())
         .replace(/{{validity}}/g, days.toString())
-        .replace(/{{{{lpaString}}}}/g, lpaString)
-        .replace(/{{iosUrl}}/g, `#${process.env.FRONTEND_BASE_URL_PRODUCTION!}/instructions/ios`)
-        .replace(/{{androidUrl}}/g, `#${process.env.FRONTEND_BASE_URL_PRODUCTION!}/instructions/android`)
-        .replace(/{{samsungUrl}}/g, `#${process.env.FRONTEND_BASE_URL_PRODUCTION!}/instructions/samsung`)
+        .replace(/{{lpaString}}/g, lpaString)
+        .replace(/{{iosUrl}}/g, `${process.env.FRONTEND_BASE_URL_PRODUCTION!}/instructions/ios`)
+        .replace(/{{androidUrl}}/g, `${process.env.FRONTEND_BASE_URL_PRODUCTION!}/instructions/android`)
+        .replace(/{{samsungUrl}}/g, `${process.env.FRONTEND_BASE_URL_PRODUCTION!}/instructions/samsung`)
 
 
 
     await resend.emails.send({
         from: emailUsername,
         to: to,
-        subject: subject,
+        subject: lang == "en" ? "Thank you for your purchase! Here is your eSIM activation 📩" : "Hvala na kupovini! Evo Vaše eSIM aktivacije 📩",
         html: htmlContent,
         attachments: [
             {
