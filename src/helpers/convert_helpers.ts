@@ -44,6 +44,7 @@ function getRegionLightDto(region: any, lang: string): RegionLightDto {
         name: lang == "en" ? region.displayNameEn : region.displayNameSr,
         code: region.code,
         keywords: region.keywords,
+        startsFrom: region.startsFrom,
 
     }
 

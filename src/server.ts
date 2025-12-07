@@ -107,6 +107,37 @@ main()
         await prisma.$connect();
         const token = await getAccessToken();
 
+        var lastId: string | undefined = ""
+
+        const products = await prisma.product.findMany({
+            where: {
+                amount: 20
+            }
+        });
+        var i = 0;
+        for (const product of products) {
+            if (product.regionId && product.sellingPrice) {
+
+                i++;
+
+                const startsFrom = Number((product.sellingPrice / 20).toFixed(2))
+                try {
+                    await prisma.region.update({
+                        where: { id: product.regionId },
+                        data: {
+                            startsFrom:
+                                startsFrom,
+                        },
+                    });
+                } catch (error) {
+                    console.log(error)
+                }
+            }
+
+        }
+
+        console.log("end")
+
 
     })
     .catch(async (e) => {
