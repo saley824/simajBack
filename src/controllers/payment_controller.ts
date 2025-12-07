@@ -161,10 +161,16 @@ const handleMonriCallback = async (req: Request, res: Response) => {
             }
         }
     } catch (error) {
-        return res.status(500).json({
-            success: false,
-            message: "Internal Server Error"
-
+        console.log("111111111111111111111111")
+        console.log("Doslo je do greske")
+        console.log("Doslo je do greske")
+        console.log("Doslo je do greske")
+        console.log("Doslo je do greske")
+        console.log("Doslo je do greske")
+        console.log("Doslo je do greske")
+        console.log("111111111111111111111111")
+        return res.status(200).json({
+            success: true,
         });
     }
 
