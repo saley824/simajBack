@@ -4,6 +4,7 @@ import { prisma } from "../server";
 
 import productsHelper from "../helpers/product_helper";
 import convertHelper from "../helpers/convert_helpers";
+import currencyHelper from "../helpers/currency_helper";
 import { CountryDto } from "../models/dto_models/country_dto";
 import { RegionDto } from "../models/dto_models/region_dto";
 
@@ -14,6 +15,8 @@ import { RegionDto } from "../models/dto_models/region_dto";
 const getAllProductsForCountry = async (req: Request, res: Response) => {
     const countryId = req.query.countryId ? Number(req.query.countryId) : -1;
     const lang = req.headers["accept-language"] || "en";
+    const currencyHeader = (req.headers["x-currency"] as string) ?? "BAM";
+    const currency = currencyHelper.parseCurrency(currencyHeader)
 
 
     try {
@@ -42,7 +45,10 @@ const getAllProductsForCountry = async (req: Request, res: Response) => {
                 }
             });
 
-            const productsResponse = products.map(productsHelper.formatProduct);
+            const productsResponse = products.map(product =>
+                productsHelper.formatProduct(product, currency)
+            );
+
             let localizedCountry: CountryDto = convertHelper.getCountryDto(country, lang)
 
 
@@ -70,6 +76,9 @@ const getAllProductsForCountry = async (req: Request, res: Response) => {
 const getAllProductsForRegion = async (req: Request, res: Response) => {
     const regionId = req.query.regionId ? Number(req.query.regionId) : -1;
     const lang = req.headers["accept-language"] || "en";
+    const currencyHeader = (req.headers["x-currency"] as string) ?? "BAM";
+    const currency = currencyHelper.parseCurrency(currencyHeader)
+
 
     try {
         const region = await prisma.region.findFirst({
@@ -96,7 +105,9 @@ const getAllProductsForRegion = async (req: Request, res: Response) => {
                 }
             });
 
-            const productsResponse = products.map(productsHelper.formatProduct);
+            const productsResponse = products.map(product =>
+                productsHelper.formatProduct(product, currency)
+            );
 
             const regionDto: RegionDto = {
                 id: region.id,

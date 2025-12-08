@@ -16,6 +16,7 @@ generator client {
 enum Currency {
     EUR
     USD
+    BAM
 }
 
 datasource db {

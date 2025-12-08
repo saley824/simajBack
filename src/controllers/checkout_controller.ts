@@ -3,6 +3,7 @@ import { NextFunction, Request, Response } from "express";
 import { prisma } from "../server";
 
 import productsHelper from "../helpers/product_helper";
+import currencyHelper from "../helpers/currency_helper";
 import { CouponType } from "@prisma/client";
 
 
@@ -27,7 +28,8 @@ interface CheckoutResponse {
 
 const getCheckoutInfo = async (req: Request, res: Response) => {
     const { productId, userId, couponCode } = req.body;
-
+    const currencyHeader = (req.headers["x-currency"] as string) ?? "BAM";
+    const currency = currencyHelper.parseCurrency(currencyHeader)
     try {
         const productRes = await prisma.product.findUnique(
             {
@@ -41,16 +43,24 @@ const getCheckoutInfo = async (req: Request, res: Response) => {
             return res.status(400).json({ success: false, message: "Product is not available. Try with another or try later!" });
         }
 
-        const product = productsHelper.formatProduct(productRes);
+        if (!productRes.sellingPrice || !productRes.amount) {
+            res.status(500).json({
+                success: false,
+                message: "Internal Server Error"
+
+            });
+        }
+
+        const product = await productsHelper.formatProduct(productRes, currency);
 
 
         let checkoutResponse: CheckoutResponse = {
             productPlanName: product.name,
             productDuration: product.duration,
-            amount: product.amount,
+            amount: product.amount!,
             DurationUnit: "days",
-            productBasePrice: product.sellingPrice,
-            productFinalPrice: product.finalPrice,
+            productBasePrice: product.sellingPrice!,
+            productFinalPrice: product.finalPrice!,
             productDiscountPercentage: product.discountPercent,
             couponCodePercentage: null,
             isPromoCodeNotApplicable: false,
@@ -81,12 +91,12 @@ const getCheckoutInfo = async (req: Request, res: Response) => {
 
                     case CouponType.All || CouponType.CustomPercentageCountryRegion:
                         if (product.countryId != null && coupon.countryPercentage != null && coupon.countryPercentage > 0) {
-                            checkoutResponse.productFinalPrice = productsHelper.getFinalPrice(product.finalPrice, coupon.countryPercentage)
+                            checkoutResponse.productFinalPrice = productsHelper.getFinalPrice(product.finalPrice!, coupon.countryPercentage)
                             checkoutResponse.couponCodePercentage = coupon.countryPercentage;
                             checkoutResponse.couponName = coupon.subjectName;
                         }
                         else if (product.regionId != null && coupon.regionPercentage != null && coupon.regionPercentage > 0) {
-                            checkoutResponse.productFinalPrice = productsHelper.getFinalPrice(product.finalPrice, coupon.regionPercentage)
+                            checkoutResponse.productFinalPrice = productsHelper.getFinalPrice(product.finalPrice!, coupon.regionPercentage)
                             checkoutResponse.couponCodePercentage = coupon.regionPercentage;
                             checkoutResponse.couponName = coupon.subjectName;
 
@@ -99,7 +109,7 @@ const getCheckoutInfo = async (req: Request, res: Response) => {
                     case CouponType.OnlyCountry:
                         if (product.countryId != null) {
                             checkoutResponse.productFinalPrice =
-                                productsHelper.getFinalPrice(product.finalPrice, coupon.countryPercentage ?? 1)
+                                productsHelper.getFinalPrice(product.finalPrice!, coupon.countryPercentage ?? 1)
                             checkoutResponse.couponCodePercentage = coupon.countryPercentage;
                             checkoutResponse.couponName = coupon.subjectName;
                         }
@@ -121,7 +131,7 @@ const getCheckoutInfo = async (req: Request, res: Response) => {
                         }
                         else {
                             checkoutResponse.productFinalPrice =
-                                productsHelper.getFinalPrice(product.sellingPrice, coupon.countryPercentage ?? 1)
+                                productsHelper.getFinalPrice(product.sellingPrice!, coupon.countryPercentage ?? 1)
                         }
                         break;
 
