@@ -18,6 +18,7 @@ const getAllProductsForCountry = async (req: Request, res: Response) => {
     const currencyHeader = (req.headers["x-currency"] as string) ?? "BAM";
     const currency = currencyHelper.parseCurrency(currencyHeader)
 
+    console.log(currency)
 
     try {
         const country = await prisma.country.findUnique({
@@ -45,8 +46,9 @@ const getAllProductsForCountry = async (req: Request, res: Response) => {
                 }
             });
 
-            const productsResponse = products.map(product =>
-                productsHelper.formatProduct(product, currency)
+
+            const productsResponse = await Promise.all(
+                products.map(product => productsHelper.formatProduct(product, currency))
             );
 
             let localizedCountry: CountryDto = convertHelper.getCountryDto(country, lang)
@@ -105,8 +107,8 @@ const getAllProductsForRegion = async (req: Request, res: Response) => {
                 }
             });
 
-            const productsResponse = products.map(product =>
-                productsHelper.formatProduct(product, currency)
+            const productsResponse = await Promise.all(
+                products.map(product => productsHelper.formatProduct(product, currency))
             );
 
             const regionDto: RegionDto = {
