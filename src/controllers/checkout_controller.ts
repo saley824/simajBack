@@ -14,6 +14,8 @@ interface CheckoutResponse {
     DurationUnit: string;
     productBasePrice: number;
     productFinalPrice: number;
+    productBasePriceBAM: number;
+    productFinalPriceBAM: number;
     productDiscountPercentage: number | null
     couponCodePercentage: number | null
     couponName: string | null
@@ -61,6 +63,8 @@ const getCheckoutInfo = async (req: Request, res: Response) => {
             DurationUnit: "days",
             productBasePrice: product.sellingPrice!,
             productFinalPrice: product.finalPrice!,
+            productBasePriceBAM: product.sellingPriceBAM!,
+            productFinalPriceBAM: product.finalPriceBAM!,
             productDiscountPercentage: product.discountPercent,
             couponCodePercentage: null,
             isPromoCodeNotApplicable: false,

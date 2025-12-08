@@ -1,11 +1,14 @@
 import { Request, Response } from "express";
 import { prisma } from "../server";
 import convertHelper from "../helpers/convert_helpers";
+import currencyHelper from "../helpers/currency_helper";
 import { RegionDto } from "../models/dto_models/region_dto";
 
 const getAllRegions = async (req: Request, res: Response) => {
     const searchText = req.query.searchText?.toString() || "";
     const lang = req.headers["accept-language"] || "en";
+    const currencyHeader = (req.headers["x-currency"] as string) ?? "BAM";
+    const currency = currencyHelper.parseCurrency(currencyHeader)
     try {
         const regions = await prisma.region.findMany({
             orderBy: {
@@ -19,6 +22,17 @@ const getAllRegions = async (req: Request, res: Response) => {
                 },
             }
         });
+
+
+        const exchangeRate = await prisma.exchangeRate.findFirst(
+            {
+                where: {
+                    currency: currency
+                }
+            }
+        )
+
+
 
 
 
@@ -69,7 +83,7 @@ const getAllRegions = async (req: Request, res: Response) => {
                     name: lang == "en" ? c.displayNameEn : c.displayNameSr,
                     code: c.code,
                     keywords: c.keywords,
-                    startsFrom: c.startsFrom,
+                    startsFrom: c.startsFrom && exchangeRate ? Number((c.startsFrom * exchangeRate!.rateFromBAM.toNumber()).toFixed(2)) : null,
                     supportedCountries: c.supportedCountries.map(c => convertHelper.getCountryLightDto(c.country, lang))
 
                 }

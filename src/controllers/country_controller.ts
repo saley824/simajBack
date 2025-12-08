@@ -4,6 +4,7 @@ import globalCommonHelper from "../helpers/global_common_helper";
 import { CountryDto } from "../models/dto_models/country_dto";
 import { RegionDto } from "../models/dto_models/region_dto";
 import convertHelper from "../helpers/convert_helpers";
+import currencyHelper from "../helpers/currency_helper";
 import { getAccessToken } from "../helpers/token_helper";
 
 
@@ -21,7 +22,8 @@ const getAllCountries = async (req: Request, res: Response) => {
 
     const lang = req.headers["accept-language"] || "en";
 
-
+    const currencyHeader = (req.headers["x-currency"] as string) ?? "BAM";
+    const currency = currencyHelper.parseCurrency(currencyHeader)
 
 
 
@@ -34,6 +36,14 @@ const getAllCountries = async (req: Request, res: Response) => {
                 supportedRegions: true
             }
         });
+
+        const exchangeRate = await prisma.exchangeRate.findFirst(
+            {
+                where: {
+                    currency: currency
+                }
+            }
+        )
         const filteredCountries: typeof countries = [];
 
         /// Searching based on name and keywords
@@ -68,9 +78,7 @@ const getAllCountries = async (req: Request, res: Response) => {
                     mcc: c.mcc,
                     keywords: c.keywords,
                     supportedRegions: [],
-                    startsFrom: c.startsFrom,
-
-
+                    startsFrom: c.startsFrom && exchangeRate ? Number((c.startsFrom * exchangeRate!.rateFromBAM.toNumber()).toFixed(2)) : null
                 }
             )
 
@@ -97,7 +105,10 @@ const getAllCountries = async (req: Request, res: Response) => {
 const getSupportedRegionsForCountry = async (req: Request, res: Response) => {
     const countryId = req.params.regionId
         ? Number(req.params.regionId)
-        : null; const lang = req.headers["accept-language"] || "en";
+        : null;
+    const lang = req.headers["accept-language"] || "en";
+    const currencyHeader = (req.headers["x-currency"] as string) ?? "BAM";
+    const currency = currencyHelper.parseCurrency(currencyHeader)
     try {
         if (countryId != null) {
             const regionSupportedCountries = await prisma.regionSupportedCountry.findMany({
@@ -105,6 +116,14 @@ const getSupportedRegionsForCountry = async (req: Request, res: Response) => {
                     countryId: countryId
                 }
             });
+
+            const exchangeRate = await prisma.exchangeRate.findFirst(
+                {
+                    where: {
+                        currency: currency
+                    }
+                }
+            )
 
             const regionIds = regionSupportedCountries.map((r) => r.regionId);
             const supportedRegions = await prisma.region.findMany({
@@ -137,7 +156,8 @@ const getSupportedRegionsForCountry = async (req: Request, res: Response) => {
                         name: lang == "en" ? c.displayNameEn : c.displayNameSr,
                         code: c.code,
                         keywords: c.keywords,
-                        startsFrom: c.startsFrom,
+                        startsFrom: c.startsFrom && exchangeRate ? Number((c.startsFrom * exchangeRate!.rateFromBAM.toNumber()).toFixed(2)) : null,
+
                         supportedCountries: c.supportedCountries.map(c => convertHelper.getCountryDto(c.country, lang),
                         )
 

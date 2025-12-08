@@ -17,8 +17,10 @@ async function formatProduct(p: Product, currency: Currency) {
     var finalPrice = hasDiscount
         ? Number((p.sellingPrice! - (p.sellingPrice! * p.discountPercent!) / 100).toFixed(2))
         : p.sellingPrice;
+    const sellingPriceBAM = p.sellingPrice;
+    const finalPriceBAM = finalPrice;
     if (exchangeRate && p.sellingPrice && finalPrice) {
-        p.sellingPrice = Number((exchangeRate.rateFromBAM.toNumber() * p.sellingPrice!));
+        p.sellingPrice = Number((exchangeRate.rateFromBAM.toNumber() * p.sellingPrice!).toFixed(2));
         finalPrice = Number((exchangeRate.rateFromBAM.toNumber() * finalPrice).toFixed(2));
     }
 
@@ -30,6 +32,9 @@ async function formatProduct(p: Product, currency: Currency) {
         ...p,
         hasDiscount,
         finalPrice,
+        sellingPriceBAM,
+        finalPriceBAM
+
     };
 }
 function getFinalPrice(sellingPrice: number, discountPercent: number): number {
