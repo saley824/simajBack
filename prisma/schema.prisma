@@ -56,8 +56,6 @@ model User {
     isEmailVerified                    Boolean       @default(false)
     emailVerificationToken             String?
     emailVerificationTokenResetExpires DateTime?
-    name                               String
-    lastName                           String
     password                           String
     passwordResetToken                 String?
     passwordResetExpires               DateTime?

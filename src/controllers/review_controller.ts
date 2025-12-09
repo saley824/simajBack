@@ -14,8 +14,6 @@ const makeReview = async (req: Request, res: Response) => {
 
         },
         select: {
-            name: true,
-            lastName: true,
             username: true,
 
         }
@@ -38,8 +36,8 @@ const makeReview = async (req: Request, res: Response) => {
                 rating: reviewBody.rating,
                 userId: reviewBody.userId,
                 comment: reviewBody.comment ?? null,
-                lastName: user.lastName,
-                name: user.name
+                lastName: user.username,
+                name: user.username
             },
         });
         res.status(200).json({

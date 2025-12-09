@@ -14,7 +14,7 @@ import { get } from "http";
 
 
 
-const signToken = (id: String, name: String, lastName: String, username: String, email: String,) => {
+const signToken = (id: String, username: String, email: String,) => {
     const jwtSecret = process.env.JWT_SECRET;
     const jwtExpires = process.env.JWT_EXPIRES;
     let token = "";
@@ -22,8 +22,6 @@ const signToken = (id: String, name: String, lastName: String, username: String,
         token = jwt.sign(
             {
                 id: id,
-                name: name,
-                lastName: lastName,
                 username: username,
                 email: email,
 
@@ -71,8 +69,6 @@ const signUp = async (req: Request, res: Response) => {
         const newUser = await prisma.user.create({
             data: {
                 email: userBody.email,
-                lastName: userBody.lastName,
-                name: userBody.name,
                 username: userBody.username,
                 password: hashedPassword,
                 isEmailVerified: false,
@@ -89,7 +85,7 @@ const signUp = async (req: Request, res: Response) => {
             userId: newUser.id,
 
         },
-            userBody.name
+            userBody.username
         );
 
         res.status(201).json({
@@ -114,7 +110,7 @@ const sendTokenForVerifyingAgain = async (req: Request, res: Response) => {
                 select: {
                     id: true,
                     isEmailVerified: true,
-                    name: true,
+                    username: true,
                 }
             }
         )
@@ -153,7 +149,7 @@ const sendTokenForVerifyingAgain = async (req: Request, res: Response) => {
             token: emailToken,
             userId: selectedUser.id,
         },
-            selectedUser.name
+            selectedUser.username
         );
         res.status(200).json({
             success: true,
@@ -258,8 +254,6 @@ const login = async (req: Request, res: Response) => {
         },
         select: {
             id: true,
-            name: true,
-            lastName: true,
             email: true,
             username: true,
             password: true,
@@ -303,7 +297,7 @@ const login = async (req: Request, res: Response) => {
         });
         return;
     }
-    const token = signToken(user.id, user.name, user.lastName, user.username, user.email,);
+    const token = signToken(user.id, user.username, user.email,);
     const { password: _, ...userWithoutSensitiveData } = user;
     res.status(200).json({
         success: true,
@@ -346,7 +340,7 @@ const forgotPassword = async (req: Request, res: Response) => {
                 subject: "Iskoristite ovaj token za reset šifre",
                 token: emailToken,
             },
-            user.name
+            user.username
         );
         res.status(200).json({
             success: true,
