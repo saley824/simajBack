@@ -161,14 +161,7 @@ const handleMonriCallback = async (req: Request, res: Response) => {
             }
         }
     } catch (error) {
-        console.log("111111111111111111111111")
-        console.log("Doslo je do greske")
-        console.log("Doslo je do greske")
-        console.log("Doslo je do greske")
-        console.log("Doslo je do greske")
-        console.log("Doslo je do greske")
-        console.log("Doslo je do greske")
-        console.log("111111111111111111111111")
+        console.log(error)
         return res.status(200).json({
             success: true,
         });
