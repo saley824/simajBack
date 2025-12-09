@@ -65,7 +65,7 @@ const getCheckoutInfo = async (req: Request, res: Response) => {
 
 
         let checkoutResponse: CheckoutResponse = {
-            productPlanName: (lang == "en" ? productRes.country?.displayNameEn : productRes.country?.displayNameSr) ?? "",
+            productPlanName: productName,
             productDuration: product.duration,
             amount: product.amount!,
             DurationUnit: "days",
