@@ -110,6 +110,9 @@ const handleMonriCallback = async (req: Request, res: Response) => {
                 }
             );
 
+            console.log("RESPONSE")
+            console.log(response)
+
 
 
 
@@ -135,8 +138,8 @@ const handleMonriCallback = async (req: Request, res: Response) => {
                 const orderData = {
                     id: esimData.id,
                     iccid: esimData.esim.iccid,
-                    esimQr: esimData.esim.esim_qr,
                     apn: esimData.esim.apn,
+                    esimQr: esimData.esim.esim_qr,
                     productId: transaction!.productId,
 
                 };
