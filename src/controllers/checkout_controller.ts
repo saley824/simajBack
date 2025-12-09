@@ -30,6 +30,8 @@ interface CheckoutResponse {
 
 const getCheckoutInfo = async (req: Request, res: Response) => {
     const { productId, userId, couponCode } = req.body;
+    const lang = req.headers["accept-language"] || "en";
+
     const currencyHeader = (req.headers["x-currency"] as string) ?? "BAM";
     const currency = currencyHelper.parseCurrency(currencyHeader)
     try {
@@ -37,6 +39,10 @@ const getCheckoutInfo = async (req: Request, res: Response) => {
             {
                 where: {
                     id: productId
+                },
+                include: {
+                    country: true,
+                    region: true,
                 }
             }
         );
@@ -55,9 +61,11 @@ const getCheckoutInfo = async (req: Request, res: Response) => {
 
         const product = await productsHelper.formatProduct(productRes, currency);
 
+        const productName = productRes.country ? ((lang == "en" ? productRes.country?.displayNameEn : productRes.country?.displayNameSr) ?? "") : ((lang == "en" ? productRes.region?.displayNameEn : productRes.region?.displayNameSr) ?? "")
+
 
         let checkoutResponse: CheckoutResponse = {
-            productPlanName: product.name,
+            productPlanName: (lang == "en" ? productRes.country?.displayNameEn : productRes.country?.displayNameSr) ?? "",
             productDuration: product.duration,
             amount: product.amount!,
             DurationUnit: "days",
