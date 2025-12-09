@@ -123,7 +123,7 @@ const handleMonriCallback = async (req: Request, res: Response) => {
                     esimData.esim.apn,
                     transaction.product!.amount!,
                     transaction.product.duration,
-                    user?.name ?? "",
+                    user?.username ?? "",
                     transaction.product.name,
                     transactionId!,
                     networks,
