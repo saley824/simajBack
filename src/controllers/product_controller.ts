@@ -33,7 +33,19 @@ const getAllProductsForCountry = async (req: Request, res: Response) => {
                 },
             }
         });
+
+        const exchangeRate = await prisma.exchangeRate.findFirst(
+            {
+                where: {
+                    currency: currency
+                }
+            }
+        )
+
         if (country != null) {
+            for (var item of country.supportedRegions) {
+                item.region.startsFrom = exchangeRate && item.region.startsFrom ? Number((exchangeRate!.rateFromBAM.toNumber() * item.region.startsFrom!).toFixed(2)) : null
+            }
             const products = await prisma.product.findMany({
                 where: {
                     OR: [
