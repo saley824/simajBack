@@ -8,8 +8,8 @@ async function formatProduct(p: Product, currency: Currency) {
 
     const hasDiscount = p.discountPercent !== null && p.discountPercent > 0;
 
-    const sellingPriceBAM = p.sellingPrice!;
-    const finalPriceBAM = hasDiscount
+    var sellingPriceBAM = p.sellingPrice!;
+    var finalPriceBAM = hasDiscount
         ? Number((p.sellingPrice! - (p.sellingPrice! * p.discountPercent!) / 100).toFixed(2))
         : p.sellingPrice!;
 
