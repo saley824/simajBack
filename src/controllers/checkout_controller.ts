@@ -97,13 +97,13 @@ const getCheckoutInfo = async (req: Request, res: Response) => {
                     case CouponType.All || CouponType.CustomPercentageCountryRegion:
                         if (product.countryId != null && coupon.countryPercentage != null && coupon.countryPercentage > 0) {
                             checkoutResponse.productFinalPrice = productsHelper.getFinalPrice(product.finalPrice!, coupon.countryPercentage)
-                            checkoutResponse.productBasePriceBAM = productsHelper.getFinalPrice(product.finalPriceBAM!, coupon.countryPercentage)
+                            checkoutResponse.productFinalPriceBAM = productsHelper.getFinalPrice(product.finalPriceBAM!, coupon.countryPercentage)
                             checkoutResponse.couponCodePercentage = coupon.countryPercentage;
                             checkoutResponse.couponName = coupon.subjectName;
                         }
                         else if (product.regionId != null && coupon.regionPercentage != null && coupon.regionPercentage > 0) {
                             checkoutResponse.productFinalPrice = productsHelper.getFinalPrice(product.finalPrice!, coupon.regionPercentage)
-                            checkoutResponse.productBasePriceBAM = productsHelper.getFinalPrice(product.finalPriceBAM!, coupon.regionPercentage)
+                            checkoutResponse.productFinalPriceBAM = productsHelper.getFinalPrice(product.finalPriceBAM!, coupon.regionPercentage)
                             checkoutResponse.couponCodePercentage = coupon.regionPercentage;
                             checkoutResponse.couponName = coupon.subjectName;
 
@@ -117,7 +117,7 @@ const getCheckoutInfo = async (req: Request, res: Response) => {
                         if (product.countryId != null) {
                             checkoutResponse.productFinalPrice =
                                 productsHelper.getFinalPrice(product.finalPrice!, coupon.countryPercentage ?? 1)
-                            checkoutResponse.productBasePriceBAM =
+                            checkoutResponse.productFinalPriceBAM =
                                 productsHelper.getFinalPrice(product.finalPriceBAM!, coupon.countryPercentage ?? 1)
                             checkoutResponse.couponCodePercentage = coupon.countryPercentage;
                             checkoutResponse.couponName = coupon.subjectName;
@@ -141,7 +141,7 @@ const getCheckoutInfo = async (req: Request, res: Response) => {
                         else {
                             checkoutResponse.productFinalPrice =
                                 productsHelper.getFinalPrice(product.sellingPrice!, coupon.countryPercentage ?? 1)
-                            checkoutResponse.productBasePriceBAM =
+                            checkoutResponse.productFinalPriceBAM =
                                 productsHelper.getFinalPrice(product.sellingPriceBAM!, coupon.countryPercentage ?? 1)
                         }
                         break;
