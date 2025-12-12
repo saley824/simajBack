@@ -46,7 +46,7 @@ const sendEmailForResetPassword = async (options: ResetPasswordOptions, name: St
                     <p><span style="font-size: 32px; background-color: #f0f0f0; padding: 5px 10px; border-radius: 4px;">${options.token}</span></p>
                     <p>Token ističe za  10 minuta.</p>
                     <p>Srdačan pozdrav,</p>
-                    <p><strong>Esimaj Tim</strong></p>
+                    <p><strong>ESIMaj Tim</strong></p>
         `
         await resend.emails.send({
             from: emailUsername,
@@ -97,6 +97,14 @@ const sendQRcode = async (lang: string, to: string, lpaString: string, apn: stri
 
     const { activationCode, smdp } = extractIOSCodes(lpaString);
 
+    const apnLocalization = apn
+        ? `<li>APN should be: <strong>${apn}</strong></li>`
+        : `<li>APN treba biti: <strong>${apn}</strong></li>`;
+
+    const apnBlock = apn
+        ? apnLocalization
+        : "";
+
     htmlContent = htmlContent
         .replace(/{{provider}}/g, provider)
         .replace(/{{customerName}}/g, customerName)
@@ -105,13 +113,13 @@ const sendQRcode = async (lang: string, to: string, lpaString: string, apn: stri
         .replace(/{{activationCode}}/g, activationCode)
         .replace(/{{smdp}}/g, smdp)
         .replace(/{{networks}}/g, networks)
-        .replace(/{{apn}}/g, apn)
+        .replace(/{{APN_BLOCK}}/g, apnBlock)
         .replace(/{{dataAmount}}/g, amount.toString())
         .replace(/{{validity}}/g, days.toString())
         .replace(/{{lpaString}}/g, lpaString)
-        .replace(/{{iosUrl}}/g, `${process.env.FRONTEND_BASE_URL_PRODUCTION!}/instructions/ios`)
-        .replace(/{{androidUrl}}/g, `${process.env.FRONTEND_BASE_URL_PRODUCTION!}/instructions/android`)
-        .replace(/{{samsungUrl}}/g, `${process.env.FRONTEND_BASE_URL_PRODUCTION!}/instructions/samsung`)
+        .replace(/{{iosUrl}}/g, `${process.env.FRONTEND_BASE_URL_PRODUCTION!} /instructions/ios`)
+        .replace(/{{androidUrl}}/g, `${process.env.FRONTEND_BASE_URL_PRODUCTION!} /instructions/android`)
+        .replace(/{{samsungUrl}}/g, `${process.env.FRONTEND_BASE_URL_PRODUCTION!} /instructions/samsung`)
 
 
 

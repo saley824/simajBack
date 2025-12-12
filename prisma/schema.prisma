@@ -50,20 +50,30 @@ enum DeviceType {
 }
 
 model User {
-    id                                 String        @id @default(uuid())
-    username                           String        @unique
-    email                              String        @unique
-    isEmailVerified                    Boolean       @default(false)
+    id                                 String    @id @default(uuid())
+    username                           String    @unique
+    email                              String    @unique
+    isEmailVerified                    Boolean   @default(false)
     emailVerificationToken             String?
     emailVerificationTokenResetExpires DateTime?
     password                           String
     passwordResetToken                 String?
     passwordResetExpires               DateTime?
-    role                               Role          @default(User)
-    balance                            Decimal       @default(0) @db.Decimal(10, 2)
-    created_at                         DateTime      @default(now())
-    Transaction                        Transaction[]
+    role                               Role      @default(User)
+    balance                            Decimal   @default(0) @db.Decimal(10, 2)
+    created_at                         DateTime  @default(now())
     Review                             Review?
+    isUsedReferralCode                 Boolean?  @default(false)
+
+    // User who invited *me*
+    invitedById String?
+    invitedBy   User?   @relation("UserInvites", fields: [invitedById], references: [id])
+
+    // Users that *I* invited
+    invitedUsers User[] @relation("UserInvites")
+
+    transactions         Transaction[]
+    referralTransactions Transaction[] @relation("Referral")
 }
 
 model Country {
@@ -161,19 +171,22 @@ model CouponCode {
 }
 
 model Transaction {
-    id           Int     @id @default(autoincrement())
-    userId       String
-    couponCodeId Int?
-    productId    String
-    orderId      String? @unique
-    price        Float?
+    id             Int       @id @default(autoincrement())
+    userId         String
+    referralUserId String?
+    couponCodeId   Int?
+    productId      String
+    orderId        String?   @unique
+    price          Float?
+    createdAt      DateTime? @default(now())
 
     TransactionStatus TransactionStatus @default(Started)
 
-    user       User        @relation(fields: [userId], references: [id])
-    product    Product     @relation(fields: [productId], references: [id])
-    order      Order?      @relation(fields: [orderId], references: [id])
-    couponCode CouponCode? @relation(fields: [couponCodeId], references: [id])
+    user         User        @relation(fields: [userId], references: [id])
+    referralUser User?       @relation("Referral", fields: [referralUserId], references: [id])
+    product      Product     @relation(fields: [productId], references: [id])
+    order        Order?      @relation(fields: [orderId], references: [id])
+    couponCode   CouponCode? @relation(fields: [couponCodeId], references: [id])
 }
 
 model Order {
@@ -231,8 +244,7 @@ model CompatibleDevice {
 }
 
 model ExchangeRate {
-    id Int @id @default(autoincrement())
-
+    id          Int      @id @default(autoincrement())
     currency    Currency
     rateFromBAM Decimal  @db.Decimal(10, 6)
     updatedAt   DateTime @updatedAt

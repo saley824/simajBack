@@ -5,6 +5,7 @@ import { prisma } from "../server";
 import productsHelper from "../helpers/product_helper";
 import currencyHelper from "../helpers/currency_helper";
 import { CouponType } from "@prisma/client";
+import { ref } from "process";
 
 
 interface CheckoutResponse {
@@ -25,11 +26,16 @@ interface CheckoutResponse {
     /// enters exiting code that cant be applied
     isPromoCodeNotApplicable: boolean
     promoCodeErrorMessage: string | null
+    referralErrorMessage: string | null
+    referralCodePercentage: number | null
+    referralUserId: string | null
+
+
 }
 
 
 const getCheckoutInfo = async (req: Request, res: Response) => {
-    const { productId, userId, couponCode } = req.body;
+    const { productId, userId, couponCode, referralUsername } = req.body;
     const lang = req.headers["accept-language"] || "en";
 
     const currencyHeader = (req.headers["x-currency"] as string) ?? "BAM";
@@ -80,6 +86,9 @@ const getCheckoutInfo = async (req: Request, res: Response) => {
             enteredWrongCode: false,
             couponName: null,
             isFreeCouponActivated: false,
+            referralErrorMessage: null,
+            referralCodePercentage: null,
+            referralUserId: null,
         };
 
 
@@ -164,6 +173,54 @@ const getCheckoutInfo = async (req: Request, res: Response) => {
             }
         }
 
+        else if (referralUsername && referralUsername != "") {
+            const user = await prisma.user.findUnique(
+                {
+                    where: {
+                        id: userId
+                    }
+                }
+            );
+
+
+
+            if (user?.invitedById) {
+                checkoutResponse.referralErrorMessage = "You already used referral code. You can invite others with your username as referral code."
+            }
+
+            else {
+                const referralUser = await prisma.user.findUnique(
+                    {
+                        where: {
+                            username: referralUsername
+                        },
+                        include: {
+                            invitedUsers: true
+                        }
+                    }
+                );
+
+                if (!referralUser) {
+                    checkoutResponse.referralErrorMessage = "User dont exists";
+                }
+
+                else if (user?.id == referralUser.id) {
+                    checkoutResponse.referralErrorMessage = "Good try. You can't enter your username!";
+                }
+
+                else if (referralUser!.invitedUsers && referralUser!.invitedUsers.length > 9) {
+                    checkoutResponse.referralErrorMessage = "This referral code has reached the maximum number of uses.";
+                }
+                else {
+                    checkoutResponse.referralUserId = referralUser.id,
+                        checkoutResponse.referralCodePercentage = 20;
+                    checkoutResponse.productFinalPrice = productsHelper.getFinalPrice(product.finalPrice!, 20)
+                    checkoutResponse.productFinalPriceBAM = productsHelper.getFinalPrice(product.finalPriceBAM!, 20)
+
+                }
+            }
+        }
+
 
 
 
@@ -179,6 +236,7 @@ const getCheckoutInfo = async (req: Request, res: Response) => {
 
 
     } catch (error) {
+        console.log(error)
         res.status(500).json({
             success: false,
             message: "Internal Server Error"

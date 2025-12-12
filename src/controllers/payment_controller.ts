@@ -36,8 +36,10 @@ const createTransaction = async (req: Request, res: Response) => {
         const transaction = await prisma.transaction.create({
             data: {
                 userId: req.body.userId,
+                referralUserId: req.body.referralUserId,
                 productId: req.body.productId,
-                price: req.body.price
+                price: req.body.price,
+
             },
         });
         res.status(200).json({
@@ -61,6 +63,10 @@ const handleMonriCallback = async (req: Request, res: Response) => {
     const transactionId = req.body.order_number
         ? Number(req.body.order_number)
         : null;
+
+    console.log()
+
+
 
     try {
 
@@ -89,6 +95,42 @@ const handleMonriCallback = async (req: Request, res: Response) => {
                     }
                 }
             );
+
+            try {
+                if (transaction.referralUserId != null) {
+                    prisma.user.update(
+                        {
+                            where: {
+                                id: user?.id
+                            },
+                            data: {
+                                invitedById: transaction.referralUserId
+                            }
+                        }
+                    )
+                    await prisma.user.update({
+                        where: {
+                            id: transaction.referralUserId
+                        },
+                        data: {
+                            balance: {
+                                increment: 1
+                            }
+                        }
+                    });
+
+                }
+            } catch (error) {
+                console.log(error)
+            }
+
+            const a = 2
+
+            if (a == 2) {
+                return null;
+            }
+
+
 
             const token = await getAccessToken();
 
