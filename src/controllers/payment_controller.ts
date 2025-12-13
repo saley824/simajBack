@@ -101,7 +101,7 @@ const handleMonriCallback = async (req: Request, res: Response) => {
                     prisma.user.update(
                         {
                             where: {
-                                id: user?.id
+                                id: transaction.userId
                             },
                             data: {
                                 invitedById: transaction.referralUserId
