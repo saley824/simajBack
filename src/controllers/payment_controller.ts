@@ -96,51 +96,51 @@ const handleMonriCallback = async (req: Request, res: Response) => {
                 }
             );
 
-            // try {
-            //     if (transaction.referralUserId != null) {
+            try {
+                if (transaction.referralUserId != null) {
 
 
-            //         await prisma.user.update({
-            //             where: {
-            //                 id: transaction.userId,
-            //                 isUsedReferralCode: false,
-            //             },
-            //             data: {
-            //                 invitedBy: {
-            //                     connect: { id: transaction.referralUserId },
-            //                 },
-            //                 isUsedReferralCode: true,
-            //             },
-            //         });
-
-
-
+                    await prisma.user.update({
+                        where: {
+                            id: transaction.userId,
+                            isUsedReferralCode: false,
+                        },
+                        data: {
+                            invitedBy: {
+                                connect: { id: transaction.referralUserId },
+                            },
+                            isUsedReferralCode: true,
+                        },
+                    });
 
 
 
-            //         await prisma.user.update({
-            //             where: {
-            //                 id: transaction.referralUserId
-            //             },
-            //             data: {
-            //                 balance: {
-            //                     increment: 1
-            //                 }
-            //             }
-            //         });
 
-            //     }
-            // } catch (error) {
-            //     console.log(error)
-            // }
 
-            // const a = 2
 
-            // if (a == 2) {
-            //     return res.status(200).json({
-            //         success: true,
-            //     });
-            // }
+                    await prisma.user.update({
+                        where: {
+                            id: transaction.referralUserId
+                        },
+                        data: {
+                            balance: {
+                                increment: 1
+                            }
+                        }
+                    });
+
+                }
+            } catch (error) {
+                console.log(error)
+            }
+
+            const a = 2
+
+            if (a == 2) {
+                return res.status(200).json({
+                    success: true,
+                });
+            }
 
 
 
