@@ -98,26 +98,16 @@ const handleMonriCallback = async (req: Request, res: Response) => {
 
             try {
                 if (transaction.referralUserId != null) {
-
-
                     await prisma.user.update({
                         where: {
                             id: transaction.userId,
-                            isUsedReferralCode: false,
                         },
                         data: {
                             invitedBy: {
                                 connect: { id: transaction.referralUserId },
                             },
-                            isUsedReferralCode: true,
                         },
                     });
-
-
-
-
-
-
                     await prisma.user.update({
                         where: {
                             id: transaction.referralUserId
@@ -132,6 +122,9 @@ const handleMonriCallback = async (req: Request, res: Response) => {
                 }
             } catch (error) {
                 console.log(error)
+                return res.status(200).json({
+                    success: true,
+                });
             }
 
             const a = 2
