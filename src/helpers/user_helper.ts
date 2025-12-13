@@ -117,9 +117,9 @@ const sendQRcode = async (lang: string, to: string, lpaString: string, apn: stri
         .replace(/{{dataAmount}}/g, amount.toString())
         .replace(/{{validity}}/g, days.toString())
         .replace(/{{lpaString}}/g, lpaString)
-        .replace(/{{iosUrl}}/g, `${process.env.FRONTEND_BASE_URL_PRODUCTION!} /instructions/ios`)
-        .replace(/{{androidUrl}}/g, `${process.env.FRONTEND_BASE_URL_PRODUCTION!} /instructions/android`)
-        .replace(/{{samsungUrl}}/g, `${process.env.FRONTEND_BASE_URL_PRODUCTION!} /instructions/samsung`)
+        .replace(/{{iosUrl}}/g, `${process.env.FRONTEND_BASE_URL_PRODUCTION!}/instructions/ios`)
+        .replace(/{{androidUrl}}/g, `${process.env.FRONTEND_BASE_URL_PRODUCTION!}/instructions/android`)
+        .replace(/{{samsungUrl}}/g, `${process.env.FRONTEND_BASE_URL_PRODUCTION!}/instructions/samsung`)
 
 
 
