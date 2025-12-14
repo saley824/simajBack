@@ -6,6 +6,7 @@ import { PublicUserDto } from "../models/dto_models/public_user_dto";
 import crypto from "crypto"
 import userHelper from "../helpers/user_helper";
 import errorHelper from "../helpers/error_helper";
+import convertHelper from "../helpers/convert_helpers";
 
 import jwt from "jsonwebtoken";
 import { get } from "http";
@@ -257,7 +258,8 @@ const login = async (req: Request, res: Response) => {
             email: true,
             username: true,
             password: true,
-            isEmailVerified: true
+            isEmailVerified: true,
+            balance: true,
         }
     });
 
@@ -298,6 +300,7 @@ const login = async (req: Request, res: Response) => {
         return;
     }
     const token = signToken(user.id, user.username, user.email,);
+
     const { password: _, ...userWithoutSensitiveData } = user;
     res.status(200).json({
         success: true,

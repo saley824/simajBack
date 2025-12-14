@@ -221,6 +221,170 @@ const handleMonriCallback = async (req: Request, res: Response) => {
 
 
 
+const handlePaymentWithBalance = async (req: Request, res: Response) => {
+    const transaction = await prisma.transaction.create({
+        data: {
+            userId: req.body.userId,
+            referralUserId: req.body.referralUserId,
+            productId: req.body.productId,
+            price: req.body.price,
+
+        },
+
+        include: {
+            order: true,
+            product: {
+                include: {
+                    networks: true
+                }
+            },
+        }
+    });
+
+
+
+    try {
+        if (transaction != null) {
+            const user = await prisma.user.findUnique(
+                {
+                    where: {
+                        id: transaction.userId
+                    }
+                }
+            );
+
+            try {
+                if (transaction.referralUserId != null) {
+                    await prisma.user.update({
+                        where: {
+                            id: transaction.userId,
+                        },
+                        data: {
+                            invitedBy: {
+                                connect: { id: transaction.referralUserId },
+                            },
+                        },
+                    });
+                    await prisma.user.update({
+                        where: {
+                            id: transaction.referralUserId
+                        },
+                        data: {
+                            balance: {
+                                increment: 1
+                            }
+                        }
+                    });
+
+                }
+            } catch (error) {
+                console.log(error)
+                return res.status(200).json({
+                    success: true,
+                });
+            }
+
+            const a = 2
+
+            if (a == 2) {
+                return res.status(200).json({
+                    success: true,
+                });
+            }
+
+
+
+            const token = await getAccessToken();
+
+
+            const response = await axios.post<OrderEsimResponse>(
+                `${process.env.N_BASE_URL}/order/api/v1/create_order`,
+                {
+                    "operation_type": "NEW",
+                    "product": {
+                        "id": transaction?.productId
+                    }
+                },
+                {
+                    headers: {
+                        "X-Idempotency-Key": crypto.randomUUID(),
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`,
+                    }
+                }
+            );
+
+            if (response.data.message === "Success") {
+
+                await prisma.user.update({
+                    where: {
+                        id: transaction.userId
+                    },
+                    data: {
+                        balance: {
+                            decrement: transaction.price ?? 0
+                        }
+                    }
+                });
+
+
+                const esimData = response.data.data;
+                const networks = transaction.product.networks.map(network => network.name ?? "").join(", ")
+                userHelper.sendQRcode(
+                    "sr",
+                    user?.email ?? "",
+                    esimData.esim.esim_qr,
+                    esimData.esim.apn,
+                    transaction.product!.amount!,
+                    transaction.product.duration,
+                    user?.username ?? "",
+                    transaction.product.name,
+                    transaction.id!,
+                    networks,
+                    transaction.product.imsiProfile ?? ""
+
+                )
+
+
+                const orderData = {
+                    id: esimData.id,
+                    iccid: esimData.esim.iccid,
+                    apn: esimData.esim.apn,
+                    esimQr: esimData.esim.esim_qr,
+                    productId: transaction!.productId,
+
+                };
+
+                const order = await prisma.order.create({
+                    data: orderData
+                });
+
+
+                await prisma.transaction.update({
+                    where: { id: transaction!.id },
+                    data: {
+                        orderId: order.id,
+                        TransactionStatus: "Completed"
+                    }
+                });
+
+                return res.status(200).json({
+                    success: true,
+                });
+
+            }
+        }
+    } catch (error) {
+        console.log(error)
+        return res.status(200).json({
+            success: true,
+        });
+    }
+
+}
+
+
+
 
 
 export default {

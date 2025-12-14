@@ -1,7 +1,9 @@
+import { User } from "@prisma/client";
 import { CountryDto } from "../models/dto_models/country_dto";
 import { CountryLightDto } from "../models/dto_models/country_light_dto";
 import { RegionDto } from "../models/dto_models/region_dto";
 import { RegionLightDto } from "../models/dto_models/region_light_dto";
+import { PublicUserDto } from "../models/dto_models/public_user_dto";
 
 function getCountryDto(country: any, lang: string): CountryDto {
     return {
@@ -49,6 +51,17 @@ function getRegionLightDto(region: any, lang: string): RegionLightDto {
     }
 
 }
+function getPublicUserDto(user: User, balance: number): PublicUserDto {
+
+
+    return {
+        id: user.id,
+        balance: balance,
+        email: user.email,
+        username: user.username,
+    }
+
+}
 
 
 
@@ -56,5 +69,6 @@ export default {
     getCountryDto,
     getRegionDto,
     getCountryLightDto,
-    getRegionLightDto
+    getRegionLightDto,
+    getPublicUserDto,
 };
