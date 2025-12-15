@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 
 import { prisma } from "../server";
+import { TransactionDto } from "../models/dto_models/transaction_dto";
 
 
 
@@ -88,17 +89,23 @@ const getTransactionById = async (req: Request, res: Response) => {
 
 const getUserTransactions = async (req: Request, res: Response) => {
     const userId: string | undefined = req.query.userId as string | undefined;
-
+    const lang = req.headers["accept-language"] || "en";
     try {
         let transactions = await prisma.transaction.findMany({
             where: {
-                userId: userId,
+                // userId: userId,
                 TransactionStatus: "Completed",
             },
             select: {
                 userId: true,
+                createdAt: true,
                 product: { select: { amount: true, duration: true, country: true, } },
-                order: true,
+                order: {
+                    select: {
+                        iccid: true,
+
+                    }
+                },
                 couponCode: {
                     select: {
                         code: true,
@@ -110,13 +117,31 @@ const getUserTransactions = async (req: Request, res: Response) => {
 
             }
         });
+        let transactionDtos: TransactionDto[] = [];
+
+        transactions.map(tra => {
+            transactionDtos.push(
+                {
+                    userId: tra.userId,
+                    createdAt: tra.createdAt,
+                    duration: tra.product.duration,
+                    amount: tra.product.amount,
+                    countryName: (lang == "en" ? tra.product.country?.displayNameEn : tra.product.country?.displayNameSr) ?? "",
+                    iccid: tra.order?.iccid ?? "",
+
+                }
+            )
+        });
+
+
+
 
 
 
         res.status(200).json({
             success: true,
             data: {
-                transactions: transactions,
+                transactions: transactionDtos,
             },
         });
     } catch (error) {
