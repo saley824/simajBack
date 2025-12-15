@@ -63,7 +63,9 @@ async function main() {
             process.env.FRONTEND_BASE_URL!,
             process.env.FRONTEND_BASE_URL_PRODUCTION_WWW!,
             process.env.FRONTEND_BASE_URL_LOCAL!,
-            process.env.FRONTEND_BASE_URL_PRODUCTION!
+            process.env.FRONTEND_BASE_URL_PRODUCTION!,
+            process.env.FRONTEND_BASE_URL_STAGING_WWW!
+!
 
         ],
 
