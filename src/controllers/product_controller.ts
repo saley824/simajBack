@@ -50,7 +50,7 @@ const getAllProductsForCountry = async (req: Request, res: Response) => {
                 where: {
                     OR: [
                         { countryId: countryId },
-                        // { regionId: regionId }
+
                     ]
                 },
                 orderBy: {

@@ -7,7 +7,6 @@ async function formatProduct(p: Product, currency: Currency) {
     });
 
     const hasDiscount = p.discountPercent !== null && p.discountPercent > 0;
-
     var sellingPriceBAM = p.sellingPrice!;
     var finalPriceBAM = hasDiscount
         ? Number((p.sellingPrice! - (p.sellingPrice! * p.discountPercent!) / 100).toFixed(2))
@@ -22,8 +21,11 @@ async function formatProduct(p: Product, currency: Currency) {
         finalPrice = Number((finalPriceBAM * rate).toFixed(2));
     }
 
+
+    const { originalPrice: _, ...productWithoutSensitiveData } = p;
+
     return {
-        ...p,
+        ...productWithoutSensitiveData,
         sellingPrice,
         finalPrice,
         sellingPriceBAM,
