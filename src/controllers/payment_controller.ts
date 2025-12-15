@@ -127,13 +127,7 @@ const handleMonriCallback = async (req: Request, res: Response) => {
                 });
             }
 
-            const a = 2
 
-            if (a == 2) {
-                return res.status(200).json({
-                    success: true,
-                });
-            }
 
 
 
@@ -222,6 +216,8 @@ const handleMonriCallback = async (req: Request, res: Response) => {
 
 
 const handlePaymentWithBalance = async (req: Request, res: Response) => {
+
+
     const transaction = await prisma.transaction.create({
         data: {
             userId: req.body.userId,
@@ -252,6 +248,13 @@ const handlePaymentWithBalance = async (req: Request, res: Response) => {
                     }
                 }
             );
+
+            if (user!.balance.toNumber() < transaction!.price!) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Nedovoljno sredstava na računu",
+                });
+            }
 
             try {
                 if (transaction.referralUserId != null) {
@@ -389,5 +392,6 @@ const handlePaymentWithBalance = async (req: Request, res: Response) => {
 
 export default {
     createTransaction,
-    handleMonriCallback
+    handleMonriCallback,
+    handlePaymentWithBalance
 };

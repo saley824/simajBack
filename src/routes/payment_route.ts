@@ -5,5 +5,6 @@ const router = express.Router();
 
 router.post("/init", paymentController.createTransaction);
 router.post("/handle-Monri", paymentController.handleMonriCallback);
+router.post("/handle-with-balance", paymentController.handlePaymentWithBalance);
 
 export default router;
