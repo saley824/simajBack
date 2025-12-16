@@ -4,6 +4,8 @@ import { prisma } from "../server";
 import { TransactionDto } from "../models/dto_models/transaction_dto";
 import { getAccessToken } from "../helpers/token_helper";
 import axios from "axios";
+import errorHelper from "../helpers/error_helper";
+
 /* =========================
    API RESPONSE
 ========================= */
@@ -188,16 +190,14 @@ const getUserTransactions = async (req: Request, res: Response) => {
         });
     } catch (error) {
         console.log(error);
-        res.status(500).json({
-            success: false,
-            message: "Internal Server Error"
-
-        });
+        errorHelper.handle500(res, req);
     }
 
 }
 
 const getESimOrders = async (req: Request, res: Response) => {
+    const t = req.t;
+
     try {
         const iccid: string | undefined = req.query.iccid as string | undefined;
         const token = await getAccessToken();
@@ -217,11 +217,7 @@ const getESimOrders = async (req: Request, res: Response) => {
         console.log(response.data.data)
     } catch (error) {
         console.log(error);
-        res.status(500).json({
-            success: false,
-            message: "Internal Server Error"
-
-        });
+        errorHelper.handle500(res, req);
     }
 
 }

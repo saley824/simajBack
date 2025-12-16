@@ -5,6 +5,7 @@ import { prisma } from "../server";
 import productsHelper from "../helpers/product_helper";
 import convertHelper from "../helpers/convert_helpers";
 import currencyHelper from "../helpers/currency_helper";
+import errorHelper from "../helpers/error_helper";
 import { CountryDto } from "../models/dto_models/country_dto";
 import { RegionDto } from "../models/dto_models/region_dto";
 
@@ -18,7 +19,6 @@ const getAllProductsForCountry = async (req: Request, res: Response) => {
     const currencyHeader = (req.headers["x-currency"] as string) ?? "BAM";
     const currency = currencyHelper.parseCurrency(currencyHeader)
 
-    console.log(currency)
 
     try {
         const country = await prisma.country.findUnique({
@@ -79,11 +79,8 @@ const getAllProductsForCountry = async (req: Request, res: Response) => {
 
     } catch (error) {
         console.log(error)
-        res.status(500).json({
-            success: false,
-            message: "Internal Server Error"
+        errorHelper.handle500(res, req);
 
-        });
     }
 
 }
@@ -144,11 +141,8 @@ const getAllProductsForRegion = async (req: Request, res: Response) => {
 
     } catch (error) {
         console.log(error)
-        res.status(500).json({
-            success: false,
-            message: "Internal Server Error"
+        errorHelper.handle500(res, req);
 
-        });
     }
 
 }
@@ -170,11 +164,8 @@ const getProductById = async (req: Request, res: Response) => {
         });
     } catch (error) {
         console.log(error)
-        res.status(500).json({
-            success: false,
-            message: "Internal Server Error"
+        errorHelper.handle500(res, req);
 
-        });
     }
 
 }
@@ -196,11 +187,8 @@ const getCouponCode = async (req: Request, res: Response) => {
         });
     } catch (error) {
         console.log(error)
-        res.status(500).json({
-            success: false,
-            message: "Internal Server Error"
+        errorHelper.handle500(res, req);
 
-        });
     }
 }
 

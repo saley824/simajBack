@@ -216,7 +216,7 @@ const handleMonriCallback = async (req: Request, res: Response) => {
 
 const handlePaymentWithBalance = async (req: Request, res: Response) => {
 
-
+    const t = req.t;
     const transaction = await prisma.transaction.create({
         data: {
             userId: req.body.userId,
@@ -251,7 +251,7 @@ const handlePaymentWithBalance = async (req: Request, res: Response) => {
             if (user!.balance.toNumber() < transaction!.price!) {
                 return res.status(400).json({
                     success: false,
-                    message: "Nedovoljno sredstava na računu",
+                    message: t("not_enough_funds"),
                 });
             }
 

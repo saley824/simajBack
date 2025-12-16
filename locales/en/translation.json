@@ -1,0 +1,84 @@
+{
+  "signup": {
+    "email_not_verified": "Email is already registered but not verified. Would you like to resend the verification email?",
+    "email_in_use": "Email is already in use",
+    "username_taken": "Username is already taken",
+    "success": "User has been successfully created!"
+  },
+
+  "login": {
+    "invalid_credentials": "Email or password is incorrect!",
+    "email_not_verified": "Email is not verified"
+  },
+
+  "email_verification": {
+    "token_sent": "A new verification token has been sent to your email",
+    "already_verified": "Email is already verified",
+    "user_not_found": "No user found with the provided email",
+    "token_invalid": "Token is invalid or has expired!",
+    "verified_success": "Email has been successfully verified"
+  },
+
+  "password": {
+        "reset_title": "Password reset",
+    "reset_email_sent": "Password reset email has been sent",
+    "token_invalid": "Token is invalid or has expired!",
+    "mismatch": "Passwords do not match!",
+    "too_short": "Password must be at least 8 characters long!",
+    "changed_success": "Password has been successfully changed!",
+    "wrong_old_password": "Incorrect password!"
+  },
+
+  "logout": {
+    "success": "Successfully logged out"
+  },
+
+  "general": {
+    "internal_error": "An internal server error occurred",
+    "unauthorized": "You are not authorized to perform this action",
+    "not_found": "Requested resource was not found"
+  },
+    "validation": {
+    "username": {
+      "required": "Username is required!",
+      "min": "Username must be at least 4 characters long!",
+      "max": "Username cannot be longer than 80 characters!"
+    },
+    "email": {
+      "required": "Email is required!",
+      "invalid": "Email must be valid!"
+    },
+    "password": {
+      "required": "Password is required!",
+      "min": "Password must be at least 8 characters long!",
+      "max": "Password cannot be longer than 128 characters!",
+      "weak": "Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number and one special character!"
+    },
+    "confirmPassword": {
+      "required": "Password confirmation is required!",
+      "mismatch": "Passwords do not match!",
+      "max": "Password confirmation cannot be longer than 128 characters!"
+    },
+    "usernameEmail": {
+      "required": "Username or email is required!",
+      "min": "Username must be at least 4 characters long!",
+      "max": "Username cannot be longer than 80 characters!"
+    }
+  },
+  "checkout": {
+    "product_not_available": "Product is not available. Please try again later.",
+    "coupon_invalid": "You entered an invalid promo code.",
+    "coupon_not_applicable": "This promo code cannot be applied to the selected plan.",
+    "coupon_only_country": "This promo code can be used only for country plans.",
+    "coupon_not_allowed_on_discounted": "This promo code cannot be applied to discounted plans.",
+    "generic_error": "Something went wrong. Please try again.",
+    "referral_already_used": "You have already used a referral code. You can invite others using your username.",
+    "referral_user_not_found": "Referral user does not exist.",
+    "referral_self_use": "You cannot use your own username as a referral code.",
+    "referral_limit_reached": "This referral code has reached the maximum number of uses."
+  },
+  "use_this_token": "Use this token for verifying email",
+  "not_enough_funds": "You don’t have enough funds in your account"
+
+
+}

@@ -5,6 +5,7 @@ import { CountryDto } from "../models/dto_models/country_dto";
 import { RegionDto } from "../models/dto_models/region_dto";
 import convertHelper from "../helpers/convert_helpers";
 import currencyHelper from "../helpers/currency_helper";
+import errorHelper from "../helpers/error_helper";
 import { getAccessToken } from "../helpers/token_helper";
 
 
@@ -16,6 +17,11 @@ import { getAccessToken } from "../helpers/token_helper";
 
 
 const getAllCountries = async (req: Request, res: Response) => {
+    const { t } = req;
+
+    console.log(";;;;;;;;;;");
+    console.log(t("auth.LOGIN_SUCCESS"));
+    console.log(";;;;;;;;;;");
     const page = req.query.page ? Number(req.query.page) : 1;
     const perPage = req.query.perPage ? Number(req.query.perPage) : 10;
     const searchText = req.query.searchText?.toString() || "";
@@ -93,11 +99,7 @@ const getAllCountries = async (req: Request, res: Response) => {
             },
         });
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: "Internal Server Error"
-
-        });
+        errorHelper.handle500(res, req);
     }
 
 }
@@ -183,11 +185,7 @@ const getSupportedRegionsForCountry = async (req: Request, res: Response) => {
         }
 
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: "Internal Server Error"
-
-        });
+        errorHelper.handle500(res, req);
     }
 
 }

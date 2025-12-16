@@ -15,32 +15,37 @@ export const validate =
                     { stripUnknown: true }
                 );
 
-                schema.validateSync(data, { abortEarly: false, });
+                schema.validateSync(data, { abortEarly: false });
 
-
+                // Ako želiš da prepišeš očišćene podatke:
                 // req.body = data.body;
                 // req.query = data.query;
+                // req.params = data.params;
 
-                // schema.validateSync(data, { abortEarly: true,  });
                 return next();
             } catch (err) {
-                // console.log(err)
                 const error = err as ValidationError;
-                const errors = error.inner as ValidationError[];
+                const errors = error.inner ?? [];
 
-                const outPut = errors.map((error) => {
+                const output = errors.map((e) => {
+                    // e.message = "validation.username.required"
+                    const translatedMessage = req.t
+                        ? req.t(e.message)
+                        : e.message;
+
                     return {
-                        field: error.path?.split(".")[1],
-                        message: error.message.startsWith("body.") ? error.message.substring(5).toLocaleUpperCase() : error.message,
+                        field: e.path
+                            ? e.path.replace(/^body\.|^query\.|^params\./, "")
+                            : null,
+                        message: translatedMessage,
                     };
-                })
-                console.log(errors)
+                });
+
                 return res.status(400).json({
                     success: false,
-                    message: outPut[0]?.message ?? "",
                     type: "ValidationError",
-                    errors: outPut
-
+                    message: output[0]?.message ?? "",
+                    errors: output,
                 });
             }
         };

@@ -1,0 +1,86 @@
+{
+  "signup": {
+    "email_not_verified": "Email je već registrovan, ali nije verifikovan. Želite li ponovo poslati verifikacioni email?",
+    "email_in_use": "Email je već u upotrebi",
+    "username_taken": "Korisničko ime je već zauzeto",
+    "success": "Korisnik je uspješno kreiran!"
+  },
+
+
+  "login": {
+    "invalid_credentials": "Email ili šifra nisu tačni!",
+    "email_not_verified": "Email nije verifikovan"
+  },
+
+  "email_verification": {
+    "token_sent": "Novi token je poslan na email",
+    "already_verified": "Email je već verifikovan",
+    "user_not_found": "Ne postoji korisnik sa unesenim emailom",
+    "token_invalid": "Token je nevažeći ili je istekao!",
+    "verified_success": "Email je uspješno verifikovan"
+  },
+
+  "password": {
+    "reset_title": "Promjena šifre",
+    "reset_email_sent": "Email za reset šifre je poslan",
+    "token_invalid": "Token je nevažeći ili je istekao!",
+    "mismatch": "Šifre se ne poklapaju!",
+    "too_short": "Šifra mora imati najmanje 8 karaktera!",
+    "changed_success": "Šifra je uspješno promijenjena!",
+    "wrong_old_password": "Netačna šifra!"
+  },
+
+  "logout": {
+    "success": "Uspješno ste se odjavili"
+  },
+
+  "general": {
+    "internal_error": "Došlo je do greške na serveru. Molimo pokušajte ponovo kasnije.",
+    "unauthorized": "Nemate dozvolu za ovu akciju",
+    "not_found": "Traženi resurs ne postoji"
+  },
+
+   "validation": {
+    "username": {
+      "required": "Korisničko ime je obavezno!",
+      "min": "Korisničko ime mora imati najmanje 4 karaktera!",
+      "max": "Korisničko ime ne može biti duže od 80 karaktera!"
+    },
+    "email": {
+      "required": "Email je obavezan!",
+      "invalid": "Email mora biti validan!"
+    },
+    "password": {
+      "required": "Šifra je obavezna!",
+      "min": "Šifra mora imati najmanje 8 karaktera!",
+      "max": "Šifra ne može biti duža od 128 karaktera!",
+      "weak": "Šifra mora imati najmanje 8 karaktera, jedno veliko slovo, jedno malo slovo, jedan broj i jedan specijalni znak!"
+    },
+    "confirmPassword": {
+      "required": "Potvrda šifre je obavezna!",
+      "mismatch": "Šifre se ne poklapaju!",
+      "max": "Potvrda šifre ne može biti duža od 128 karaktera!"
+    },
+    "usernameEmail": {
+      "required": "Korisničko ime ili email su obavezni!",
+      "min": "Korisničko ime mora imati najmanje 4 karaktera!",
+      "max": "Korisničko ime ne može biti duže od 80 karaktera!"
+    }
+  },
+    "checkout": {
+    "product_not_available": "Proizvod trenutno nije dostupan. Pokušajte ponovo kasnije.",
+    "coupon_invalid": "Unijeli ste neispravan promo kod.",
+    "coupon_not_applicable": "Ovaj promo kod se ne može primijeniti na odabrani paket.",
+    "coupon_only_country": "Ovaj promo kod se može koristiti samo za državne pakete.",
+    "coupon_not_allowed_on_discounted": "Ovaj promo kod se ne može koristiti na paketima koji su već na popustu.",
+    "generic_error": "Došlo je do greške. Pokušajte ponovo.",
+    "referral_already_used": "Već ste iskoristili referral kod. Možete pozvati druge koristeći svoje korisničko ime.",
+    "referral_user_not_found": "Korisnik sa ovim referral kodom ne postoji.",
+    "referral_self_use": "Ne možete koristiti vlastito korisničko ime kao referral kod.",
+    "referral_limit_reached": "Ovaj referral kod je dostigao maksimalan broj korištenja."
+  },
+  "use_this_token": "Iskoristite ovaj token za verifikovanje emaila",
+    "not_enough_funds": "Nemate dovoljno sredstava na svom nalogu."
+
+
+}

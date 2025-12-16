@@ -5,7 +5,8 @@ import { prisma } from "../server";
 import productsHelper from "../helpers/product_helper";
 import currencyHelper from "../helpers/currency_helper";
 import { CouponType } from "@prisma/client";
-import { ref } from "process";
+import errorHelper from "../helpers/error_helper";
+
 
 
 interface CheckoutResponse {
@@ -35,8 +36,8 @@ interface CheckoutResponse {
 
 
 const getCheckoutInfo = async (req: Request, res: Response) => {
+    const t = req.t;
     const { productId, userId, couponCode, referralUsername } = req.body;
-    const lang = req.headers["accept-language"] || "en";
 
     const currencyHeader = (req.headers["x-currency"] as string) ?? "BAM";
     const currency = currencyHelper.parseCurrency(currencyHeader)
@@ -54,20 +55,16 @@ const getCheckoutInfo = async (req: Request, res: Response) => {
         );
 
         if (productRes == null) {
-            return res.status(400).json({ success: false, message: "Product is not available. Try with another or try later!" });
+            return res.status(400).json({ success: false, message: t("product_not_available") });
         }
 
         if (!productRes.sellingPrice || !productRes.amount) {
-            res.status(500).json({
-                success: false,
-                message: "Internal Server Error"
-
-            });
+            errorHelper.handle500(res, req);
         }
 
         const product = await productsHelper.formatProduct(productRes, currency);
 
-        const productName = productRes.country ? ((lang == "en" ? productRes.country?.displayNameEn : productRes.country?.displayNameSr) ?? "") : ((lang == "en" ? productRes.region?.displayNameEn : productRes.region?.displayNameSr) ?? "")
+        const productName = productRes.country ? ((req.language == "en" ? productRes.country?.displayNameEn : productRes.country?.displayNameSr) ?? "") : ((req.language == "en" ? productRes.region?.displayNameEn : productRes.region?.displayNameSr) ?? "")
 
 
         let checkoutResponse: CheckoutResponse = {
@@ -101,7 +98,7 @@ const getCheckoutInfo = async (req: Request, res: Response) => {
 
             if (coupon == null) {
                 checkoutResponse.enteredWrongCode = true;
-                checkoutResponse.promoCodeErrorMessage = "You entered wrong code"
+                checkoutResponse.promoCodeErrorMessage = t("coupon_invalid")
             }
             else {
                 switch (coupon?.couponType) {
@@ -141,7 +138,7 @@ const getCheckoutInfo = async (req: Request, res: Response) => {
                         }
                         else {
                             checkoutResponse.isPromoCodeNotApplicable = true;
-                            checkoutResponse.promoCodeErrorMessage = "This code can be applied only on country plans"
+                            checkoutResponse.promoCodeErrorMessage = t("checkout.coupon_only_country")
 
 
                         }
@@ -149,11 +146,11 @@ const getCheckoutInfo = async (req: Request, res: Response) => {
                     case CouponType.OnlyCountryWithoutDiscount:
                         if (product.countryId == null) {
                             checkoutResponse.isPromoCodeNotApplicable = true;
-                            checkoutResponse.promoCodeErrorMessage = "This code can be applied only on country plans"
+                            checkoutResponse.promoCodeErrorMessage = t("checkout.coupon_only_country")
                         }
                         else if (product.hasDiscount) {
                             checkoutResponse.isPromoCodeNotApplicable = true;
-                            checkoutResponse.promoCodeErrorMessage = "This code can be applied on plans that are already on discount"
+                            checkoutResponse.promoCodeErrorMessage = t("checkout.coupon_not_allowed_on_discounted")
                         }
                         else {
                             checkoutResponse.productFinalPrice =
@@ -165,7 +162,7 @@ const getCheckoutInfo = async (req: Request, res: Response) => {
 
                     default:
                         checkoutResponse.isPromoCodeNotApplicable = true;
-                        checkoutResponse.promoCodeErrorMessage = "Something went wrong, try again"
+                        checkoutResponse.promoCodeErrorMessage = t("checkout.generic_error")
 
                         break;
                 }
@@ -185,7 +182,7 @@ const getCheckoutInfo = async (req: Request, res: Response) => {
 
 
             if (user?.invitedById) {
-                checkoutResponse.referralErrorMessage = "You already used referral code. You can invite others with your username as referral code."
+                checkoutResponse.referralErrorMessage = t("checkout.referral_already_used")
             }
 
             else {
@@ -201,15 +198,15 @@ const getCheckoutInfo = async (req: Request, res: Response) => {
                 );
 
                 if (!referralUser) {
-                    checkoutResponse.referralErrorMessage = "User dont exists";
+                    checkoutResponse.referralErrorMessage = t("checkout.referral_user_not_found");
                 }
 
                 else if (user?.id == referralUser.id) {
-                    checkoutResponse.referralErrorMessage = "Good try. You can't enter your username!";
+                    checkoutResponse.referralErrorMessage = t("checkout.referral_self_use");
                 }
 
                 else if (referralUser!.invitedUsers && referralUser!.invitedUsers.length > 9) {
-                    checkoutResponse.referralErrorMessage = "This referral code has reached the maximum number of uses.";
+                    checkoutResponse.referralErrorMessage = t("checkout.referral_limit_reached");
                 }
                 else {
                     checkoutResponse.referralUserId = referralUser.id,
@@ -237,11 +234,7 @@ const getCheckoutInfo = async (req: Request, res: Response) => {
 
     } catch (error) {
         console.log(error)
-        res.status(500).json({
-            success: false,
-            message: "Internal Server Error"
-
-        });
+        errorHelper.handle500(res, req);
     }
 
 }

@@ -19,6 +19,8 @@ import externalHelper from "./external_helpers/external_helpers";
 import axios, { AxiosResponse } from "axios";
 import { getAccessToken } from "./helpers/token_helper";
 import { PriceRow } from "./external_helpers/external_helpers";
+import { i18nMiddleware } from "./middlewares/i18.middleware";
+
 
 
 
@@ -73,6 +75,9 @@ async function main() {
         credentials: true // if you need cookies/auth
     }));
     app.use(express.json());
+
+    app.use(i18nMiddleware);
+
 
     // Register API routes
 

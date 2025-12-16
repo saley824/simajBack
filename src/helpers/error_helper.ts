@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import errorHelper from "../helpers/error_helper";
 
 
 
@@ -16,12 +17,8 @@ const handle404 = async (res: Response,) => {
     message: "Error",
   });;
 };
-const handle500 = async (res: Response,) => {
-  res.status(500).json({
-    success: false,
-    message: "Došlo je do greške na serveru. Molimo pokušajte ponovo kasnije.",
-
-  });;
+const handle500 = async (res: Response, req: Request) => {
+  errorHelper.handle500(res, req);
 };
 
 

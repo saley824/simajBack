@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { prisma } from "../server";
 import convertHelper from "../helpers/convert_helpers";
 import currencyHelper from "../helpers/currency_helper";
+import errorHelper from "../helpers/error_helper";
 import { RegionDto } from "../models/dto_models/region_dto";
 
 const getAllRegions = async (req: Request, res: Response) => {
@@ -99,11 +100,7 @@ const getAllRegions = async (req: Request, res: Response) => {
             },
         });
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: "Internal Server Error"
-
-        });
+        errorHelper.handle500(res, req);
     }
 
 }
@@ -146,11 +143,7 @@ const getSupportedCountriesForRegion = async (req: Request, res: Response) => {
         }
 
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: "Internal Server Error"
-
-        });
+        errorHelper.handle500(res, req);
     }
 
 }

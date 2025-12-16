@@ -5,6 +5,7 @@ import { prisma } from "../server";
 import productsHelper from "../helpers/product_helper";
 import convertHelper from "../helpers/convert_helpers";
 import currencyHelper from "../helpers/currency_helper";
+import errorHelper from "../helpers/error_helper";
 
 
 
@@ -47,16 +48,13 @@ const topUpBalance = async (req: Request, res: Response) => {
 
 
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: "Internal Server Error"
-
-        });
+        errorHelper.handle500(res, req);
     }
 
 }
 const getUserInfo = async (req: Request, res: Response) => {
     const userId = req.params.id;
+    const t = req.t;
 
 
     const currencyHeader = (req.headers["x-currency"] as string) ?? "BAM";
@@ -101,11 +99,7 @@ const getUserInfo = async (req: Request, res: Response) => {
 
     } catch (error) {
         console.log(error)
-        res.status(500).json({
-            success: false,
-            message: "Internal Server Error"
-
-        });
+        errorHelper.handle500(res, req);
     }
 
 }

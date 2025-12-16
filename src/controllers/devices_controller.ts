@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { prisma } from "../server";
+import errorHelper from "../helpers/error_helper";
 
 
 
@@ -24,11 +25,7 @@ const getAllDevices = async (req: Request, res: Response) => {
             },
         });
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: "Internal Server Error"
-
-        });
+        errorHelper.handle500(res, req);
     }
 
 }

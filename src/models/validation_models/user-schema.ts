@@ -1,29 +1,43 @@
-import {
-    string,
-    object,
-    ref,
-    InferType,
-
-} from "yup";
+import { string, object, ref, InferType } from "yup";
 
 export const userSchemaCreate = object({
     body: object({
-        // name: string().required().max(40, "Ime ne može biti duže od 20 karaktera!"),
-        // lastName: string().required().max(20, "Prezime ne može biti duže od 20 karaktera!"),
-        username: string().required().min(4, "Korisničko ime mora imati makar 4 karaktera!").max(80, "Korisničko ime ne može biti duže od 80 karaktera!"),
-        email: string().email().required("Email mora biti validan!"),
-        password: string().required().min(8, "Šifra mora imati makar 8 karaktera!").max(128, "Šifra ne može biti duža od 128 karaktera!"),
-        confirmPassword: string().max(128, "Šifra ne može biti duža od 128 karaktera!").oneOf([ref('password')], 'Šifre se ne poklapaju!').required(),
+        username: string()
+            .required("validation.username.required")
+            .min(4, "validation.username.min")
+            .max(80, "validation.username.max"),
+
+        email: string()
+            .email("validation.email.invalid")
+            .required("validation.email.required"),
+
+        password: string()
+            .required("validation.password.required")
+            .max(128, "validation.password.max")
+            .matches(
+                /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/,
+                "validation.password.weak"
+            ),
+
+        confirmPassword: string()
+            .required("validation.confirmPassword.required")
+            .oneOf([ref("password")], "validation.confirmPassword.mismatch")
+            .max(128, "validation.confirmPassword.max"),
     }),
 });
 
 export const loginSchema = object({
     body: object({
-        usernameEmail: string().required().min(4, "Korisničko ime mora imati makar 4 karaktera!").max(80, "Korisničko ime ne može biti duže od 80 karaktera!"),
-        password: string().required().min(8, "Šifra mora imati makar 8 karaktera!").max(128, "Šifra ne može biti duža od 128 karaktera!"),
+        usernameEmail: string()
+            .required("validation.usernameEmail.required")
+            .min(4, "validation.usernameEmail.min")
+            .max(80, "validation.usernameEmail.max"),
+
+        password: string()
+            .required("validation.password.required")
+            .min(8, "validation.password.min")
+            .max(128, "validation.password.max"),
     }),
 });
 
-
 export type userSchemaCreateDto = InferType<typeof userSchemaCreate>["body"];
-

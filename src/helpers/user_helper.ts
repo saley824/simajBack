@@ -23,7 +23,7 @@ interface VerifyEmailOptions {
 }
 
 // ----------------------------EMAIL SENDING-----------------------------------
-const sendEmailForResetPassword = async (options: ResetPasswordOptions, name: String) => {
+const sendEmailForResetPassword = async (lang: string, options: ResetPasswordOptions, name: String) => {
     try {
         const resendApiKey = process.env.RESEND_API_KEY!;
         const emailUsername: string = process.env.EMAIL_USERNAME!;
@@ -38,16 +38,32 @@ const sendEmailForResetPassword = async (options: ResetPasswordOptions, name: St
         const resend = new Resend(resendApiKey);
 
         const htmlContent =
-            `
+            lang == "en" ?
+
+                `
+                    <img src="cid:logoId" style="max-width: 160px; width: 100%; height: auto;" />
+                    <p>Dear <strong>${name}</strong>,</p>
+                    <p>We have received a request to reset the password for your account.</p>
+                    <p>Please use the following token to reset your password:</p>
+                    <p>
+                        <span style="font-size: 32px; background-color: #f0f0f0; padding: 5px 10px; border-radius: 4px;">
+                        ${options.token}
+                        </span>
+                    </p>
+                    <p>This token will expire in 120 minutes.</p>
+                    <p>Kind regards,</p>
+                    <p><strong>eSIMaj Team</strong></p>
+                    `:
+                `
                   <img src="cid:logoId" style="max-width: 160px; width: 100%; height: auto;" />
                     <p>Poštovani <strong>${name}</strong>,</p>
                     <p>Primili smo zahtjev za resetovanje šifre za Vaš nalog.</p>
                     <p>Molimo vas da koristite sljedeći token za resetovanje šifre:</p>
                     <p><span style="font-size: 32px; background-color: #f0f0f0; padding: 5px 10px; border-radius: 4px;">${options.token}</span></p>
-                    <p>Token ističe za  10 minuta.</p>
+                    <p>Token ističe za  120 minuta.</p>
                     <p>Srdačan pozdrav,</p>
-                    <p><strong>ESIMaj Tim</strong></p>
-        `
+                    <p><strong>eSIMaj Tim</strong></p>
+        `;
         await resend.emails.send({
             from: emailUsername,
             to: options.email,
@@ -160,7 +176,7 @@ function extractIOSCodes(lpa: string) {
     };
 }
 
-const sendEmailForVerification = async (options: VerifyEmailOptions, name: String) => {
+const sendEmailForVerification = async (lang: string, options: VerifyEmailOptions, name: String) => {
     try {
 
 
@@ -173,17 +189,25 @@ const sendEmailForVerification = async (options: VerifyEmailOptions, name: Strin
 
         const verificationUrl = `${process.env.FRONTEND_BASE_URL}/verify-email?token=${options.token}&userId=${options.userId}`;
 
-        const htmlContent =
-
+        const htmlContent = lang == "en" ?
             `
-<img src="cid:logoId" style="max-width: 160px; width: 100%; height: auto;" />
-<p>Poštovani <strong>${name}</strong>,</p>
-<p>Dobrobrodosli na ESimaj platformu!</p>
-<p>Klikom na <a href="${verificationUrl}">here</a> verifikujte email.</p>
-<p>Token ističe za  120 minuta.</p>
-<p>Srdačan pozdrav,</p>
-<p><strong>Esimaj Tim</strong></p>
-`;
+        <img src="cid:logoId" style="max-width: 160px; width: 100%; height: auto;" />
+        <p>Dear <strong>${name}</strong>,</p>
+        <p>Welcome to the eSIMaj platform!</p>
+        <p>Please verify your email address by clicking <a href="${verificationUrl}">here</a>.</p>
+        <p>This verification link will expire in 120 minutes.</p>
+        <p>Kind regards,</p>
+        <p><strong>eSIMaj Team</strong></p>
+        ` :
+            `
+        <img src="cid:logoId" style="max-width: 160px; width: 100%; height: auto;" />
+        <p>Poštovani <strong>${name}</strong>,</p>
+        <p>Dobrobrodosli na eSIMaj platformu!</p>
+        <p>Klikom na <a href="${verificationUrl}">here</a> verifikujte email.</p>
+        <p>Token ističe za  120 minuta.</p>
+        <p>Srdačan pozdrav,</p>
+        <p><strong>eSIMaj Tim</strong></p>
+        `;
 
 
 
@@ -259,7 +283,6 @@ const createEmailToken = function () {
         .digest("hex");
 
     const now = new Date();
-    // token aktivan 2 sata
     const tokenExpires = new Date(now.getTime() + 2 * 60 * 60 * 1000);
 
     return { emailToken, hashEmailToken, tokenExpires };
