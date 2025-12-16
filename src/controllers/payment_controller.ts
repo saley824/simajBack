@@ -64,7 +64,6 @@ const handleMonriCallback = async (req: Request, res: Response) => {
         ? Number(req.body.order_number)
         : null;
 
-    console.log()
 
 
 

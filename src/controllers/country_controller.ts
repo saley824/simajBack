@@ -18,10 +18,6 @@ import { getAccessToken } from "../helpers/token_helper";
 
 const getAllCountries = async (req: Request, res: Response) => {
     const { t } = req;
-
-    console.log(";;;;;;;;;;");
-    console.log(t("auth.LOGIN_SUCCESS"));
-    console.log(";;;;;;;;;;");
     const page = req.query.page ? Number(req.query.page) : 1;
     const perPage = req.query.perPage ? Number(req.query.perPage) : 10;
     const searchText = req.query.searchText?.toString() || "";
