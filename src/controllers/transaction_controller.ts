@@ -2,6 +2,48 @@ import { NextFunction, Request, Response } from "express";
 
 import { prisma } from "../server";
 import { TransactionDto } from "../models/dto_models/transaction_dto";
+import { getAccessToken } from "../helpers/token_helper";
+import axios from "axios";
+/* =========================
+   API RESPONSE
+========================= */
+
+export interface ESimOrderResponse {
+    code: number;
+    message: string;
+    data: ESimOrder[];
+}
+
+
+
+export interface ESimOrder {
+    product: Product;
+    subscription: Subscription;
+    creation_time: string;
+}
+
+export interface Subscription {
+    upper_limit_amount: number;
+    used_amount: number;
+    activation_time: string; // ISO date string
+    expiry: string; // ISO date string
+    status: SubscriptionStatus;
+    activate_by: string; // ISO date string
+}
+
+export interface Product {
+    id: string;
+    name: string;
+    duration: number;
+    imsi_profile: string;
+}
+
+export type SubscriptionStatus =
+    | "PENDING"     // plan kupljen, ali još nije aktiviran
+    | "ACTIVE"      // plan aktiviran (mreža ili auto-aktivacija nakon 60 dana)
+    | "EXPIRED"     // plan je istekao prirodno
+    | "TERMINATED"; // plan je ručno prekinut
+
 
 
 
@@ -93,7 +135,7 @@ const getUserTransactions = async (req: Request, res: Response) => {
     try {
         let transactions = await prisma.transaction.findMany({
             where: {
-                // userId: userId,
+                userId: userId,
                 TransactionStatus: "Completed",
             },
             select: {
@@ -155,13 +197,39 @@ const getUserTransactions = async (req: Request, res: Response) => {
 
 }
 
+const getESimOrders = async (req: Request, res: Response) => {
+    try {
+        const iccid: string | undefined = req.query.iccid as string | undefined;
+        const token = await getAccessToken();
 
+        const response = await axios.get<ESimOrderResponse>(
+            `${process.env.N_BASE_URL}/order/api/v1/get_esim_orders?iccid=${iccid}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+        res.status(200).json({
+            success: true,
+            data: response.data,
+        });
+        console.log(response.data.data)
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            success: false,
+            message: "Internal Server Error"
 
+        });
+    }
 
+}
 
 export default {
     getTransactionById,
-    getUserTransactions
+    getUserTransactions,
+    getESimOrders,
 };
 
 

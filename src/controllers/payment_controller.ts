@@ -151,8 +151,7 @@ const handleMonriCallback = async (req: Request, res: Response) => {
                 }
             );
 
-            console.log("RESPONSE")
-            console.log(response)
+
 
 
 
