@@ -6,18 +6,9 @@ import { RegionDto } from "../models/dto_models/region_dto";
 import convertHelper from "../helpers/convert_helpers";
 import currencyHelper from "../helpers/currency_helper";
 import errorHelper from "../helpers/error_helper";
-import { getAccessToken } from "../helpers/token_helper";
-
-
-
-
-
-
-
 
 
 const getAllCountries = async (req: Request, res: Response) => {
-    const { t } = req;
     const page = req.query.page ? Number(req.query.page) : 1;
     const perPage = req.query.perPage ? Number(req.query.perPage) : 10;
     const searchText = req.query.searchText?.toString() || "";

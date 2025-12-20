@@ -212,14 +212,12 @@ model Review {
 }
 
 model ContactMessage {
-    id            Int     @id @default(autoincrement())
-    name          String
-    lastName      String
-    email         String
-    phoneModel    String?
-    typeOfPackage String?
-    question      String?
-    isResolved    Boolean @default(false)
+    id          Int     @id @default(autoincrement())
+    email       String
+    device      String?
+    orderNumber String?
+    question    String?
+    isResolved  Boolean @default(false)
 }
 
 model DeviceBrand {

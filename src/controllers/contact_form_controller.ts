@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 
 import { prisma } from "../server";
 
-import { reviewSchemaCreateDto } from "../models/validation_models/review-schema";
 import { contactFormGuestSchemaCreateDto } from "../models/validation_models/contact_fom_guest-schema";
 
 
@@ -12,12 +11,10 @@ const addContactFormQuestion = async (req: Request, res: Response) => {
         await prisma.contactMessage.create({
             data:
             {
-                name: contactFormBody.name,
-                lastName: contactFormBody.name,
                 email: contactFormBody.email,
                 question: contactFormBody.question,
-                typeOfPackage: contactFormBody.typeOfPackage ?? null,
-                phoneModel: contactFormBody.phoneModel ?? null,
+                orderNumber: contactFormBody.orderNumber ?? null,
+                device: contactFormBody.device ?? null,
 
 
             },
