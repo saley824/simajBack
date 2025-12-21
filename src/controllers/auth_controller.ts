@@ -11,8 +11,9 @@ import jwt from "jsonwebtoken";
 
 
 
-const signToken = (id: String, username: String, email: String,) => {
+const signToken = (id: String,) => {
     const jwtSecret = process.env.JWT_SECRET;
+
     const jwtExpires = process.env.JWT_EXPIRES;
 
     let token = "";
@@ -20,10 +21,6 @@ const signToken = (id: String, username: String, email: String,) => {
         token = jwt.sign(
             {
                 id: id,
-                username: username,
-                email: email,
-
-
             },
             jwtSecret,
             {
@@ -291,7 +288,7 @@ const login = async (req: Request, res: Response) => {
         });
     }
 
-    const token = signToken(user.id, user.username, user.email);
+    const token = signToken(user.id,);
 
     const { password: _, ...userWithoutSensitiveData } = user;
 
