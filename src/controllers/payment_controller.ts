@@ -65,6 +65,9 @@ const handleMonriCallback = async (req: Request, res: Response) => {
         : null;
 
     const orderInfo = req.body.order_info;
+    console.log("===================")
+    console.log(orderInfo)
+    console.log("===================")
     let lang = "sr";
 
     try {
