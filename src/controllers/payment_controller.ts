@@ -64,6 +64,26 @@ const handleMonriCallback = async (req: Request, res: Response) => {
         ? Number(req.body.order_number)
         : null;
 
+    const orderInfo = req.body.order_info;
+    let lang = "sr";
+
+    try {
+        lang = orderInfo.split("=")[1];
+    } catch (error) {
+        console.log(error)
+    }
+
+    console.log(lang)
+    const a = 2;
+
+    if (a == 2) {
+        return
+
+    }
+
+
+
+
 
 
 
@@ -159,7 +179,7 @@ const handleMonriCallback = async (req: Request, res: Response) => {
                 const esimData = response.data.data;
                 const networks = transaction.product.networks.map(network => network.name ?? "").join(", ")
                 userHelper.sendQRcode(
-                    "sr",
+                    lang,
                     user?.email ?? "",
                     esimData.esim.esim_qr,
                     esimData.esim.apn,
@@ -284,15 +304,6 @@ const handlePaymentWithBalance = async (req: Request, res: Response) => {
                     success: true,
                 });
             }
-
-            const a = 2
-
-            if (a == 2) {
-                return res.status(200).json({
-                    success: true,
-                });
-            }
-
 
 
             const token = await getAccessToken();
