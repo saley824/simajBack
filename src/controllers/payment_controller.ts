@@ -343,7 +343,7 @@ const handlePaymentWithBalance = async (req: Request, res: Response) => {
                 const esimData = response.data.data;
                 const networks = transaction.product.networks.map(network => network.name ?? "").join(", ")
                 userHelper.sendQRcode(
-                    "sr",
+                    req.language,
                     user?.email ?? "",
                     esimData.esim.esim_qr,
                     esimData.esim.apn,
