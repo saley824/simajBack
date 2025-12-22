@@ -71,7 +71,7 @@ const handleMonriCallback = async (req: Request, res: Response) => {
     let lang = "sr";
 
     try {
-        lang = orderInfo.split("=")[1];
+        lang = orderInfo.split("-")[1];
     } catch (error) {
         console.log(error)
     }
