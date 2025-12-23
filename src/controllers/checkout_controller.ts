@@ -30,6 +30,7 @@ interface CheckoutResponse {
     referralErrorMessage: string | null
     referralCodePercentage: number | null
     referralUserId: string | null
+    userBalance: number | null;
 
 
 }
@@ -42,6 +43,14 @@ const getCheckoutInfo = async (req: Request, res: Response) => {
     const currencyHeader = (req.headers["x-currency"] as string) ?? "BAM";
     const currency = currencyHelper.parseCurrency(currencyHeader)
     try {
+
+        const user = await prisma.user.findUnique(
+            {
+                where: {
+                    id: userId
+                }
+            }
+        );
         const productRes = await prisma.product.findUnique(
             {
                 where: {
@@ -55,7 +64,7 @@ const getCheckoutInfo = async (req: Request, res: Response) => {
         );
 
         if (productRes == null) {
-            return res.status(400).json({ success: false, message: t("product_not_available") });
+            return res.status(400).json({ success: false, message: t("checkout.product_not_available") });
         }
 
         if (!productRes.sellingPrice || !productRes.amount) {
@@ -86,6 +95,7 @@ const getCheckoutInfo = async (req: Request, res: Response) => {
             referralErrorMessage: null,
             referralCodePercentage: null,
             referralUserId: null,
+            userBalance: user?.balance.toNumber() ?? 0
         };
 
 
@@ -98,7 +108,7 @@ const getCheckoutInfo = async (req: Request, res: Response) => {
 
             if (coupon == null) {
                 checkoutResponse.enteredWrongCode = true;
-                checkoutResponse.promoCodeErrorMessage = t("coupon_invalid")
+                checkoutResponse.promoCodeErrorMessage = t("checkout.coupon_invalid")
             }
             else {
                 switch (coupon?.couponType) {
@@ -170,14 +180,10 @@ const getCheckoutInfo = async (req: Request, res: Response) => {
             }
         }
 
+
+
         else if (referralUsername && referralUsername != "") {
-            const user = await prisma.user.findUnique(
-                {
-                    where: {
-                        id: userId
-                    }
-                }
-            );
+
 
 
 
