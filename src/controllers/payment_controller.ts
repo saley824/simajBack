@@ -72,23 +72,6 @@ const handleMonriCallback = async (req: Request, res: Response) => {
     } catch (error) {
         console.log(error)
     }
-
-    console.log(lang)
-    const a = 2;
-
-    if (a == 2) {
-        return res.status(200).json({
-            success: true,
-        });
-
-    }
-
-
-
-
-
-
-
     try {
 
         if (transactionId != null) {
