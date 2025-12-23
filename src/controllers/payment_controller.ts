@@ -32,14 +32,25 @@ interface OrderEsimResponse {
 }
 
 const createTransaction = async (req: Request, res: Response) => {
+
+    const couponCode = req.body.couponCode;
     try {
+        var coupon = null;
+
+        if (couponCode) {
+            coupon = await prisma.couponCode.findUnique({
+                where: {
+                    code: couponCode
+                },
+            });
+        }
         const transaction = await prisma.transaction.create({
             data: {
                 userId: req.body.userId,
                 referralUserId: req.body.referralUserId,
                 productId: req.body.productId,
                 price: req.body.price,
-
+                couponCodeId: coupon?.id,
             },
         });
         res.status(200).json({
@@ -73,7 +84,6 @@ const handleMonriCallback = async (req: Request, res: Response) => {
         console.log(error)
     }
     try {
-
         if (transactionId != null) {
             let transaction = await prisma.transaction.findUnique({
                 where: {
@@ -155,11 +165,6 @@ const handleMonriCallback = async (req: Request, res: Response) => {
                 }
             );
 
-
-
-
-
-
             if (response.data.message === "Success") {
                 const esimData = response.data.data;
                 const networks = transaction.product.networks.map(network => network.name ?? "").join(", ")
@@ -219,6 +224,16 @@ const handleMonriCallback = async (req: Request, res: Response) => {
 
 
 const handlePaymentWithBalance = async (req: Request, res: Response) => {
+    const couponCode = req.body.couponCode;
+    var coupon = null;
+
+    if (couponCode) {
+        coupon = await prisma.couponCode.findUnique({
+            where: {
+                code: couponCode
+            },
+        });
+    }
 
     const t = req.t;
     const transaction = await prisma.transaction.create({
