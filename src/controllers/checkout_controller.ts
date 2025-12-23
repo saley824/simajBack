@@ -44,6 +44,10 @@ const getCheckoutInfo = async (req: Request, res: Response) => {
     const currency = currencyHelper.parseCurrency(currencyHeader)
     try {
 
+        const exchangeRate = await prisma.exchangeRate.findFirst({
+            where: { currency }
+        });
+
         const user = await prisma.user.findUnique(
             {
                 where: {
@@ -51,6 +55,10 @@ const getCheckoutInfo = async (req: Request, res: Response) => {
                 }
             }
         );
+
+        if (user == null) {
+            return errorHelper.handle500(res, req);
+        }
         const productRes = await prisma.product.findUnique(
             {
                 where: {
@@ -75,6 +83,8 @@ const getCheckoutInfo = async (req: Request, res: Response) => {
 
         const productName = productRes.country ? ((req.language == "en" ? productRes.country?.displayNameEn : productRes.country?.displayNameSr) ?? "") : ((req.language == "en" ? productRes.region?.displayNameEn : productRes.region?.displayNameSr) ?? "")
 
+        const balance = user.balance.toNumber() && exchangeRate ? Number((user.balance.toNumber() * exchangeRate!.rateFromBAM.toNumber()).toFixed(2)) : null;
+
 
         let checkoutResponse: CheckoutResponse = {
             productPlanName: productName,
@@ -95,7 +105,7 @@ const getCheckoutInfo = async (req: Request, res: Response) => {
             referralErrorMessage: null,
             referralCodePercentage: null,
             referralUserId: null,
-            userBalance: user?.balance.toNumber() ?? 0
+            userBalance: balance ?? 0
         };
 
 
