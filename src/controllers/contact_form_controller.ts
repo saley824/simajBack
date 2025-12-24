@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 
 import { prisma } from "../server";
+import contactFormHelper from "../helpers/contact_form_helper";
 
 import { contactFormGuestSchemaCreateDto } from "../models/validation_models/contact_fom_guest-schema";
 
@@ -19,6 +20,7 @@ const addContactFormQuestion = async (req: Request, res: Response) => {
 
             },
         });
+        await contactFormHelper.sendEmailForContactForm(contactFormBody.email, contactFormBody.question, contactFormBody.device ?? null, contactFormBody.orderNumber ?? null,)
         res.status(201).json({
             success: true,
             message: "Created question",

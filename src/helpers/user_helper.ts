@@ -229,32 +229,6 @@ const sendEmailForVerification = async (lang: string, options: VerifyEmailOption
 
             ],
         });
-
-
-        // const transporter = nodemailer.createTransport({
-        //     host: emailHost,
-        //     port: parseInt(emailPort),
-        //     secure: false,
-        //     auth: {
-        //         user: emailUsername,
-        //         pass: emailPassword,
-        //     },
-        //     tls: {
-        //         rejectUnauthorized: false,
-        //     }
-        // });
-
-
-
-
-        // const mailOptions = {
-        //     from: emailUsername,
-        //     to: options.email,
-        //     subject: options.subject,
-        //     html: htmlContent,
-        // };
-
-        // await transporter.sendMail(mailOptions);
         return true;
     } catch (error) {
         console.error(error)
