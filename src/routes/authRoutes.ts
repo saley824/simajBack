@@ -3,7 +3,16 @@ import { validate } from "../middlewares/validate_middleware";
 import {
     userSchemaCreate,
     loginSchema,
+
 } from "../models/validation_models/user-schema";
+import {
+    resetPasswordSchema
+
+} from "../models/validation_models/reset-password-schema";
+import {
+    changePasswordSchema
+
+} from "../models/validation_models/change-password-schema";
 import authController from "../controllers/auth_controller";
 
 const router = express.Router();
@@ -23,8 +32,8 @@ router.post("/sendTokenForVerifyEmailAgain", authController.sendTokenForVerifyin
 
 
 // PASSWORD HANDLER
-router.patch("/resetPassword", authController.resetPassword);
+router.patch("/resetPassword", validate(resetPasswordSchema), authController.resetPassword);
 router.post("/forgotPassword", authController.forgotPassword);
-router.post("/changePassword", authController.changePassword);
+router.post("/changePassword", validate(changePasswordSchema), authController.changePassword);
 
 export default router;

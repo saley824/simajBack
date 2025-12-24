@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 
 import { prisma } from "../server";
 import { userSchemaCreateDto } from "../models/validation_models/user-schema";
+import { resetPasswordSchema } from "../models/validation_models/reset-password-schema";
 import crypto from "crypto"
 import userHelper from "../helpers/user_helper";
 import errorHelper from "../helpers/error_helper";

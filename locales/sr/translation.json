@@ -80,7 +80,9 @@
     "referral_limit_reached": "Ovaj referral kod je dostigao maksimalan broj korištenja."
   },
   "use_this_token": "Iskoristite ovaj token za verifikovanje emaila",
-    "not_enough_funds": "Nemate dovoljno sredstava na svom nalogu."
+  "not_enough_funds": "Nemate dovoljno sredstava na svom nalogu.",
+  "global_required": "Polje je obavezno"
+
 
 
 }

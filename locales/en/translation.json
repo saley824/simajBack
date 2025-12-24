@@ -78,7 +78,7 @@
     "referral_limit_reached": "This referral code has reached the maximum number of uses."
   },
   "use_this_token": "Use this token for verifying email",
-  "not_enough_funds": "You don’t have enough funds in your account"
-
+  "not_enough_funds": "You don’t have enough funds in your account",
+  "global_required": "Required field"
 
 }
