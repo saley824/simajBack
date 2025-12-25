@@ -14,47 +14,19 @@ import checkoutRoutes from "./routes/checkoutRoutes";
 import deviceRoutes from "./routes/devicesRoutes";
 import paymentRoutes from "./routes/payment_route";
 import testRoutes from "./routes/testRoutes";
-import testHelper from "./helpers/user_helper";
-import externalHelper from "./external_helpers/external_helpers";
-import axios, { AxiosResponse } from "axios";
 import { getAccessToken } from "./helpers/token_helper";
-import { PriceRow } from "./external_helpers/external_helpers";
 import { i18nMiddleware } from "./middlewares/i18.middleware";
+import { apiLimiter } from "./middlewares/rate_limiter_middleware";
 
 
 
 
 
 
-
-
-// import dotenv from "dotenv";
-// dotenv.config();
-// import PostRouter from "./routes/blog.route";
-
-// export const prisma = new PrismaClient().$extends({
-//   result: {
-//     product: {
-//       discountedPrice: {
-//         needs: { price: true },
-//         compute(product) {
-//           return product.price * 0.7;
-//         },
-//       },
-//     },
-//   },
-// });
 
 export const prisma = new PrismaClient();
 
 
-// var serviceAccount = require("./serviceAccountKeyNotifications.json");
-
-
-
-// export const bucket = firebase.storage().bucket()
-
-// import app from "./app";
 const app = express();
 
 
@@ -71,18 +43,17 @@ async function main() {
 
         ],
 
-        methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], // allowed HTTP methods
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
         credentials: true // if you need cookies/auth
     }));
     app.use(express.json());
 
     app.use(i18nMiddleware);
 
-
-    // Register API routes
-
     const baseUrl: string = "/api/v1";
 
+    app.use(express.json({ limit: "100kb" }));
+    app.use(`${baseUrl}`, apiLimiter);
 
     app.use(`${baseUrl}/auth`, authRouter);
     app.use(`${baseUrl}/countries`, countryRouter);
@@ -98,10 +69,7 @@ async function main() {
     app.use(`${baseUrl}/test`, testRoutes);
 
 
-    /// this make problem, check it out
-    // app.all("*", (req: Request, res: Response) => {
-    //     res.status(404).json({ error: `Route ${req.originalUrl} not found` });
-    // });
+
 
     const port = Number(process.env.PORT) || 8080;
 

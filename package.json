@@ -24,6 +24,7 @@
     "axios": "^1.13.2",
     "cors": "^2.8.5",
     "express": "^5.1.0",
+    "express-rate-limit": "^8.2.1",
     "i18next": "^25.7.3",
     "i18next-fs-backend": "^2.6.1",
     "i18next-http-middleware": "^3.9.0",
