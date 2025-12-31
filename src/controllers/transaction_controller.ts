@@ -143,7 +143,7 @@ const getUserTransactions = async (req: Request, res: Response) => {
             select: {
                 userId: true,
                 createdAt: true,
-                product: { select: { amount: true, duration: true, country: true, } },
+                product: { select: { id: true, amount: true, duration: true, country: true, region: true } },
                 order: {
                     select: {
                         iccid: true,
@@ -163,16 +163,21 @@ const getUserTransactions = async (req: Request, res: Response) => {
         });
         let transactionDtos: TransactionDto[] = [];
 
+
+
         transactions.map(tra => {
+            let name: string = tra.product.country != null ? (lang == "en" ? tra.product.country?.displayNameEn : tra.product.country?.displayNameSr) : (lang == "en" ? tra.product.region?.displayNameEn : tra.product.region?.displayNameSr) ?? ""
             transactionDtos.push(
                 {
                     userId: tra.userId,
                     createdAt: tra.createdAt,
                     duration: tra.product.duration,
                     amount: tra.product.amount,
-                    countryName: (lang == "en" ? tra.product.country?.displayNameEn : tra.product.country?.displayNameSr) ?? "",
+                    name: name,
+                    countryId: tra.product.country?.id ?? null,
+                    regionId: tra.product.region?.id ?? null,
                     iccid: tra.order?.iccid ?? "",
-
+                    productId: tra.product.id,
                 }
             )
         });

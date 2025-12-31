@@ -31,8 +31,6 @@ interface CheckoutResponse {
     referralCodePercentage: number | null
     referralUserId: string | null
     userBalance: number | null;
-
-
 }
 
 

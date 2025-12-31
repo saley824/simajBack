@@ -4,6 +4,9 @@ export type TransactionDto = {
     createdAt: Date | null;
     duration: number;
     amount: number | null;
-    countryName: string;
+    name: string | null;
+    countryId: number | null;
+    regionId: number | null;
     iccid: string;
+    productId: string;
 }

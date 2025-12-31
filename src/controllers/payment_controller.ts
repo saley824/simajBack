@@ -34,9 +34,24 @@ interface OrderEsimResponse {
 const createTransaction = async (req: Request, res: Response) => {
 
     const couponCode = req.body.couponCode;
-    try {
-        var coupon = null;
+    const isTop: boolean = req.body?.isTopUp ?? false;
 
+    //--------------------------TOP UP LOGIC--------------------------
+
+    try {
+
+        const subscriptionId = req.body.subscriptionId;
+        var orderForTopUp = null;
+
+        if (isTop && subscriptionId) {
+            orderForTopUp = await prisma.order.findFirst({
+                where: {
+                    productId: subscriptionId
+                },
+
+            });
+        }
+        var coupon = null;
         if (couponCode) {
             coupon = await prisma.couponCode.findUnique({
                 where: {
@@ -44,6 +59,9 @@ const createTransaction = async (req: Request, res: Response) => {
                 },
             });
         }
+
+
+
         const transaction = await prisma.transaction.create({
             data: {
                 userId: req.body.userId,
@@ -51,6 +69,11 @@ const createTransaction = async (req: Request, res: Response) => {
                 productId: req.body.productId,
                 price: req.body.price,
                 couponCodeId: coupon?.id,
+                paymentMethod: "Card",
+                transactionType: orderForTopUp != null ? "TopUp" : "New",
+                isTopUP: orderForTopUp != null,
+                existingIccid: orderForTopUp?.iccid
+
             },
         });
         res.status(200).json({
@@ -147,10 +170,13 @@ const handleMonriCallback = async (req: Request, res: Response) => {
             const response = await axios.post<OrderEsimResponse>(
                 `${process.env.N_BASE_URL}/order/api/v1/create_order`,
                 {
-                    "operation_type": "NEW",
+                    "operation_type": transaction.transactionType == "New" ? "NEW" : "TOPUP",
                     "product": {
                         "id": transaction?.productId
-                    }
+                    },
+                    ...(transaction.existingIccid && {
+                        iccid: transaction.existingIccid,
+                    })
                 },
                 {
                     headers: {
@@ -232,28 +258,54 @@ const handlePaymentWithBalance = async (req: Request, res: Response) => {
     }
 
     const t = req.t;
-    const transaction = await prisma.transaction.create({
-        data: {
-            userId: req.body.userId,
-            referralUserId: req.body.referralUserId,
-            productId: req.body.productId,
-            price: req.body.price,
+    const isTop: boolean = req.body?.isTopUp ?? false;
 
-        },
 
-        include: {
-            order: true,
-            product: {
-                include: {
-                    networks: true
-                }
-            },
-        }
-    });
+
 
 
 
     try {
+
+
+
+        const subscriptionId = req.body.subscriptionId;
+        var orderForTopUp = null;
+
+        if (isTop && subscriptionId) {
+            orderForTopUp = await prisma.order.findFirst({
+                where: {
+                    productId: subscriptionId
+                },
+
+            });
+        }
+
+        const transaction = await prisma.transaction.create({
+            data: {
+                userId: req.body.userId,
+                referralUserId: req.body.referralUserId,
+                productId: req.body.productId,
+                price: req.body.price,
+                paymentMethod: "Balance",
+                transactionType: orderForTopUp != null ? "TopUp" : "New",
+                isTopUP: orderForTopUp != null,
+                existingIccid: orderForTopUp?.iccid,
+                couponCodeId: coupon?.id,
+            },
+
+            include: {
+                order: true,
+                product: {
+                    include: {
+                        networks: true
+                    }
+                },
+            }
+        });
+
+
+
         if (transaction != null) {
             const user = await prisma.user.findUnique(
                 {

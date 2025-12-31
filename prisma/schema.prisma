@@ -35,6 +35,16 @@ enum TransactionStatus {
     Failed
 }
 
+enum TransactionType {
+    New
+    TopUp
+}
+
+enum PaymentMethod {
+    Card
+    Balance
+}
+
 enum CouponType {
     All
     OnlyCountry
@@ -179,8 +189,12 @@ model Transaction {
     orderId        String?   @unique
     price          Float?
     createdAt      DateTime? @default(now())
+    isTopUP        Boolean?  @default(false)
+    existingIccid  String?
 
     TransactionStatus TransactionStatus @default(Started)
+    paymentMethod     PaymentMethod?
+    transactionType   TransactionType?
 
     user         User        @relation(fields: [userId], references: [id])
     referralUser User?       @relation("Referral", fields: [referralUserId], references: [id])
