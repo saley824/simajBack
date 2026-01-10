@@ -94,6 +94,13 @@ const createTransaction = async (req: Request, res: Response) => {
 const handleMonriCallback = async (req: Request, res: Response) => {
     const a = 2;
     if (a == 2) {
+        const orderInfo = req.body.order_info;
+
+        const tempLang = orderInfo.split("-")[1];
+        console.log("tempLang")
+        console.log(tempLang)
+
+        console.log(req.body)
         console.log("DONE")
         return res.status(200).json({
             success: true,

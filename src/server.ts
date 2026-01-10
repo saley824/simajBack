@@ -51,6 +51,7 @@ async function main() {
     app.use(i18nMiddleware);
 
     const baseUrl: string = "/api/v1";
+    app.set("trust proxy", 1)
 
     app.use(express.json({ limit: "100kb" }));
     app.use(`${baseUrl}`, apiLimiter);
