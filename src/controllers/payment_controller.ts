@@ -94,6 +94,7 @@ const createTransaction = async (req: Request, res: Response) => {
 const handleMonriCallback = async (req: Request, res: Response) => {
     const a = 2;
     if (a == 2) {
+        console.log("DONE")
         return res.status(200).json({
             success: true,
         });
