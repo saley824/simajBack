@@ -92,11 +92,21 @@ const createTransaction = async (req: Request, res: Response) => {
 
 }
 const handleMonriCallback = async (req: Request, res: Response) => {
+    const a = 2;
+    if (a == 2) {
+        return res.status(200).json({
+            success: true,
+        });
+    }
+
 
 
     const transactionId = req.body.order_number
         ? Number(req.body.order_number)
         : null;
+
+
+
 
     const orderInfo = req.body.order_info;
     let lang = "sr";
