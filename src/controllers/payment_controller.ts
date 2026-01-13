@@ -39,17 +39,20 @@ const createTransaction = async (req: Request, res: Response) => {
     //--------------------------TOP UP LOGIC--------------------------
 
     try {
-
         const orderId = req.body.orderId;
         var orderForTopUp = null;
 
+        console.log(orderId)
+
         if (isTop && orderId) {
+
             orderForTopUp = await prisma.order.findFirst({
                 where: {
                     id: orderId,
                 },
-
             });
+
+            console.log(orderForTopUp)
         }
         var coupon = null;
         if (couponCode) {
@@ -59,6 +62,15 @@ const createTransaction = async (req: Request, res: Response) => {
                 },
             });
         }
+
+
+        if (isTop) {
+            return res.status(200).json({
+                success: true,
+            });
+        }
+
+
 
 
 
