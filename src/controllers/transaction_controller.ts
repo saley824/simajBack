@@ -146,6 +146,7 @@ const getUserTransactions = async (req: Request, res: Response) => {
                 product: { select: { id: true, amount: true, duration: true, country: true, region: true } },
                 order: {
                     select: {
+                        id: true,
                         iccid: true,
 
                     }
@@ -178,6 +179,7 @@ const getUserTransactions = async (req: Request, res: Response) => {
                     regionId: tra.product.region?.id ?? null,
                     iccid: tra.order?.iccid ?? "",
                     productId: tra.product.id,
+                    orderId: tra.order?.id ?? "",
                 }
             )
         });

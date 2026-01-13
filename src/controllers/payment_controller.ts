@@ -40,13 +40,13 @@ const createTransaction = async (req: Request, res: Response) => {
 
     try {
 
-        const subscriptionId = req.body.subscriptionId;
+        const orderId = req.body.orderId;
         var orderForTopUp = null;
 
-        if (isTop && subscriptionId) {
+        if (isTop && orderId) {
             orderForTopUp = await prisma.order.findFirst({
                 where: {
-                    productId: subscriptionId
+                    id: orderId,
                 },
 
             });
@@ -274,13 +274,13 @@ const handlePaymentWithBalance = async (req: Request, res: Response) => {
 
 
 
-        const subscriptionId = req.body.subscriptionId;
+        const orderId = req.body.orderId;
         var orderForTopUp = null;
 
-        if (isTop && subscriptionId) {
+        if (isTop && orderId) {
             orderForTopUp = await prisma.order.findFirst({
                 where: {
-                    productId: subscriptionId
+                    id: orderId
                 },
 
             });

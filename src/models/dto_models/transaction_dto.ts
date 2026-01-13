@@ -9,4 +9,5 @@ export type TransactionDto = {
     regionId: number | null;
     iccid: string;
     productId: string;
+    orderId: string;
 }
