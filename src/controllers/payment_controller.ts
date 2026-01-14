@@ -63,17 +63,6 @@ const createTransaction = async (req: Request, res: Response) => {
             });
         }
 
-
-        if (isTop) {
-            return res.status(200).json({
-                success: true,
-            });
-        }
-
-
-
-
-
         const transaction = await prisma.transaction.create({
             data: {
                 userId: req.body.userId,
